@@ -84,23 +84,13 @@ function displayPerfumes(perfumesToShow) {
                     <div class="mb-2">${scentTags}</div>
                     <p class="perfume-card-text">${perfume.description}</p>
                     <p class="price-display">${new Intl.NumberFormat('hu-HU').format(perfume.price)} Ft</p>
-                    <button class="btn btn-outline-primary btn-sm mt-2">Részletek</button>
+                    
                 </div>
-                <a href="#" class="perfume-card-link" data-id="${perfume.id}"></a>
+                <a href="perfumes.html?id=${perfume.id}" class="perfume-card-link" data-id="${perfume.id}"></a>
             </div>
         `;
         
         perfumeList.appendChild(perfumeCard);
-    });
-    
-    // Kártya kattintás eseménykezelő
-    document.querySelectorAll('.perfume-card-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const perfumeId = parseInt(this.dataset.id);
-            const selectedPerfume = perfumes.find(p => p.id === perfumeId);
-            alert(`A ${selectedPerfume.name} parfüm részletei hamarosan elérhetőek lesznek!`);
-        });
     });
 }
 
@@ -109,19 +99,15 @@ function applyFilters() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const maxPrice = parseInt(priceRange.value) || Infinity;
 
-    // Márka szűrők
     const selectedBrands = Array.from(document.querySelectorAll('.brand-checkbox:checked'))
         .map(checkbox => checkbox.value);
 
-    // Kategória szűrők
     const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
         .map(checkbox => checkbox.value);
 
-    // Illat típus szűrők
     const selectedScents = Array.from(document.querySelectorAll('.scent-checkbox:checked'))
         .map(checkbox => checkbox.value);
 
-    // Szűrés
     const filteredPerfumes = perfumes.filter(perfume => {
         const matchesSearch = searchTerm === '' || 
             perfume.name.toLowerCase().includes(searchTerm) || 
@@ -141,10 +127,7 @@ function applyFilters() {
         return matchesSearch && matchesPrice && matchesBrand && matchesCategory && matchesScents;
     });
 
-    // Aktív szűrők frissítése
     updateActiveFilters(selectedBrands, selectedCategories, selectedScents, maxPrice);
-
-    // Parfümök megjelenítése
     displayPerfumes(filteredPerfumes);
 }
 
@@ -160,7 +143,7 @@ function updateActiveFilters(brands, categories, scents, maxPrice) {
 // Szűrők törlése
 function resetFilters() {
     searchInput.value = '';
-    priceRange.value = priceRange.max; // Reset to max value
+    priceRange.value = priceRange.max;
     priceValue.textContent = new Intl.NumberFormat('hu-HU').format(priceRange.max);
     document.querySelectorAll('.brand-checkbox:checked').forEach(cb => cb.checked = false);
     document.querySelectorAll('.category-checkbox:checked').forEach(cb => cb.checked = false);

@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parfümvilág - Főoldal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <title>Parfümvilág - Fedezd fel az illatok világát</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigációs sáv -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="index.html">Parfümvilág</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +29,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown" data-auth="guest">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Belépés
                         </a>
@@ -39,32 +38,79 @@
                             <li><a class="dropdown-item" href="register.html">Regisztráció</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item d-none" id="profileItem" data-auth="user">
+                    <li class="nav-item d-none" id="profileItem">
                         <a class="nav-link" href="profile.html">
                             <i class="fas fa-user-circle"></i> <span id="usernameDisplay"></span>
                         </a>
-                    </li>
-                    <li class="nav-item" data-auth="user">
-                        <button id="logout-btn" class="btn btn-link nav-link">Kilépés</button>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Szekció -->
-    <section class="hero-section">
-        <div class="container">
-            <h1>Az illatod az azonosságod</h1>
-            <p>Kedvenc parfümedet találd meg most!</p>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <a href="catalog.html" class="btn btn-primary btn-lg">Mutasd a legfrissebb híreket!</a>
-                <a href="search.html" class="btn btn-secondary btn-lg">Részletes keresés</a>
+    <div class="hero-section">
+        <h1>Üdvözöljük a Parfümvilágban</h1>
+        <p>Merülj el az illatok lenyűgöző világában, és találd meg a tökéletes parfümöt, amely kifejezi egyéniségedet.</p>
+        <a href="search.html" class="btn btn-primary">Keresés indítása</a>
+    </div>
+
+    <section class="container my-5">
+        <h2 class="text-center mb-5">Kiemelt Parfümjeink</h2>
+        <div class="row g-4" id="perfumeList">
+            <div class="col-md-4">
+                <div class="perfume-card">
+                    <img src="https://fimgs.net/himg/o.97897.jpg" alt="Chanel No. 5">
+                    <div class="perfume-card-body">
+                        <h5 class="perfume-card-title">Chanel No. 5</h5>
+                        <h6 class="perfume-card-subtitle">Chanel</h6>
+                        <div class="scent-tags mb-2">
+                            <span class="scent-tag">Virágos</span>
+                            <span class="scent-tag">Aldehides</span>
+                        </div>
+                        <p class="perfume-card-text">Időtlen klasszikus, ikonikus virágos-aldehides illat.</p>
+                        <p class="price-display">45 000 Ft</p>
+                    </div>
+                    <a href="perfumes.html?id=1" class="perfume-card-link"></a>
+                </div>
             </div>
+            <div class="col-md-4">
+                <div class="perfume-card">
+                    <img src="https://cdn.notinoimg.com/detail_main_mq/dior/3348901250153_01/sauvage___200828.jpg" alt="Sauvage">
+                    <div class="perfume-card-body">
+                        <h5 class="perfume-card-title">Sauvage</h5>
+                        <h6 class="perfume-card-subtitle">Dior</h6>
+                        <div class="scent-tags mb-2">
+                            <span class="scent-tag">Fás</span>
+                            <span class="scent-tag">Fűszeres</span>
+                        </div>
+                        <p class="perfume-card-text">Friss, erőteljes, nyers és nemes összetevőkkel.</p>
+                        <p class="price-display">38 000 Ft</p>
+                    </div>
+                    <a href="perfumes.html?id=2" class="perfume-card-link"></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="perfume-card">
+                    <img src="https://cdn.shopify.com/s/files/1/0259/7733/products/black-opium-le-parfum-90ml_grande.png?v=1679625919" alt="Black Opium">
+                    <div class="perfume-card-body">
+                        <h5 class="perfume-card-title">Black Opium</h5>
+                        <h6 class="perfume-card-subtitle">Yves Saint Laurent</h6>
+                        <div class="scent-tags mb-2">
+                            <span class="scent-tag">Orientális</span>
+                            <span class="scent-tag">Édes</span>
+                        </div>
+                        <p class="perfume-card-text">Erőteljes és érzéki illat, kávé és vanília jegyekkel.</p>
+                        <p class="price-display">44 000 Ft</p>
+                    </div>
+                    <a href="perfumes.html?id=11" class="perfume-card-link"></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a href="search.html" class="btn btn-outline-primary">További parfümök felfedezése</a>
         </div>
     </section>
 
-    <!-- Lábléc -->
     <footer class="footer_section">
         <div class="container">
             <div class="row">
@@ -80,7 +126,7 @@
                                 <i class="fa fa-phone" aria-hidden="true"></i>
                                 <span>+1 23 456 789</span>
                             </a>
-                            <a href="mailto:info@parfümvilág.hu">
+                            <a href="/cdn-cgi/l/email-protection#4a23242c250a3a2b382c691623382722691b2d64223f">
                                 <i class="fa fa-envelope" aria-hidden="true"></i>
                                 <span>Parfümvilág.hu</span>
                             </a>
@@ -89,9 +135,7 @@
                 </div>
                 <div class="col-md-4 footer-col">
                     <div class="footer_detail">
-                        <a href="index.html" class="footer-logo">
-                            Parfümvilág
-                        </a>
+                        <a href="index.html" class="footer-logo">Parfümvilág</a>
                         <p>Keress minket bizalommal! Az alábbi platformokon is elérhetőek vagyunk:</p>
                         <div class="footer_social">
                             <a href="https://facebook.com" target="_blank">
@@ -119,25 +163,12 @@
                 </div>
             </div>
             <div class="footer-info">
-                <p>&copy; <span id="displayYear"></span> Minden jog fenntartva</p>
+                <p>© <span id="displayYear"></span> Minden jog fenntartva</p>
             </div>
         </div>
     </footer>
 
-    <!-- Bejelentkezési űrlap (elrejtve alapból) -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Bejelentkezés</h2>
-            <form id="login-form">
-                <input type="text" id="username" placeholder="Felhasználónév" required>
-                <input type="password" id="password" placeholder="Jelszó" required>
-                <button type="submit" class="btn btn-primary">Bejelentkezés</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

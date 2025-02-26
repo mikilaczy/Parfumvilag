@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parfümvilág - Profil</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigációs sáv (ugyanaz, mint az index.html-ben) -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="index.html">Parfümvilág</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,23 +48,20 @@
         </div>
     </nav>
 
-    <!-- Fő tartalom -->
     <div class="container my-5">
         <h1 class="text-center mb-4">Profil</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <!-- Felhasználói adatok -->
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Felhasználói adatok</h5>
                         <p><strong>Név:</strong> <span id="profileName">Felhasználó</span></p>
-                        <p><strong>Email:</strong> <span id="profileEmail">felhasznalo@example.com</span></p>
+                        <p><strong>Email:</strong> <span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a48281888c85979e8a85888ba4819c8589948881ca878b89">[email&#160;protected]</a></span></p>
                         <p><strong>Regisztráció dátuma:</strong> <span id="profileDate">2023-10-01</span></p>
                         <button class="btn btn-primary w-100" id="editProfileButton">Adatok szerkesztése</button>
                     </div>
                 </div>
 
-                <!-- Szerkesztési űrlap (elrejtve alapból) -->
                 <div class="card mb-4 d-none" id="editProfileForm">
                     <div class="card-body">
                         <h5 class="card-title">Adatok szerkesztése</h5>
@@ -87,7 +84,6 @@
                     </div>
                 </div>
 
-                <!-- Kijelentkezés -->
                 <div class="card">
                     <div class="card-body text-center">
                         <button class="btn btn-danger w-100" id="logoutButton">Kijelentkezés</button>
@@ -97,7 +93,6 @@
         </div>
     </div>
 
-    <!-- Lábléc -->
     <footer class="footer_section">
         <div class="container">
             <div class="row">
@@ -113,7 +108,7 @@
                                 <i class="fa fa-phone" aria-hidden="true"></i>
                                 <span>+1 23 456 789</span>
                             </a>
-                            <a href="mailto:info@parfümvilág.hu">
+                            <a href="/cdn-cgi/l/email-protection#a18c8f878ea191809382c7b8809b8481c7a582c98f92">
                                 <i class="fa fa-envelope" aria-hidden="true"></i>
                                 <span>Parfümvilág.hu</span>
                             </a>
@@ -122,9 +117,7 @@
                 </div>
                 <div class="col-md-4 footer-col">
                     <div class="footer_detail">
-                        <a href="index.html" class="footer-logo">
-                            Parfümvilág
-                        </a>
+                        <a href="index.html" class="footer-logo">Parfümvilág</a>
                         <p>Keress minket bizalommal! Az alábbi platformokon is elérhetőek vagyunk:</p>
                         <div class="footer_social">
                             <a href="https://facebook.com" target="_blank">
@@ -146,22 +139,20 @@
                     </div>
                 </div>
                 <div class="col-md-4 footer-col">
-                    <h4>ügyfélszolgálat</h4>
+                    <h4>Ügyfélszolgálat</h4>
                     <p>Minden nap</p>
                     <p>10.00 - 20.00</p>
                 </div>
             </div>
             <div class="footer-info">
-                <p>&copy; <span id="displayYear"></span> Minden jog fenntartva</p>
+                <p>© <span id="displayYear"></span> Minden jog fenntartva</p>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Egyéni JavaScript -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script src="auth.js"></script>
     <script src="profile.js"></script>
-
 </body>
 </html>
