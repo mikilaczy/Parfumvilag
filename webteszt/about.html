@@ -4,10 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parfümvilág - Rólunk</title>
+    <meta name="description" content="Ismerd meg a Parfümvilágot, ahol a tökéletes illat megtalálása a szenvedélyünk. Segítünk neked eligazodni az illatok világában!">
+    <meta name="keywords" content="parfümvilág, rólunk, illatok, parfümök, összehasonlítás, minőség">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <style>
+        .title-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+        .title-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #6200ea;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        .title-section p {
+            font-size: 1.25rem;
+            color: #495057;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+        .title-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(98, 0, 234, 0.1), transparent);
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        .title-section .divider {
+            width: 60px;
+            height: 3px;
+            background-color: #6200ea;
+            margin: 1rem auto;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
@@ -48,41 +94,65 @@
         </div>
     </nav>
 
-    <div class="container my-5">
-        <h1 class="text-center mb-4">Rólunk</h1>
-        <p class="text-center mb-5">Üdvözlünk a Parfümvilágon, ahol a tökéletes illat megtalálása egyszerűbb, mint valaha!</p>
+    <div class="title-section">
+        <h1>Rólunk</h1>
+        <div class="divider"></div>
+        <p>Üdvözlünk a Parfümvilágban, ahol az illatok és az egyéniség tökéletes harmóniát alkotnak!</p>
+    </div>
 
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <h2>Mi vagyunk?</h2>
-                <p>A Parfümvilág nem egy hagyományos webshop, hanem egy segítő platform, ahol összegyűjtjük és összehasonlítjuk a különböző online üzletek kínálatát. Célunk, hogy időt és energiát spóroljunk neked, miközben segítünk a legjobb döntést meghozni a parfümök terén.</p>
+    <div class="container my-5" id="about-section">
+        <!-- Mi vagyunk? -->
+        <div class="row align-items-center mb-5">
+            <div class="col-md-6 order-md-2">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Parfümvilág csapat" class="img-fluid rounded shadow">
             </div>
-            <div class="col-md-6">
-                <img src="https://via.placeholder.com/800x600?text=A+Professzionális+Team+Working+Together" alt="Parfümvilág csapat" class="img-fluid rounded shadow">
+            <div class="col-md-6 order-md-1">
+                <div class="perfume-card p-4">
+                    <h2 class="perfume-card-title">Kik vagyunk?</h2>
+                    <p class="perfume-card-text">A Parfümvilág nem csupán egy webshop, hanem egy egyedülálló platform, amely összegyűjti és összehasonlítja a legjobb online parfümkínálatokat. Küldetésünk, hogy időt és energiát spóroljunk neked, miközben a legmegfelelőbb illatot választod.</p>
+                </div>
             </div>
         </div>
 
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <img src="https://via.placeholder.com/800x600?text=Product+Comparison+Screen" alt="Parfümvilág szolgáltatásai" class="img-fluid rounded shadow">
+        <!-- Miben segíthetünk? -->
+        <div class="row mb-5">
+            <div class="col-12 text-center mb-4">
+                <h2 class="text-center">Miben segíthetünk?</h2>
             </div>
-            <div class="col-md-6">
-                <h2>Miben segíthetünk?</h2>
-                <ul>
-                    <li><strong>Kategóriák szerinti böngészés:</strong> Különböző márkák és illatcsoportok között könnyedén navigálhatsz.</li>
-                    <li><strong>Árak összehasonlítása:</strong> Könnyedén hasonlíthatod össze az árakat különböző boltok között.</li>
-                    <li><strong>Újdonságok és ikonikus illatok:</strong> Fedezd fel új illatokat és találd meg a klasszikusokat is.</li>
-                </ul>
+            <div class="col-md-4">
+                <div class="perfume-card text-center p-4">
+                    <i class="fas fa-list-ul fa-2x mb-3" style="color: #6200ea;"></i>
+                    <h5 class="perfume-card-title">Kategóriák szerinti böngészés</h5>
+                    <p class="perfume-card-text">Navigálj könnyedén különböző márkák és illatcsoportok között.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="perfume-card text-center p-4">
+                    <i class="fas fa-balance-scale fa-2x mb-3" style="color: #6200ea;"></i>
+                    <h5 class="perfume-card-title">Árak összehasonlítása</h5>
+                    <p class="perfume-card-text">Találd meg a legjobb ajánlatokat különböző boltokból.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="perfume-card text-center p-4">
+                    <i class="fas fa-star fa-2x mb-3" style="color: #6200ea;"></i>
+                    <h5 class="perfume-card-title">Újdonságok és klasszikusok</h5>
+                    <p class="perfume-card-text">Fedezd fel az új illatokat és a timeless klasszikusokat.</p>
+                </div>
             </div>
         </div>
 
-        <div class="row mt-5">
+        <!-- Célunk -->
+        <div class="row align-items-center mb-5">
             <div class="col-md-6">
-                <h2>Célunk</h2>
-                <p>Célunk, hogy mindenki könnyedén megtalálja a hozzá illő saját illatát. Az illat sokkal többet mond, mint gondolnád, és mi segítünk abban, hogy megtaláld azt, ami neked illik.</p>
+                <img src="https://images.unsplash.com/photo-1503235930437-8c6293ba41f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Parfüm üvegek" class="img-fluid rounded shadow">
             </div>
             <div class="col-md-6">
-                <img src="https://via.placeholder.com/800x600?text=Finding+Your+Perfect+Scent" alt="Parfümvilág célja" class="img-fluid rounded shadow">
+                <div class="perfume-card p-4">
+                    <h2 class="perfume-card-title">Célunk</h2>
+                    <p class="perfume-card-text">Szeretnénk, hogy mindenki megtalálja a saját, egyedi illatát. Az illatok többet mondanak rólad, mint gondolnád – mi pedig itt vagyunk, hogy segítsünk ebben az utazásban.</p>
+                    <a href="search.html" class="btn btn-primary mt-3">Kezdj keresni most</a>
+                </div>
             </div>
         </div>
     </div>
@@ -124,4 +194,28 @@
                                 <img src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/linkedin.svg" alt="LinkedIn" class="social-icon">
                             </a>
                             <a href="https://instagram.com" target="_blank">
-                                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/i
+                                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/instagram.svg" alt="Instagram" class="social-icon">
+                            </a>
+                            <a href="https://pinterest.com" target="_blank">
+                                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/pinterest.svg" alt="Pinterest" class="social-icon">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-col">
+                    <h4>Ügyfélszolgálat</h4>
+                    <p>Minden nap</p>
+                    <p>10.00 - 20.00</p>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>© <span id="displayYear"></span> Minden jog fenntartva</p>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdnjs<colgroup.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
