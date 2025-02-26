@@ -1,0 +1,362 @@
+/* Meglévő CSS */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                url('/Test2/img/43a71477-7914-4047-a0b0-ad19d6483b56.png') center/cover;
+    color: white;
+    padding: 10rem 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    opacity: 0.8;
+    max-width: 800px;
+    margin: 1rem auto;
+}
+
+/* Általános beállítások */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Navigációs sáv */
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+}
+.navbar-brand {
+    font-weight: bold;
+    color: #6200ea; /* Indigó szín */
+    transition: color 0.3s;
+}
+.navbar-brand:hover {
+    color: #3700b3; /* Sötétebb indigó */
+}
+.nav-link {
+    color: #555;
+    transition: color 0.3s;
+}
+.nav-link:hover {
+    color: #6200ea; /* Indigó szín */
+}
+
+/* Fő tartalom */
+.container.my-5 {
+    padding: 5rem 2rem;
+}
+.hero-section {
+    color: white;
+    padding: 10rem 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+.hero-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+.hero-section p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+.hero-section a.btn {
+    background-color: #6200ea;
+    border-color: #6200ea;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.hero-section a.btn:hover {
+    background-color: #3700b3;
+    border-color: #3700b3;
+}
+
+/* Keresési eredmények */
+#perfumeList {
+    margin-top: 2rem;
+}
+.perfume-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: transform 0.3s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+}
+.perfume-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.perfume-card img {
+    width: 100%;
+    height: 200px; /* Fix magasság */
+    object-fit: cover; /* Képek átméretezése a fix magasságra illesztve */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.perfume-card-body {
+    padding: 1rem;
+    flex-grow: 1; /* A szöveg rész kitölti a maradék területet */
+}
+.perfume-card-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.perfume-card-text {
+    font-size: 1rem;
+    color: #6c757d;
+}
+.perfume-card-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Értékelési felület */
+.form-range-value {
+    display: inline-block;
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+/* Értékelések */
+.review {
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem 0;
+}
+.review:last-child {
+    border-bottom: none;
+}
+.review .review-header {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.review .review-rating {
+    color: #6200ea;
+    margin-bottom: 0.5rem;
+}
+.review .review-comment {
+    margin-bottom: 0;
+}
+
+/* Lábléc */
+.footer_section {
+    background-color: #121212;
+    color: #ecf0f1;
+    padding: 2rem 0;
+    position: relative;
+    text-align: center;
+}
+.footer_section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #6200ea, #3700b3);
+    opacity: 0.1;
+    z-index: -1;
+}
+.footer_contact h4,
+.footer_detail h4 {
+    color: #6200ea; /* Indigó szín */
+    margin-bottom: 1rem;
+}
+.contact_link_box a,
+.footer_social a {
+    color: #ecf0f1;
+    text-decoration: none;
+    margin-right: 1rem;
+    transition: color 0.3s;
+}
+.contact_link_box a:hover,
+.footer_social a:hover {
+    color: #6200ea; /* Indigó szín */
+}
+.footer_social img {
+    width: 24px;
+    height: 24px;
+    margin-right: 1rem;
+    filter: brightness(0) invert(1); /* Fehér színre váltás */
+    transition: transform 0.3s;
+}
+.footer_social img:hover {
+    transform: scale(1.1);
+}
+.footer-info p {
+    text-align: center;
+    margin-top: 2rem;
+    color: #bdc3c7;
+}
+
+/* Profil ikon */
+#profileItem .fas.fa-user-circle {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Széles képernyős nézetekre */
+@media (min-width: 768px) {
+    .hero-section {
+        padding: 10rem 4rem;
+    }
+    .hero-section h2 {
+        font-size: 3rem;
+    }
+    .hero-section p {
+        font-size: 1.5rem;
+    }
+    .footer_section .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .container.my-5 {
+        padding: 5rem 4rem;
+    }
+    .perfume-card {
+        margin-bottom: 3rem;
+    }
+    .perfume-card-title {
+        font-size: 1.75rem;
+    }
+    .perfume-card-text {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 100px 2rem;
+    }
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Kiegészítő CSS stílusok */
+.search-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
+}
+
+.filter-badge {
+    background-color: #6200ea;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.filter-badge .close-btn {
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+.active-filters {
+    margin-top: 1rem;
+}
+
+.btn-primary {
+    background-color: #6200ea;
+    border-color: #6200ea;
+}
+
+.btn-outline-primary {
+    color: #6200ea;
+    border-color: #6200ea;
+}
+
+.btn-outline-primary:hover {
+    background-color: #6200ea;
+    color: white;
+}
+
+.price-slider {
+    margin-top: 2rem;
+}
+
+.brand-filter, .category-filter {
+    margin-bottom: 1.5rem;
+}
+
+.navbar-placeholder, .footer-placeholder {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    text-align: center;
+    color: #6c757d;
+    border: 1px dashed #dee2e6;
+}
+
+.scent-tag {
+    display: inline-block;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 0.2rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.price-display {
+    font-weight: bold;
+    color: #6200ea;
+}
+
+#noResults {
+    text-align: center;
+    padding: 3rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+}
