@@ -23,22 +23,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark">
+    <nav className="navbar navbar-dark">
       <div className="container">
-        <Link className="navbar-brand" to="/">Parfümvilág</Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav mx-auto">
+        <div className="navbar-content">
+          <Link className="navbar-brand" to="/">Parfümvilág</Link>
+          <ul className="navbar-nav flex-column align-items-center">
             <li className="nav-item">
               <NavLink className="nav-link" to="/katalogus">Katalógus</NavLink>
             </li>
@@ -48,8 +37,6 @@ const Navbar = () => {
             <li className="nav-item">
               <NavLink className="nav-link" to="/rolunk">Rólunk</NavLink>
             </li>
-          </ul>
-          <ul className="navbar-nav ms-auto">
             {isLoggedIn ? (
               <>
                 <li className="nav-item">
@@ -64,25 +51,8 @@ const Navbar = () => {
                 </li>
               </>
             ) : (
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Belépés
-                </a>
-                <ul className="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                  <li>
-                    <NavLink className="dropdown-item" to="/bejelentkezes">Bejelentkezés</NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/regisztracio">Regisztráció</NavLink>
-                  </li>
-                </ul>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/bejelentkezes">Belépés</NavLink>
               </li>
             )}
           </ul>
