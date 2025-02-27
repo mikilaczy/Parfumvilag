@@ -1,29 +1,30 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../style.css';
 
 const PerfumeCard = ({ perfume }) => {
+  const { id, name, brand, description, price, image_url, notes = [] } = perfume;
+
   return (
-    <div className="col-lg-4 col-md-6">
+    <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
       <div className="perfume-card">
-        <img src={perfume.image} alt={perfume.name} />
+        <img
+          src={image_url || 'https://via.placeholder.com/220x220?text=Nincs+kép'}
+          alt={name}
+          className="perfume-card-img"
+        />
         <div className="perfume-card-body">
-          <h3 className="perfume-card-title">{perfume.name}</h3>
-          <h5 className="perfume-card-subtitle">{perfume.brand}</h5>
+          <h5 className="perfume-card-title">{name}</h5>
+          <h6 className="perfume-card-subtitle">{brand}</h6>
           <div className="scent-tags">
-            {perfume.scents.map((scent, index) => (
-              <span key={index} className="scent-tag">
-                {scent}
-              </span>
+            {notes.map((note, index) => (
+              <span key={index} className="scent-tag">{note}</span>
             ))}
           </div>
-          <p className="perfume-card-text">{perfume.description}</p>
-          <p className="price-display">
-            {new Intl.NumberFormat("hu-HU").format(perfume.price)} Ft
-          </p>
-          <Link to={`/parfume/${perfume.id}`} className="perfume-card-link">
-            Részletek
-          </Link>
+          <p className="perfume-card-text">{description || 'Nincs leírás'}</p>
+          <p className="price-display">{new Intl.NumberFormat('hu-HU').format(price)} Ft</p>
         </div>
+        <Link to={`/parfume/${id}`} className="perfume-card-link" />
       </div>
     </div>
   );

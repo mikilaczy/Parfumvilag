@@ -1,298 +1,62 @@
-import React, { useState, useEffect } from "react";
-import PerfumeCard from "../components/PerfumeCard";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import '../style.css';
 
 const Catalog = () => {
-  const [perfumes, setPerfumes] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [maxPrice, setMaxPrice] = useState(100000);
-  const [activeFilters, setActiveFilters] = useState("");
+  const [news, setNews] = useState([]);
+  const [error, setError] = useState(null);
+  const API_KEY = '001f49d7cbf241f1bfeed545c38a76c2'; // NewsAPI kulcs
+  const API_URL = `https://newsapi.org/v2/everything?q=perfume NOT (concert OR Genius OR novelist OR Trump OR Orders OR walmart OR habit OR Delicious OR PNOĒS OR Sophie OR Pizza OR Sci-Fi OR Logitech OR Watch OR Shoes OR Message OR Apothecary OR weekend OR Beauty OR Nightstand OR Reeves OR Shoe OR 韓国 OR Card OR Alba OR Apple OR Egyptian OR BWS OR Captain OR Recipe OR books OR Crossword OR rubbish OR Tea OR Candle OR Wine OR J-Pop OR robbers OR Newborn OR Bella OR Snacks OR Chronological OR Sexuality OR Stepsister OR Amazon OR Strange OR cheating)&language=en&sortBy=relevancy&apiKey=${API_KEY}`;
 
   useEffect(() => {
-    const mockPerfumes = [
-      {
-        id: 1,
-        name: "Chanel No. 5",
-        brand: "Chanel",
-        category: "Női",
-        description: "Időtlen klasszikus, ikonikus virágos-aldehides illat.",
-        scents: ["Virágos", "Aldehides"],
-        price: 45000,
-        image: "https://fimgs.net/himg/o.97897.jpg",
-      },
-      {
-        id: 2,
-        name: "Sauvage",
-        brand: "Dior",
-        category: "Férfi",
-        description: "Friss, erőteljes, nyers és nemes összetevőkkel.",
-        scents: ["Fás", "Fűszeres", "Friss"],
-        price: 38000,
-        image:
-          "https://cdn.notinoimg.com/detail_main_mq/dior/3348901250153_01/sauvage___200828.jpg",
-      },
-      {
-        id: 3,
-        name: "Black Opium",
-        brand: "Yves Saint Laurent",
-        category: "Női",
-        description: "Erőteljes és érzéki illat, kávé és vanília jegyekkel.",
-        scents: ["Orientális", "Fűszeres", "Édes"],
-        price: 44000,
-        image:
-          "https://cdn.shopify.com/s/files/1/0259/7733/products/black-opium-le-parfum-90ml_grande.png?v=1679625919",
-      },
-    ];
-    setPerfumes(mockPerfumes);
-  }, []);
-
-  const applyFilters = () => {
-    const filtered = perfumes
-      .filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          p.brand.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .filter(
-        (p) => selectedBrands.length === 0 || selectedBrands.includes(p.brand)
-      )
-      .filter((p) => p.price <= maxPrice);
-
-    setActiveFilters(getActiveFilters());
-    setPerfumes(filtered);
-  };
-
-  const getActiveFilters = () => {
-    const filters = [];
-    if (searchTerm) filters.push(`Keresés: ${searchTerm}`);
-    if (selectedBrands.length > 0)
-      filters.push(`Márkák: ${selectedBrands.join(", ")}`);
-    if (maxPrice < 100000)
-      filters.push(
-        `Max ár: ${new Intl.NumberFormat("hu-HU").format(maxPrice)} Ft`
-      );
-    return filters.join(", ");
-  };
-
-  const resetFilters = () => {
-    setSearchTerm("");
-    setSelectedBrands([]);
-    setMaxPrice(100000);
-    setActiveFilters("");
-    setPerfumes([
-      {
-        id: 1,
-        name: "Chanel No. 5",
-        brand: "Chanel",
-        category: "Női",
-        description: "Időtlen klasszikus, ikonikus virágos-aldehides illat.",
-        scents: ["Virágos", "Aldehides"],
-        price: 45000,
-        image: "https://fimgs.net/himg/o.97897.jpg",
-      },
-      {
-        id: 2,
-        name: "Sauvage",
-        brand: "Dior",
-        category: "Férfi",
-        description: "Friss, erőteljes, nyers és nemes összetevőkkel.",
-        scents: ["Fás", "Fűszeres", "Friss"],
-        price: 38000,
-        image:
-          "https://cdn.notinoimg.com/detail_main_mq/dior/3348901250153_01/sauvage___200828.jpg",
-      },
-      {
-        id: 3,
-        name: "Black Opium",
-        brand: "Yves Saint Laurent",
-        category: "Női",
-        description: "Erőteljes és érzéki illat, kávé és vanília jegyekkel.",
-        scents: ["Orientális", "Fűszeres", "Édes"],
-        price: 44000,
-        image:
-          "https://cdn.shopify.com/s/files/1/0259/7733/products/black-opium-le-parfum-90ml_grande.png?v=1679625919",
-      },
-    ]);
-  };
+    const fetchNews = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        const articles = response.data.articles.slice(0, 12); // Csak az első 12 hír
+        setNews(articles);
+      } catch (err) {
+        setError('A hírek betöltése nem sikerült. Kérlek, próbáld újra később!');
+        console.error('Hiba a hírek lekérésekor:', err);
+      }
+    };
+    fetchNews();
+  }, [API_URL]);
 
   return (
-    <div className="container">
-      <div className="search-container">
-        <h2>Keresés</h2>
-        <div className="input-group mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Keresés..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            className="btn btn-outline-primary"
-            type="button"
-            onClick={applyFilters}
-          >
-            Keresés
-          </button>
-        </div>
-        <div className="brand-filter">
-          <h5>Márkák</h5>
-          <div className="form-check">
-            <input
-              className="form-check-input brand-checkbox"
-              type="checkbox"
-              value="Chanel"
-              id="brandChanel"
-              onChange={(e) =>
-                setSelectedBrands((prev) =>
-                  e.target.checked
-                    ? [...prev, e.target.value]
-                    : prev.filter((b) => b !== e.target.value)
-                )
-              }
-            />
-            <label className="form-check-label" htmlFor="brandChanel">
-              Chanel
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input brand-checkbox"
-              type="checkbox"
-              value="Dior"
-              id="brandDior"
-              onChange={(e) =>
-                setSelectedBrands((prev) =>
-                  e.target.checked
-                    ? [...prev, e.target.value]
-                    : prev.filter((b) => b !== e.target.value)
-                )
-              }
-            />
-            <label className="form-check-label" htmlFor="brandDior">
-              Dior
-            </label>
-          </div>
-          {/* További márkák */}
-        </div>
-        <div className="category-filter">
-          <h5>Kategóriák</h5>
-          <div className="form-check">
-            <input
-              className="form-check-input category-checkbox"
-              type="checkbox"
-              value="Női"
-              id="categoryNői"
-              onChange={(e) =>
-                setSelectedBrands((prev) =>
-                  e.target.checked
-                    ? [...prev, e.target.value]
-                    : prev.filter((b) => b !== e.target.value)
-                )
-              }
-            />
-            <label className="form-check-label" htmlFor="categoryNői">
-              Női
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input category-checkbox"
-              type="checkbox"
-              value="Férfi"
-              id="categoryFérfi"
-              onChange={(e) =>
-                setSelectedBrands((prev) =>
-                  e.target.checked
-                    ? [...prev, e.target.value]
-                    : prev.filter((b) => b !== e.target.value)
-                )
-              }
-            />
-            <label className="form-check-label" htmlFor="categoryFérfi">
-              Férfi
-            </label>
-          </div>
-          {/* További kategóriák */}
-        </div>
-        <div className="scent-filter">
-          <h5>Illat típus</h5>
-          <div className="form-check">
-            <input
-              className="form-check-input scent-checkbox"
-              type="checkbox"
-              value="Virágos"
-              id="scentVirágos"
-              onChange={(e) =>
-                setSelectedBrands((prev) =>
-                  e.target.checked
-                    ? [...prev, e.target.value]
-                    : prev.filter((b) => b !== e.target.value)
-                )
-              }
-            />
-            <label className="form-check-label" htmlFor="scentVirágos">
-              Virágos
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input scent-checkbox"
-              type="checkbox"
-              value="Fás"
-              id="scentFás"
-              onChange={(e) =>
-                setSelectedBrands((prev) =>
-                  e.target.checked
-                    ? [...prev, e.target.value]
-                    : prev.filter((b) => b !== e.target.value)
-                )
-              }
-            />
-            <label className="form-check-label" htmlFor="scentFás">
-              Fás
-            </label>
-          </div>
-          {/* További illat típusok */}
-        </div>
-        <div className="price-filter">
-          <h5>Ár (Ft)</h5>
-          <input
-            type="range"
-            className="form-range"
-            id="priceRange"
-            min="0"
-            max="100000"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(parseInt(e.target.value))}
-          />
-          <span>
-            Maximum:{" "}
-            <span id="priceValue">
-              {new Intl.NumberFormat("hu-HU").format(maxPrice)}
-            </span>{" "}
-            Ft
-          </span>
-        </div>
-        <div className="active-filters">{activeFilters}</div>
-        <div className="btn-group">
-          <button className="btn btn-outline-primary" onClick={applyFilters}>
-            Szűrés alkalmazása
-          </button>
-          <button className="btn btn-outline-secondary" onClick={resetFilters}>
-            Szűrők törlése
-          </button>
-        </div>
-      </div>
-      <div className="row" id="perfumeList">
-        {perfumes.length === 0 ? (
-          <div id="noResults">
-            <i className="fas fa-search"></i>
-            <h4>Nincs találat a keresési feltételeknek megfelelően</h4>
-            <p>Próbálj meg kevesebb vagy más szűrőfeltételt beállítani</p>
-          </div>
+    <div className="container my-5">
+      <h1 className="text-center mb-5">Parfüm Hírek</h1>
+      {error && <div className="alert alert-danger">{error}</div>}
+      <div id="news-container" className="row g-4">
+        {news.length > 0 ? (
+          news.map((article, index) => (
+            <div key={index} className="col-md-4 col-sm-6 col-12">
+              <div className="perfume-card">
+                <img
+                  src={article.urlToImage || 'https://via.placeholder.com/220x220?text=Nincs+kép'}
+                  alt={article.title}
+                  className="card-img-top"
+                  style={{ height: '220px', objectFit: 'cover' }}
+                />
+                <div className="perfume-card-body" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div>
+                    <h5 className="perfume-card-title" style={{ fontSize: '1.6rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {article.title}
+                    </h5>
+                    <p className="perfume-card-text" style={{ fontSize: '0.95rem', height: '60px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {article.description || 'Nincs elérhető leírás.'}
+                    </p>
+                  </div>
+                  <a href={article.url} target="_blank" rel="noopener noreferrer" className="btn btn-outline-primary">Tovább olvasom</a>
+                </div>
+              </div>
+            </div>
+          ))
         ) : (
-          perfumes.map((p) => <PerfumeCard key={p.id} perfume={p} />)
+          <div id="noResults" className="text-center">
+            <i className="fas fa-search fa-3x mb-3"></i>
+            <h4>{error ? 'Hiba történt' : 'Nincs találat'}</h4>
+            <p>{error || 'Jelenleg nem állnak rendelkezésre releváns hírek.'}</p>
+          </div>
         )}
       </div>
     </div>

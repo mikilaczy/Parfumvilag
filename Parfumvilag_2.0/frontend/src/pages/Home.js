@@ -1,58 +1,63 @@
-import React from "react";
-import PerfumeCard from "../components/PerfumeCard";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import PerfumeCard from '../components/PerfumeCard';
+import axios from 'axios';
+import '../style.css';
 
 const Home = () => {
-  const featuredPerfumes = [
-    {
-      id: 1,
-      name: "Chanel No. 5",
-      brand: "Chanel",
-      category: "Női",
-      description: "Időtlen klasszikus, ikonikus virágos-aldehides illat.",
-      scents: ["Virágos", "Aldehides"],
-      price: 45000,
-      image: "https://fimgs.net/himg/o.97897.jpg",
-    },
-    {
-      id: 2,
-      name: "Sauvage",
-      brand: "Dior",
-      category: "Férfi",
-      description: "Friss, erőteljes, nyers és nemes összetevőkkel.",
-      scents: ["Fás", "Fűszeres", "Friss"],
-      price: 38000,
-      image:
-        "https://cdn.notinoimg.com/detail_main_mq/dior/3348901250153_01/sauvage___200828.jpg",
-    },
-    {
-      id: 3,
-      name: "Black Opium",
-      brand: "Yves Saint Laurent",
-      category: "Női",
-      description: "Erőteljes és érzéki illat, kávé és vanília jegyekkel.",
-      scents: ["Orientális", "Fűszeres", "Édes"],
-      price: 44000,
-      image:
-        "https://cdn.shopify.com/s/files/1/0259/7733/products/black-opium-le-parfum-90ml_grande.png?v=1679625919",
-    },
-  ];
+  const [featuredPerfumes, setFeaturedPerfumes] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFeaturedPerfumes = async () => {
+      try {
+        const response = await axios.get('/api/featured-perfumes');
+        const perfumesData = await Promise.all(
+          response.data.map(async (fp) => {
+            const perfumeResponse = await axios.get(`/api/perfumes/${fp.perfume_id}`);
+            return perfumeResponse.data;
+          })
+        );
+        setFeaturedPerfumes(perfumesData);
+      } catch (err) {
+        console.error('Error fetching featured perfumes:', err);
+        setError('Nem sikerült betölteni a kiemelt parfümöket.');
+        setFeaturedPerfumes([]);
+      }
+    };
+    fetchFeaturedPerfumes();
+  }, []);
 
   return (
-    <div className="container">
+    <div>
       <div className="hero-section">
         <h1>Üdvözöljük a Parfümvilágban</h1>
         <p>
-          Merülj el az illatok lenyűgöző világában, és találd meg a tökéletes
-          parfümöt, amely kifejezi egyéniségedet.
+          Merülj el az illatok lenyűgöző világában, és találd meg a tökéletes parfümöt, amely kifejezi egyéniségedet.
         </p>
-        <button className="btn btn-primary">Keresés indítása</button>
+        <Link to="/kereses" className="btn btn-primary">Keresés indítása</Link>
       </div>
-      <div className="row" id="perfumeList">
-        <h2>Kiemelt Parfümjeink</h2>
-        {featuredPerfumes.map((p) => (
-          <PerfumeCard key={p.id} perfume={p} />
-        ))}
-      </div>
+
+      <section className="container my-5">
+        <h2 className="text-center mb-5">Kiemelt Parfümjeink</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <div className="row g-4" id="perfumeList">
+          {featuredPerfumes.length > 0 ? (
+            featuredPerfumes.map((perfume) => (
+              <PerfumeCard key={perfume.id} perfume={perfume} />
+            ))
+          ) : (
+            <div id="noResults" className="text-center">
+              <i className="fas fa-search fa-3x mb-3"></i>
+              <h4>Nincs találat</h4>
+              <p>Próbálj meg később újra!</p>
+            </div>
+          )}
+        </div>
+        <div className="text-center mt-5">
+          <Link to="/kereses" className="btn btn-outline-primary">További parfümök felfedezése</Link>
+        </div>
+      </section>
     </div>
   );
 };

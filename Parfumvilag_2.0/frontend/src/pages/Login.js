@@ -1,38 +1,31 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
+import '../style.css';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/auth/login", { email, password });
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("username", response.data.user.name);
-      localStorage.setItem("email", response.data.user.email);
-      localStorage.setItem(
-        "registrationDate",
-        response.data.user.created_at.split("T")[0]
-      );
-      alert("Sikeresen bejelentkeztél!");
-      window.location.href = "/profil";
-    } catch (error) {
-      setError(error.response.data.error || "Bejelentkezés sikertelen.");
+      const response = await axios.post('/api/auth/login', { email, password });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('isLoggedIn', 'true');
+      window.location.href = '/profil';
+    } catch (err) {
+      setError(err.response?.data?.error || 'Bejelentkezés sikertelen.');
     }
   };
 
   return (
-    <div className="container">
-      <h1>Bejelentkezés</h1>
+    <div className="container my-5 auth-container">
+      <h1 className="text-center mb-4 auth-title">Bejelentkezés</h1>
       {error && <div className="alert alert-danger">{error}</div>}
-      <form id="loginForm" onSubmit={handleSubmit}>
+      <form className="mx-auto auth-form" onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email cím
-          </label>
+          <label htmlFor="email" className="form-label">Email cím</label>
           <input
             type="email"
             className="form-control"
@@ -43,9 +36,7 @@ const Login = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Jelszó
-          </label>
+          <label htmlFor="password" className="form-label">Jelszó</label>
           <input
             type="password"
             className="form-control"
@@ -55,11 +46,8 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Bejelentkezés
-        </button>
+        <button type="submit" className="btn btn-primary w-100">Bejelentkezés</button>
       </form>
-      
     </div>
   );
 };
