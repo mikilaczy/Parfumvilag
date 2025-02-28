@@ -11,52 +11,86 @@ body {
 
 /* Navbar */
 .navbar {
-  background-color: #1a2b3c; /* Sötétkék háttér a képen látható módon */
+  background-color: #1a2b3c;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  padding: 1rem 0;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
+
 .navbar-dark .navbar-brand,
 .navbar-dark .nav-link {
-  color: #ffffff !important; /* Fehér betűk */
+  color: #ffffff !important;
 }
-.navbar-dark .nav-link:hover {
-  color: #f8f9fa !important;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
+
+.navbar-brand {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
 }
+
+.navbar-brand:hover {
+  color: #ffcc00 !important;
+}
+
 .navbar-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-.navbar-brand {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
+
 .navbar-nav {
+  display: flex;
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.navbar-nav .nav-item {
+
+.navbar-left {
+  flex-direction: column; /* Vertical by default for mobile */
+}
+
+.navbar-right {
+  flex-direction: column; /* Vertical by default for mobile */
+}
+
+.nav-item {
   margin: 0.5rem 0;
 }
+
 .nav-link {
   font-size: 1.1rem;
   font-weight: 500;
   padding: 0.5rem 1rem;
   transition: all 0.3s ease;
+  position: relative;
 }
+
+.nav-link:hover {
+  color: #f8f9fa !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+.nav-link.active {
+  color: #ffcc00 !important;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
 .profile-link {
   display: flex;
   align-items: center;
 }
+
 .profile-link i {
   font-size: 1.5rem;
   margin-right: 0.5rem;
+  color: #ffcc00;
 }
+
 .logout-btn {
   border-radius: 20px;
   padding: 0.5rem 1.25rem;
@@ -64,42 +98,114 @@ body {
   border: 1px solid #ffffff;
   transition: all 0.3s ease;
 }
+
 .logout-btn:hover {
   background-color: #ffffff;
   color: #1a2b3c;
   border-color: #ffffff;
+  transform: translateY(-2px);
 }
 
-/* Reszponzivitás */
+/* Dropdown Styles */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-toggle::after {
+  content: '\25BC'; /* Down arrow Unicode */
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-toggle:hover::after {
+  transform: rotate(180deg); /* Arrow rotates up on hover */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0; /* Aligns dropdown to the right of "Belépés" */
+  background-color: #1a2b3c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding: 0.5rem 0;
+  min-width: 150px;
+  z-index: 1001; /* Above navbar */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  color: #ffffff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffcc00;
+}
+
+/* Reszponzivitás - Navbar */
 @media (min-width: 768px) {
   .navbar-content {
-      flex-direction: row;
-      justify-content: space-between;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
-  .navbar-brand {
-      margin-bottom: 0;
+  .navbar-left {
+    flex-direction: row;
+    margin-right: auto; /* Pushes left items to the left */
   }
-  .navbar-nav {
-      flex-direction: row;
-      align-items: center;
+  .navbar-right {
+    flex-direction: row;
+    margin-left: auto; /* Pushes right items to the right */
   }
-  .navbar-nav .nav-item {
-      margin: 0 0.5rem;
+  .nav-item {
+    margin: 0 0.75rem;
   }
   .nav-link {
-      padding: 0.5rem;
+    padding: 0.5rem 1rem;
   }
 }
 
 @media (max-width: 767px) {
   .navbar {
-      padding: 0.75rem 0;
+    padding: 0.75rem 1rem;
   }
   .navbar-brand {
-      font-size: 1.5rem;
+    font-size: 1.5rem;
   }
   .nav-link {
-      font-size: 1rem;
+    font-size: 1rem;
+  }
+  .dropdown-menu {
+    position: static; /* Stacks naturally on mobile */
+    width: 100%;
+    box-shadow: none; /* Removes shadow for cleaner mobile look */
+    border: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar {
+    padding: 1.5rem 4rem;
+  }
+  .navbar-brand {
+    font-size: 2.2rem;
+  }
+  .nav-link {
+    font-size: 1.2rem;
   }
 }
 
@@ -441,7 +547,7 @@ body {
 
 /* Footer */
 .footer_section {
-  background-color: #1a2b3c; /* Sötétkék háttér a képen látható módon */
+  background-color: #1a2b3c;
   color: #ffffff;
   padding: 4rem 0;
   text-align: center;
@@ -475,7 +581,7 @@ body {
 .footer-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #ffcc00; /* Sárga címek a képen látható módon */
+  color: #ffcc00;
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -548,69 +654,60 @@ body {
   font-weight: 300;
 }
 
-/* Reszponzivitás */
+/* Reszponzivitás - Other Sections */
 @media (min-width: 992px) {
-  .navbar {
-      padding: 1.5rem 4rem;
-  }
-  .navbar-brand {
-      font-size: 2rem;
-  }
-  .nav-link {
-      font-size: 1.2rem;
-  }
   .hero-section {
-      padding: 10rem 4rem;
+    padding: 10rem 4rem;
   }
   .hero-section h1 {
-      font-size: 4rem;
+    font-size: 4rem;
   }
   .hero-section p {
-      font-size: 1.75rem;
+    font-size: 1.75rem;
   }
   .container.my-5 {
-      padding: 0 4rem;
+    padding: 0 4rem;
   }
 }
 
 @media (max-width: 991px) {
   .navbar {
-      padding: 1rem 2rem;
+    padding: 1rem 2rem;
   }
   .nav-link {
-      padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem;
   }
   .hero-section {
-      padding: 6rem 2rem;
+    padding: 6rem 2rem;
   }
   .hero-section h1 {
-      font-size: 2.5rem;
+    font-size: 2.5rem;
   }
   .hero-section p {
-      font-size: 1.25rem;
+    font-size: 1.25rem;
   }
 }
 
 @media (max-width: 576px) {
   .navbar {
-      padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem;
   }
   .navbar-brand {
-      font-size: 1.5rem;
+    font-size: 1.5rem;
   }
   .nav-link {
-      font-size: 1rem;
+    font-size: 1rem;
   }
   .hero-section {
-      padding: 4rem 1rem;
+    padding: 4rem 1rem;
   }
   .hero-section h1 {
-      font-size: 2rem;
+    font-size: 2rem;
   }
   .hero-section p {
-      font-size: 1rem;
+    font-size: 1rem;
   }
   .perfume-card-img {
-      height: 180px;
+    height: 180px;
   }
 }
