@@ -547,7 +547,7 @@ body {
 
 /* Footer */
 .footer_section {
-  background-color: #1a2b3c;
+  background-color: #1a2b3c; /* Sötétkék háttér a képen látható módon */
   color: #ffffff;
   padding: 4rem 0;
   text-align: center;
@@ -568,20 +568,25 @@ body {
 .footer_section .container {
   position: relative;
   z-index: 1;
+  max-width: 1200px; /* Korlátozzuk a szélességet, hogy ne terjedjen túl */
+  margin: 0 auto; /* Centráljuk a konténert */
+  padding: 0 1rem; /* Kis padding a széleken mobilon */
 }
 .footer_section .row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: center; /* Centráljuk a sor tartalmát */
   gap: 2rem;
 }
 .footer-col {
   max-width: 300px;
+  flex: 1 1 300px; /* Rugalmas szélesség, de maximum 300px */
+  margin: 0 auto; /* Centráljuk az oszlopokat */
 }
 .footer-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #ffcc00;
+  color: #ffcc00; /* Sárga címek a képen látható módon */
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -592,7 +597,7 @@ body {
   width: 40px;
   height: 2px;
   background-color: #ffcc00;
-  margin: 0.5rem auto;
+  margin: 0.5rem auto; /* Centráljuk az aláhúzást */
 }
 .contact_link_box a,
 .footer_detail p {
@@ -601,7 +606,7 @@ body {
   text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Centráljuk a linkeket és szövegeket */
   margin-bottom: 0.75rem;
   transition: color 0.3s ease, transform 0.3s ease;
 }
@@ -628,7 +633,7 @@ body {
 }
 .footer_social {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Centráljuk a szociális média ikonokat */
   gap: 1.5rem;
   margin-top: 1rem;
 }
@@ -652,6 +657,71 @@ body {
   color: #ffffff;
   margin: 0;
   font-weight: 300;
+}
+
+/* Reszponzivitás */
+@media (min-width: 1200px) {
+  .footer_section .container {
+      padding: 0 2rem;
+  }
+  .footer_section .row {
+      justify-content: center;
+  }
+  .footer-col {
+      flex: 1 1 300px;
+  }
+}
+
+@media (max-width: 991px) {
+  .footer_section {
+      padding: 3rem 0;
+  }
+  .footer_section .row {
+      gap: 1.5rem;
+  }
+  .footer-col {
+      flex: 1 1 100%;
+      max-width: 100%;
+  }
+  .footer-title {
+      font-size: 1.1rem;
+  }
+  .footer-logo {
+      font-size: 1.8rem;
+  }
+  .contact_link_box a,
+  .footer_detail p {
+      font-size: 0.9rem;
+  }
+  .footer_social {
+      gap: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .footer_section {
+      padding: 2rem 0;
+  }
+  .footer_section .row {
+      gap: 1rem;
+  }
+  .footer-col {
+      flex: 1 1 100%;
+      max-width: 100%;
+  }
+  .footer-title {
+      font-size: 1rem;
+  }
+  .footer-logo {
+      font-size: 1.5rem;
+  }
+  .footer_social {
+      gap: 0.8rem;
+  }
+  .footer_social img {
+      width: 24px;
+      height: 24px;
+  }
 }
 
 /* Reszponzivitás - Other Sections */
