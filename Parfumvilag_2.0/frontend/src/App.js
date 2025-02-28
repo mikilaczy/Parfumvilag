@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Search from './pages/Search';
 import Login from './pages/Login';
 import About from './pages/About';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
 function App() {
