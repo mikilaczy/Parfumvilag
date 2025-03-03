@@ -20,8 +20,12 @@ const savedPerfumeRoutes = require('./routes/savedPerfumeRoutes');
 const searchLogRoutes = require('./routes/searchLogRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 
+=======
+const userRoutes = require('./routes/userRoutes');
+>>>>>>> Stashed changes
 =======
 const userRoutes = require('./routes/userRoutes');
 >>>>>>> Stashed changes
