@@ -19,7 +19,8 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const savedPerfumeRoutes = require('./routes/savedPerfumeRoutes');
 const searchLogRoutes = require('./routes/searchLogRoutes');
 const storeRoutes = require('./routes/storeRoutes');
-const userRoutes = require('./routes/userRoutes');
+
+
 // Használjuk az útvonalakat
 app.use('/api/auth', authRoutes);
 app.use('/api/brands', brandRoutes);
@@ -31,7 +32,6 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/saved-perfumes', savedPerfumeRoutes);
 app.use('/api/search-logs', searchLogRoutes);
 app.use('/api/stores', storeRoutes);
-app.use('/api/users', userRoutes);
 
 // Kapcsolódunk a MySQL-hez a db.js segítségével
 const db = require('./db');
