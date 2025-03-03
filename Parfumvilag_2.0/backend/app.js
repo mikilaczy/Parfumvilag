@@ -19,28 +19,7 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const savedPerfumeRoutes = require('./routes/savedPerfumeRoutes');
 const searchLogRoutes = require('./routes/searchLogRoutes');
 const storeRoutes = require('./routes/storeRoutes');
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-
-=======
 const userRoutes = require('./routes/userRoutes');
->>>>>>> Stashed changes
-=======
-const userRoutes = require('./routes/userRoutes');
->>>>>>> Stashed changes
-=======
-const userRoutes = require('./routes/userRoutes');
->>>>>>> Stashed changes
-=======
-const userRoutes = require('./routes/userRoutes');
->>>>>>> Stashed changes
-=======
-const userRoutes = require('./routes/userRoutes');
->>>>>>> Stashed changes
 // Használjuk az útvonalakat
 app.use('/api/auth', authRoutes);
 app.use('/api/brands', brandRoutes);

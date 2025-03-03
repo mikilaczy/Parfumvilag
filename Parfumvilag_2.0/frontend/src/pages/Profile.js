@@ -1,3 +1,4 @@
+// frontend/pages/Profile.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser } from '../services/userService';
@@ -8,6 +9,7 @@ const Profile = () => {
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +19,8 @@ const Profile = () => {
         setUser(userData);
         setNewName(userData.name);
         setNewEmail(userData.email);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        setError(err);
       }
     };
     fetchUser();
@@ -32,7 +34,16 @@ const Profile = () => {
     navigate('/');
   };
 
-  const handleEdit = async () => {
+  const handleEdit = () => {
+    setEditing(true);
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+    setError('');
+  };
+
+  const handleSave = async () => {
     try {
       const updatedUser = await updateUser({
         name: newName,
@@ -42,19 +53,20 @@ const Profile = () => {
       setUser(updatedUser);
       setEditing(false);
       alert('Adatok frissítve!');
-    } catch (error) {
-      alert(error);
+    } catch (err) {
+      setError(err);
     }
   };
 
   return (
     <div className="container">
       <h1>Profil</h1>
+      {error && <div className="alert alert-danger">{error}</div>}
       {user && (
         <div>
           <p><strong>Név:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
-          <button onClick={() => setEditing(true)}>Szerkesztés</button>
+          <button onClick={handleEdit}>Szerkesztés</button>
           {editing && (
             <form>
               <div className="mb-3">
@@ -67,9 +79,10 @@ const Profile = () => {
               </div>
               <div className="mb-3">
                 <label>Új jelszó</label>
-                <input type="password" onChange={(e) => setNewPassword(e.target.value)} />
+                <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
               </div>
-              <button onClick={handleEdit}>Mentés</button>
+              <button onClick={handleSave}>Mentés</button>
+              <button onClick={handleCancel}>Mégse</button>
             </form>
           )}
           <button onClick={handleLogout}>Kilépés</button>

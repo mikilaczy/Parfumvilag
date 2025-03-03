@@ -1,3 +1,4 @@
+// backend/models/user.js
 const db = require('../db');
 const bcrypt = require('bcryptjs');
 

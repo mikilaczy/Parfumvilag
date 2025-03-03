@@ -1,3 +1,4 @@
+// frontend/pages/Register.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../services/authService';
@@ -14,7 +15,7 @@ const Register = () => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      setError('A jelszavak nem egyeznek!');
+      setError('Passwords do not match');
       return;
     }
 
@@ -36,11 +37,11 @@ const Register = () => {
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="name">Név</label>
+          <label htmlFor="name">Felhasználónév</label>
           <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
         <div className="mb-3">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">Email cím</label>
           <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div className="mb-3">
