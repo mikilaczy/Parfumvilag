@@ -1,58 +1,53 @@
 // backend/controllers/authController.js
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs'); // bcrypt importálása
 require('dotenv').config();
 
+// Regisztráció
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
   
   try {
-    const existingUser = await new Promise((resolve, reject) => {
-      User.getUserByEmail(email, (err, results) => {
-        if (err) reject(err);
-        resolve(results);
-      });
+    // Ellenőrizzük az email-t
+    User.getUserByEmail(email, (err, results) => {
+      if (err) throw new Error('Adatbázis-hiba');
+      if (results.length > 0) throw new Error('Ez az email már foglalt!');
     });
 
-    if (existingUser.length > 0) {
-      return res.status(400).json({ error: 'Email already exists' });
-    }
-
-    const createdUser = await new Promise((resolve, reject) => {
-      User.createUser({ name, email, password }, (err, results) => {
-        if (err) reject(err);
-        resolve(results);
-      });
+    // Felhasználó létrehozása
+    User.createUser({ name, email, password }, (err, results) => {
+      if (err) throw err;
+      
+      const token = jwt.sign({ id: results.insertId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.status(201).json({ user: { id: results.insertId, name, email }, token });
     });
-
-    const user = { id: createdUser.insertId, name, email };
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    
-    res.status(201).json({ user, token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
+// Bejelentkezés
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   
   try {
-    const user = await new Promise((resolve, reject) => {
-      User.getUserByEmail(email, (err, results) => {
-        if (err) reject(err);
-        resolve(results[0]);
+    // Felhasználó lekérése email alapján
+    User.getUserByEmail(email, (err, results) => {
+      if (err) throw new Error('Adatbázis-hiba');
+      if (results.length === 0) throw new Error('Felhasználó nem található!');
+
+      const user = results[0];
+      // Jelszó ellenőrzés
+      bcrypt.compare(password, user.password, (bcryptErr, isMatch) => {
+        if (bcryptErr) throw new Error('Jelszó-hiba');
+        if (!isMatch) throw new Error('Hibás jelszó!');
+
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ user: { id: user.id, name: user.name, email: user.email }, token });
       });
     });
-
-    if (!user) return res.status(404).json({ error: 'User not found' });
-
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) return res.status(401).json({ error: 'Invalid password' });
-
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ user: { id: user.id, name: user.name, email: user.email }, token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(401).json({ error: error.message });
   }
 };
