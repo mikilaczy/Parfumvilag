@@ -44,11 +44,11 @@ const Footer = () => {
           <div className="footer-col">
             <h4 className="footer-title">Ügyfélszolgálat</h4>
             <p>Minden nap</p>
-            <p>10:00 - 20:00</p>
+            <p>10:00 - 18:00</p>
           </div>
         </div>
         <div className="footer-info text-center">
-          <p>© {new Date().getFullYear()} Parfümvilág – Minden jog fenntartva</p>
+          <p>© {new Date().getFullYear()} Parfümvilág - Minden jog fenntartva</p>
         </div>
       </div>
     </footer>

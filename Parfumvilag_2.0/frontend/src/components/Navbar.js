@@ -2,7 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import '../style.css';
 
+
+/*
 const Navbar = () => {
+  return (
+    <nav className="w-full flex py-6 justify-between items-center navbar">
+      <img src={logo} alt="hoobank" className="w-[124px] h-[32px]" />
+      
+      <ul className="list-none sm:flex hidden justify-end items-center flex-1">
+        {navLinks.map((nav, index) => (
+         <li key={nav.id} className={`font-poppins font-normal cursor-pointer text-[16px] text-white mr-10`}>
+            <a href={`#${nav.id}`}> 
+              {nav.title}
+            </a>
+         </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+*/
+
+
+ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
@@ -90,7 +112,7 @@ const Navbar = () => {
                       <NavLink 
                         className="dropdown-item" 
                         to="/bejelentkezes" 
-                        onClick={() => setIsDropdownOpen(false)} // Close on click
+                        onClick={() => setIsDropdownOpen(false)}
                       >
                         Bejelentkezés
                       </NavLink>
@@ -99,7 +121,7 @@ const Navbar = () => {
                       <NavLink 
                         className="dropdown-item" 
                         to="/regisztracio" 
-                        onClick={() => setIsDropdownOpen(false)} // Close on click
+                        onClick={() => setIsDropdownOpen(false)}
                       >
                         Regisztráció
                       </NavLink>

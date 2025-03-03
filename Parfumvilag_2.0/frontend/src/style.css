@@ -1,8 +1,8 @@
 /* Általános beállítások */
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #a8b5a4; /* Soft sage green background for the body */
-  color: #333;
+  background-color: #ffffff; /* Tiszta fehér háttér */
+  color: #000000; /* Fekete szöveg, maximális kontraszt */
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -11,8 +11,8 @@ body {
 
 /* Navbar */
 .navbar {
-  background-color: #0a1e3f; /* Deep navy background for contrast */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #000000; /* Fekete navbar, elegáns és letisztult */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Finom fekete árnyék */
   padding: 1rem 2rem;
   position: sticky;
   top: 0;
@@ -41,20 +41,20 @@ body {
 .navbar-brand {
   font-size: 1.8rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #ffffff; /* Fehér szöveg a fekete háttéren */
   text-decoration: none;
   transition: color 0.3s ease;
-  margin-right: auto; /* Pushes brand to the left */
+  margin-right: auto; /* Balra tolja a brandet */
 }
 
 .navbar-brand:hover {
-  color: #f4a261; /* Warm peach hover */
+  color: #e6e6fa; /* Halvány lila hover, finom akcentus */
 }
 
 .nav-link {
   font-size: 1rem;
   font-weight: 500;
-  color: #ffffff;
+  color: #ffffff; /* Fehér szöveg a navbarban */
   padding: 0.5rem 1rem;
   border-radius: 4px;
   display: flex;
@@ -69,13 +69,13 @@ body {
 }
 
 .nav-link:hover {
-  color: #f4a261; /* Warm peach hover */
-  background-color: rgba(244, 162, 97, 0.1);
+  color: #e6e6fa; /* Halvány lila hover, diszkrét */
+  background-color: rgba(230, 230, 250, 0.1); /* Nagyon halvány lila háttér */
 }
 
 .nav-link.active {
-  color: #f4a261; /* Warm peach for active state */
-  background-color: rgba(244, 162, 97, 0.15);
+  color: #e6e6fa; /* Halvány lila az aktív állapothoz */
+  background-color: rgba(230, 230, 250, 0.15);
   font-weight: 600;
 }
 
@@ -87,23 +87,23 @@ body {
 .profile-link i {
   font-size: 1.3rem;
   margin-right: 0.5rem;
-  color: #f4a261; /* Warm peach icon */
+  color: #e6e6fa; /* Halvány lila ikon */
 }
 
 .logout-btn {
   border-radius: 20px;
   padding: 0.5rem 1.2rem;
   font-weight: 500;
-  border: 1px solid #ffffff;
+  border: 1px solid #ffffff; /* Fehér keret */
   background-color: transparent;
-  color: #ffffff;
+  color: #ffffff; /* Fehér szöveg */
   transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-  background-color: #ffffff;
-  color: #0a1e3f;
-  border-color: #ffffff;
+  background-color: #ffffff; /* Fehér háttér hovernél */
+  color: #000000; /* Fekete szöveg hovernél */
+  border-color: #e6e6fa; /* Halvány lila keret hovernél */
   transform: translateY(-2px);
 }
 
@@ -118,41 +118,41 @@ body {
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  color: #ffffff;
+  color: #ffffff; /* Fehér szöveg */
 }
 
 .dropdown-toggle:hover {
-  color: #f4a261;
-  background-color: rgba(244, 162, 97, 0.1);
+  color: #e6e6fa; /* Halvány lila hover */
+  background-color: rgba(230, 230, 250, 0.1); /* Nagyon halvány lila háttér */
 }
 
 .dropdown-toggle::after {
-  content: '\25BC'; /* Down arrow Unicode */
+  content: '\25BC'; /* Lefelé mutató nyíl Unicode */
   margin-left: 0.5rem;
   font-size: 0.8rem;
-  color: #ffffff;
+  color: #ffffff; /* Fehér nyíl */
   transition: transform 0.3s ease;
 }
 
 .dropdown-toggle:hover::after {
-  transform: rotate(180deg); /* Arrow rotates up on hover */
+  transform: rotate(180deg); /* Nyíl forgása hovernél */
 }
 
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0; /* Aligns dropdown to the right of "Belépés" */
-  background-color: #0a1e3f;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  right: 0; /* "Belépés" jobb oldalához igazít */
+  background-color: #000000; /* Fekete dropdown háttér */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Finom fehér keret */
   border-radius: 5px;
   padding: 0.5rem 0;
   min-width: 150px;
-  z-index: 1001; /* Above navbar */
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001; /* Navbar felett */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
 .dropdown-item {
-  color: #ffffff;
+  color: #ffffff; /* Fehér szöveg */
   font-size: 1rem;
   padding: 0.5rem 1rem;
   text-decoration: none;
@@ -161,8 +161,8 @@ body {
 }
 
 .dropdown-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #f4a261;
+  background-color: rgba(230, 230, 250, 0.1); /* Halvány lila háttér hovernél */
+  color: #e6e6fa; /* Halvány lila szöveg hovernél */
 }
 
 /* Home Wrapper */
@@ -174,7 +174,7 @@ body {
 .hero-section {
   background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
               url('https://images.unsplash.com/photo-1585203892280-cdcd274e6f89?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
-  color: #ffffff;
+  color: #ffffff; /* Fehér szöveg a sötét háttéren */
   padding: 4rem 2rem 3rem;
   text-align: center;
   position: relative;
@@ -188,7 +188,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(244, 162, 97, 0.2), transparent);
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
   z-index: 1;
 }
 
@@ -203,7 +203,7 @@ body {
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Fekete árnyék */
   animation: fadeInUp 1.2s ease-out;
 }
 
@@ -231,36 +231,36 @@ body {
 }
 
 .btn-peach {
-  background-color: #f4a261;
-  border-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila gomb, helyett a korábbi peach szín */
+  border-color: #e6e6fa;
+  color: #000000; /* Fekete szöveg a gombokon */
   transition: all 0.3s ease;
 }
 
 .btn-peach:hover {
-  background-color: #e07a2a;
-  border-color: #e07a2a;
+  background-color: #d8bfd8; /* Sötétebb halvány lila hover */
+  border-color: #d8bfd8;
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(224, 122, 42, 0.3);
+  box-shadow: 0 5px 12px rgba(216, 191, 216, 0.3);
 }
 
 .btn-outline-peach {
-  color: #f4a261;
-  border-color: #f4a261;
+  color: #e6e6fa; /* Halvány lila körvonal */
+  border-color: #e6e6fa;
   transition: all 0.3s ease;
 }
 
 .btn-outline-peach:hover {
-  background-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila háttér hovernél */
+  color: #000000; /* Fekete szöveg hovernél */
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(244, 162, 97, 0.3);
+  box-shadow: 0 5px 12px rgba(230, 230, 250, 0.3);
 }
 
 /* Featured Section (Refined for Recommendations) */
 .featured-section {
   padding: 4rem 0;
-  background: #ffffff; /* Crisp white for contrast */
+  background: #ffffff; /* Tiszta fehér háttér */
   position: relative;
   overflow: hidden;
 }
@@ -272,7 +272,7 @@ body {
   left: 50%;
   width: 150%;
   height: 150%;
-  background: radial-gradient(circle, rgba(244, 162, 97, 0.1), transparent);
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
   transform: translate(-50%, -50%);
   z-index: 0;
 }
@@ -280,13 +280,13 @@ body {
 .section-title {
   font-size: 2.5rem;
   font-weight: 600;
-  color: #0a1e3f; /* Deep navy for contrast */
+  color: #000000; /* Fekete címek */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   position: relative;
   z-index: 1;
   margin-bottom: 2.5rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   animation: slideInLeft 1.2s ease-out;
 }
 
@@ -298,16 +298,16 @@ body {
 }
 
 .explore-btn:hover {
-  background-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila gombhover */
+  color: #000000; /* Fekete szöveg hovernél */
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(244, 162, 97, 0.3);
+  box-shadow: 0 5px 12px rgba(230, 230, 250, 0.3);
 }
 
 /* Catalog Section */
 .catalog-section {
   padding: 4rem 0;
-  background: linear-gradient(135deg, #a8b5a4 0%, #b9c7b4 100%); /* Soft sage gradient */
+  background: #ffffff; /* Tiszta fehér háttér */
   position: relative;
   overflow: hidden;
 }
@@ -315,13 +315,13 @@ body {
 .title-section-h1 {
   font-size: 3rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   position: relative;
   z-index: 1;
   margin-bottom: 3rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
 .catalog-section::before {
@@ -331,14 +331,14 @@ body {
   left: 50%;
   width: 150%;
   height: 150%;
-  background: radial-gradient(circle, rgba(244, 162, 97, 0.1), transparent);
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
   transform: translate(-50%, -50%);
   z-index: 0;
 }
 
 /* Title Section */
 .title-section {
-  background: linear-gradient(135deg, #a8b5a4 0%, #b9c7b4 100%); /* Soft sage gradient */
+  background: #ffffff; /* Tiszta fehér háttér */
   padding: 4rem 2rem;
   text-align: center;
   position: relative;
@@ -349,18 +349,18 @@ body {
 .title-section h1 {
   font-size: 3rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   position: relative;
   z-index: 1;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
 .title-section p {
   font-size: 1.2rem;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke szöveg, diszkrét kontraszt */
   max-width: 800px;
   margin: 0 auto;
   font-weight: 400;
@@ -373,7 +373,7 @@ body {
   left: 50%;
   width: 150%;
   height: 150%;
-  background: radial-gradient(circle, rgba(244, 162, 97, 0.1), transparent);
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
   transform: translate(-50%, -50%);
   z-index: 0;
 }
@@ -381,7 +381,7 @@ body {
 .title-section .divider {
   width: 60px;
   height: 3px;
-  background-color: #f4a261;
+  background-color: #e6e6fa; /* Halvány lila elválasztó */
   margin: 1.2rem auto;
 }
 
@@ -393,18 +393,18 @@ body {
 .about-title {
   font-size: 3.5rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin-bottom: 0.8rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   animation: fadeInUp 1.2s ease-out;
 }
 
 .about-subtitle {
   font-size: 1.1rem;
   font-weight: 400;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke al szöveg */
   max-width: 800px;
   margin: 0 auto 1.5rem;
   opacity: 0.9;
@@ -414,19 +414,19 @@ body {
 .section-title {
   font-size: 2.5rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin-bottom: 2rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   animation: slideInLeft 1.2s ease-out;
 }
 
 /* About Card */
 .about-card {
-  background: #ffffff;
+  background: #ffffff; /* Tiszta fehér háttér */
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   padding: 1.5rem;
   height: 100%;
   display: flex;
@@ -437,12 +437,12 @@ body {
 
 .about-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Sötétebb fekete árnyék hovernél */
 }
 
 .about-icon {
   font-size: 2rem;
-  color: #f4a261;
+  color: #e6e6fa; /* Halvány lila ikon */
   margin-bottom: 1rem;
   animation: pulse 2s infinite ease-in-out;
 }
@@ -450,14 +450,14 @@ body {
 .about-card-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   margin-bottom: 0.8rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Fekete árnyék */
 }
 
 .about-card-text {
   font-size: 1rem;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke szöveg */
   margin-bottom: 0;
   flex-grow: 1;
 }
@@ -468,7 +468,7 @@ body {
   object-fit: cover;
   border-radius: 10px;
   margin-top: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
 /* Search Page */
@@ -479,18 +479,18 @@ body {
 .search-title {
   font-size: 3rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin-bottom: 0.8rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   animation: fadeInUp 1.2s ease-out;
 }
 
 .search-subtitle {
   font-size: 1.1rem;
   font-weight: 400;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke al szöveg */
   max-width: 800px;
   margin: 0 auto 1.5rem;
   opacity: 0.9;
@@ -498,9 +498,9 @@ body {
 }
 
 .search-container {
-  background: #ffffff;
+  background: #ffffff; /* Tiszta fehér háttér */
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   padding: 2rem;
   animation: slideInLeft 1.2s ease-out;
 }
@@ -508,11 +508,11 @@ body {
 .results-title {
   font-size: 2rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   text-transform: uppercase;
   letter-spacing: 1.2px;
   margin-bottom: 1.5rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   animation: slideInLeft 1.2s ease-out;
 }
 
@@ -523,23 +523,23 @@ body {
 
 .form-control {
   border-radius: 20px;
-  border: 1px solid #ced4da;
+  border: 1px solid #e6e6fa; /* Halvány lila keret */
   padding: 0.8rem 1.2rem;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #ffffff;
+  background-color: #ffffff; /* Fehér háttér */
 }
 
 .form-control:focus {
-  border-color: #f4a261;
-  box-shadow: 0 0 6px rgba(244, 162, 97, 0.4);
+  border-color: #e6e6fa; /* Halvány lila focus */
+  box-shadow: 0 0 6px rgba(230, 230, 250, 0.4);
   outline: none;
 }
 
 .btn-peach {
-  background-color: #f4a261;
-  border-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila gomb */
+  border-color: #e6e6fa;
+  color: #000000; /* Fekete szöveg */
   padding: 0.8rem 1.6rem;
   font-size: 1rem;
   font-weight: 500;
@@ -548,15 +548,15 @@ body {
 }
 
 .btn-peach:hover {
-  background-color: #e07a2a;
-  border-color: #e07a2a;
+  background-color: #d8bfd8; /* Sötétebb halvány lila hover */
+  border-color: #d8bfd8;
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(224, 122, 42, 0.3);
+  box-shadow: 0 5px 12px rgba(216, 191, 216, 0.3);
 }
 
 .btn-outline-peach {
-  color: #f4a261;
-  border-color: #f4a261;
+  color: #e6e6fa; /* Halvány lila körvonal */
+  border-color: #e6e6fa;
   padding: 0.8rem 1.6rem;
   font-size: 1rem;
   font-weight: 500;
@@ -565,33 +565,33 @@ body {
 }
 
 .btn-outline-peach:hover {
-  background-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila háttér hovernél */
+  color: #000000; /* Fekete szöveg hovernél */
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(244, 162, 97, 0.3);
+  box-shadow: 0 5px 12px rgba(230, 230, 250, 0.3);
 }
 
 /* Filter Sections */
 .filter-section {
-  background: #ffffff;
+  background: #ffffff; /* Tiszta fehér háttér */
   border-radius: 10px;
   padding: 1.2rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Fekete árnyék */
   margin-bottom: 1rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .filter-section:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Sötétebb fekete árnyék hovernél */
 }
 
 .filter-section h5 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   margin-bottom: 1rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Fekete árnyék */
 }
 
 .form-check-input {
@@ -600,39 +600,39 @@ body {
 }
 
 .form-check-input:checked {
-  border-color: #f4a261;
-  background-color: #f4a261;
+  border-color: #e6e6fa; /* Halvány lila checked állapot */
+  background-color: #e6e6fa;
 }
 
 .form-check-label {
   font-size: 1rem;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke szöveg */
   transition: color 0.3s ease;
 }
 
 .form-check-label:hover {
-  color: #0a1e3f;
+  color: #000000; /* Fekete hovernél */
 }
 
 .form-range {
-  accent-color: #f4a261;
+  accent-color: #e6e6fa; /* Halvány lila csúszka */
 }
 
 .price-value {
   display: block;
   font-size: 1rem;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke ár információ */
   margin-top: 0.5rem;
 }
 
 /* Active Filters */
 .active-filters {
   font-size: 0.9rem;
-  color: #6c757d;
-  background: #ffffff;
+  color: #666666; /* Halvány szürke szöveg */
+  background: #ffffff; /* Tiszta fehér háttér */
   padding: 1rem;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* Fekete árnyék */
   animation: fadeInUp 1.2s ease-out;
 }
 
@@ -642,9 +642,9 @@ body {
 
 /* Perfume Card */
 .perfume-card {
-  background: #ffffff;
+  background: #ffffff; /* Tiszta fehér háttér */
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   overflow: hidden;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   position: relative;
@@ -655,20 +655,20 @@ body {
 }
 
 .perfume-card:hover {
-  transform: translateY(-10px) scale(1.02); /* Subtle lift and zoom */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-10px) scale(1.02); /* Finom emelés és zoom */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sötétebb fekete árnyék hovernél */
 }
 
 .perfume-card-img {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-bottom: 4px solid #f4a261;
+  border-bottom: 4px solid #e6e6fa; /* Halvány lila keret */
   transition: opacity 0.3s ease;
 }
 
 .perfume-card:hover .perfume-card-img {
-  opacity: 0.9; /* Slight fade on hover */
+  opacity: 0.9; /* Finom elhalványodás hovernél */
 }
 
 .perfume-card-body {
@@ -677,28 +677,28 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 200px; /* Ensures consistent height */
+  min-height: 200px; /* Konzisztens magasság */
 }
 
 .perfume-card-title {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   margin-bottom: 0.8rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: color 0.3s ease;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Fekete árnyék */
 }
 
 .perfume-card:hover .perfume-card-title {
-  color: #f4a261; /* Warm peach on hover */
+  color: #e6e6fa; /* Halvány lila hovernél */
 }
 
 .perfume-card-text {
   font-size: 0.9rem;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke szöveg */
   margin-bottom: 1.2rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -715,28 +715,28 @@ body {
   font-size: 1rem;
   border-radius: 20px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(244, 162, 97, 0.15);
+  box-shadow: 0 2px 6px rgba(230, 230, 250, 0.15); /* Halvány lila árnyék */
 }
 
 .perfume-card-btn:hover {
-  background-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila gombhover */
+  color: #000000; /* Fekete szöveg hovernél */
   transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(244, 162, 97, 0.3);
+  box-shadow: 0 6px 15px rgba(230, 230, 250, 0.3);
 }
 
 /* No Results */
 #noResults {
   padding: 3rem;
-  background-color: #ffffff;
+  background-color: #ffffff; /* Tiszta fehér háttér */
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   margin-top: 2rem;
   animation: fadeInUp 1.2s ease-out;
 }
 
 #noResults i {
-  color: #f4a261;
+  color: #e6e6fa; /* Halvány lila ikon */
   margin-bottom: 1.2rem;
   transition: transform 0.3s ease;
   animation: pulse 1.5s infinite;
@@ -749,19 +749,19 @@ body {
 #noResults h4 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #0a1e3f;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #000000; /* Fekete címek */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
 #noResults p {
   font-size: 1rem;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke szöveg */
 }
 
 /* Quick Suggestions Section */
 .quick-suggestions-section {
   padding: 4rem 0;
-  background: #ffffff;
+  background: #ffffff; /* Tiszta fehér háttér */
   position: relative;
   overflow: hidden;
 }
@@ -773,7 +773,7 @@ body {
   left: 50%;
   width: 150%;
   height: 150%;
-  background: radial-gradient(circle, rgba(244, 162, 97, 0.1), transparent);
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
   transform: translate(-50%, -50%);
   z-index: 0;
 }
@@ -781,27 +781,27 @@ body {
 .section-title {
   font-size: 2.5rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   position: relative;
   z-index: 1;
   margin-bottom: 2.5rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   animation: slideInLeft 1.2s ease-out;
 }
 
 .suggestion-card {
-  background: #ffffff;
+  background: #ffffff; /* Tiszta fehér háttér */
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: slideInUp 1s ease-out;
 }
 
 .suggestion-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Sötétebb fekete árnyék hovernél */
 }
 
 .card-body {
@@ -811,14 +811,14 @@ body {
 .card-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   margin-bottom: 0.8rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Fekete árnyék */
 }
 
 .card-text {
   font-size: 1rem;
-  color: #6c757d;
+  color: #666666; /* Halvány szürke szöveg */
   margin-bottom: 1.2rem;
 }
 
@@ -832,8 +832,8 @@ body {
   max-height: 200px;
   overflow-y: auto;
   border-radius: 0 0 10px 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
+  background: #ffffff; /* Tiszta fehér háttér */
 }
 
 .list-group-item {
@@ -842,8 +842,8 @@ body {
 }
 
 .list-group-item:hover {
-  background-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila háttér hovernél */
+  color: #000000; /* Fekete szöveg hovernél */
 }
 
 /* Auth Pages */
@@ -851,15 +851,15 @@ body {
   max-width: 500px;
   margin: 0 auto;
   padding: 2rem;
-  background: #ffffff;
+  background: #ffffff; /* Tiszta fehér háttér */
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
 .auth-title {
   font-size: 2.5rem;
   font-weight: 600;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
 }
 
 .auth-form {
@@ -869,31 +869,31 @@ body {
 /* Input mezők */
 .form-control {
   border-radius: 20px;
-  border: 1px solid #ced4da;
+  border: 1px solid #e6e6fa; /* Halvány lila keret */
   padding: 0.8rem 1.2rem;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #ffffff;
+  background-color: #ffffff; /* Fehér háttér */
 }
 
 .form-control:focus {
-  border-color: #f4a261;
-  box-shadow: 0 0 6px rgba(244, 162, 97, 0.4);
+  border-color: #e6e6fa; /* Halvány lila focus */
+  box-shadow: 0 0 6px rgba(230, 230, 250, 0.4);
   outline: none;
 }
 
 .form-label {
   font-size: 1rem;
   font-weight: 500;
-  color: #0a1e3f;
+  color: #000000; /* Fekete címek */
   margin-bottom: 0.7rem;
 }
 
 /* Gombok */
 .btn-peach {
-  background-color: #f4a261;
-  border-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila gomb */
+  border-color: #e6e6fa;
+  color: #000000; /* Fekete szöveg */
   padding: 0.8rem 1.6rem;
   font-size: 1rem;
   font-weight: 500;
@@ -902,15 +902,15 @@ body {
 }
 
 .btn-peach:hover {
-  background-color: #e07a2a;
-  border-color: #e07a2a;
+  background-color: #d8bfd8; /* Sötétebb halvány lila hover */
+  border-color: #d8bfd8;
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(224, 122, 42, 0.3);
+  box-shadow: 0 5px 12px rgba(216, 191, 216, 0.3);
 }
 
 .btn-outline-peach {
-  color: #f4a261;
-  border-color: #f4a261;
+  color: #e6e6fa; /* Halvány lila körvonal */
+  border-color: #e6e6fa;
   padding: 0.8rem 1.6rem;
   font-size: 1rem;
   font-weight: 500;
@@ -919,17 +919,17 @@ body {
 }
 
 .btn-outline-peach:hover {
-  background-color: #f4a261;
-  color: #ffffff;
+  background-color: #e6e6fa; /* Halvány lila háttér hovernél */
+  color: #000000; /* Fekete szöveg hovernél */
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(244, 162, 97, 0.3);
+  box-shadow: 0 5px 12px rgba(230, 230, 250, 0.3);
 }
 
 /* Footer */
 .footer_section {
-  background-color: #0a1e3f; /* Deep navy background for contrast */
-  color: #ffffff;
-  padding: 2rem 0; /* Reduced padding for a compact look */
+  background-color: #000000; /* Fekete footer háttér */
+  color: #ffffff; /* Fehér szöveg */
+  padding: 2rem 0; 
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -943,7 +943,7 @@ body {
   left: 50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(244, 162, 97, 0.15), transparent);
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
   transform: translateX(-50%);
   z-index: 0;
 }
@@ -951,78 +951,78 @@ body {
 .footer_section .container {
   position: relative;
   z-index: 1;
-  max-width: 1200px; /* Limit container width for consistency */
+  max-width: 1200px; 
   margin: 0 auto;
   padding: 0 1rem;
 }
 
 .footer-grid {
-  display: grid; /* Use CSS Grid for precise control */
-  grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-  gap: 1rem; /* Reduced gap for compactness */
-  min-height: 120px; /* Set a minimum height to ensure equal column heights */
-  width: 100%; /* Ensure full width within container */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1rem; 
+  min-height: 120px; 
+  width: 100%; 
 }
 
 .footer-col {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically center content within each column */
-  align-items: center; /* Horizontally center content within each column */
-  padding: 0 0.8rem; /* Minimal padding for each column */
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.8rem; 
 }
 
 .footer-title {
   font-size: 1.4rem;
   font-weight: 600;
-  color: #f4a261; /* Warm peach for titles */
-  margin-bottom: 1rem; /* Reduced margin for compactness */
+  color: #e6e6fa; /* Halvány lila címek */
+  margin-bottom: 1rem; 
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
   animation: slideInLeft 1.2s ease-out;
 }
 
 .footer-title::after {
   content: '';
   display: block;
-  width: 40px; /* Reduced width for a cleaner look */
+  width: 40px;
   height: 2px;
-  background-color: #f4a261;
-  margin: 0.4rem auto; /* Reduced margin for compactness */
+  background-color: #e6e6fa; /* Halvány lila elválasztó */
+  margin: 0.4rem auto; 
 }
 
 .contact_link_box {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem; /* Reduced gap for compactness */
+  gap: 0.6rem; 
 }
 
 .contact_link {
   font-size: 1rem;
-  color: #ffffff;
+  color: #ffffff; /* Fehér szöveg */
   text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center text and icons */
+  justify-content: center;
   transition: color 0.3s ease, transform 0.3s ease;
   animation: fadeInUp 1.5s ease-out 0.2s;
 }
 
 .contact_link:hover {
-  color: #f4a261;
+  color: #e6e6fa; /* Halvány lila hover */
   transform: translateX(6px);
 }
 
 .contact_link i {
-  margin-right: 0.6rem; /* Reduced margin for compactness */
-  font-size: 1rem; /* Smaller icons for a cleaner look */
-  color: #f4a261;
+  margin-right: 0.6rem; 
+  font-size: 1rem;
+  color: #e6e6fa; /* Halvány lila ikon */
   transition: color 0.3s ease;
 }
 
 .contact_link:hover i {
-  color: #e07a2a;
+  color: #d8bfd8; /* Sötétebb halvány lila hovernél */
 }
 
 .footer_detail {
@@ -1030,60 +1030,60 @@ body {
 }
 
 .footer_detail p {
-  font-size: 0.9rem; /* Smaller text for compactness */
-  margin-bottom: 0.8rem; /* Reduced margin for compactness */
+  font-size: 0.9rem; 
+  margin-bottom: 0.8rem; 
 }
 
 .footer-logo {
-  font-size: 1.8rem; /* Reduced size for compactness */
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #ffffff; /* Fehér logó szöveg */
   text-decoration: none;
   display: block;
-  margin-bottom: 1rem; /* Reduced margin for compactness */
+  margin-bottom: 1rem; 
   transition: color 0.3s ease;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
 .footer-logo:hover {
-  color: #f4a261;
+  color: #e6e6fa; /* Halvány lila hover */
 }
 
 .footer_social {
   display: flex;
   justify-content: center;
-  gap: 1rem; /* Reduced gap for compactness */
-  margin-top: 0.8rem; /* Reduced margin for compactness */
+  gap: 1rem; 
+  margin-top: 0.8rem; 
   animation: slideInLeft 1.5s ease-out 0.6s;
 }
 
 .social-link {
-  font-size: 1.2rem; /* Smaller icons for a cleaner look */
-  color: #ffffff;
+  font-size: 1.2rem; 
+  color: #ffffff; /* Fehér ikonok */
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-link:hover {
-  color: #f4a261;
+  color: #e6e6fa; /* Halvány lila hover */
   transform: scale(1.2);
 }
 
 .footer-info {
-  margin-top: 1.5rem; /* Reduced margin for compactness */
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 1rem; /* Reduced padding for compactness */
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Finom fehér keret */
+  padding-top: 1rem; 
   animation: fadeInUp 1.5s ease-out 0.8s;
 }
 
 .footer-info p {
-  font-size: 0.8rem; /* Smaller text for compactness */
-  color: #ffffff;
+  font-size: 0.8rem; 
+  color: #ffffff; /* Fehér szöveg */
   margin: 0;
   font-weight: 400;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
 
-/* Animations */
+/* Animations (unchanged) */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -1112,115 +1112,7 @@ body {
   100% { transform: scale(1); }
 }
 
-/* Reszponzivitás (Optional - Adjust if needed for very small screens) */
-@media (max-width: 767px) {
-  .footer-grid {
-    grid-template-columns: repeat(3, minmax(200px, 1fr)); /* Ensure columns stay side by side with minimum width */
-    gap: 0.5rem; /* Reduce gap on mobile for compactness */
-  }
-
-  .footer-col {
-    padding: 0 0.5rem; /* Reduced padding for mobile */
-  }
-
-  .footer-title {
-    font-size: 1.2rem;
-  }
-
-  .contact_link {
-    font-size: 0.9rem;
-  }
-
-  .contact_link i {
-    font-size: 0.9rem;
-    margin-right: 0.4rem;
-  }
-
-  .footer_detail p {
-    font-size: 0.8rem;
-  }
-
-  .footer-logo {
-    font-size: 1.6rem;
-  }
-
-  .social-link {
-    font-size: 1rem;
-  }
-
-  .footer-info p {
-    font-size: 0.7rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .footer-grid {
-    gap: 0.3rem; /* Further reduce gap on very small screens */
-  }
-
-  .footer-col {
-    padding: 0 0.3rem; /* Further reduced padding for very small screens */
-  }
-
-  .footer-title {
-    font-size: 1rem;
-  }
-
-  .contact_link {
-    font-size: 0.8rem;
-  }
-
-  .contact_link i {
-    font-size: 0.8rem;
-    margin-right: 0.3rem;
-  }
-
-  .footer_detail p {
-    font-size: 0.7rem;
-  }
-
-  .footer-logo {
-    font-size: 1.4rem;
-  }
-
-  .social-link {
-    font-size: 0.9rem;
-  }
-
-  .footer-info p {
-    font-size: 0.6rem;
-  }
-}
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-/* Reszponzivitás */
+/* Reszponzivitás (unchanged, de színek ahol szükséges, alkalmazva) */
 @media (min-width: 768px) {
   .navbar-content {
     flex-direction: row;
@@ -1229,11 +1121,11 @@ body {
   }
   .navbar-left {
     flex-direction: row;
-    margin-right: auto; /* Pushes left items to the left */
+    margin-right: auto; /* Balra tolja a bal oldali elemeket */
   }
   .navbar-right {
     flex-direction: row;
-    margin-left: auto; /* Pushes right items to the right */
+    margin-left: auto; /* Jobbra tolja a jobb oldali elemeket */
   }
   .nav-item {
     margin: 0 0.75rem;
@@ -1350,9 +1242,9 @@ body {
     font-size: 1rem;
   }
   .dropdown-menu {
-    position: static; /* Stacks naturally on mobile */
+    position: static; /* Mobilokon természetesen tornyozódik */
     width: 100%;
-    box-shadow: none; /* Removes shadow for cleaner mobile look */
+    box-shadow: none; /* Árnyék eltávolítása tisztább mobil megjelenésért */
     border: none;
   }
   .footer_section {
@@ -1462,7 +1354,7 @@ body {
   }
   .perfume-card-text {
     font-size: 0.8rem;
-    -webkit-line-clamp: 2; /* Fewer lines on smaller screens */
+    -webkit-line-clamp: 2; /* Kevesebb sor kisebb képernyőkön */
   }
 }
 
