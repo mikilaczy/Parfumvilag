@@ -1,52 +1,42 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import '../style.css';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../services/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('isLoggedIn', 'true');
-      window.location.href = '/profil';
-    } catch (err) {
-      setError(err.response?.data?.error || 'Bejelentkezés sikertelen.');
+      const { user, token } = await login(email, password);
+      localStorage.setItem('isLoggedIn', true);
+      localStorage.setItem('username', user.name);
+      localStorage.setItem('email', user.email);
+      localStorage.setItem('token', token);
+      navigate('/profil');
+    } catch (error) {
+      setError(error);
     }
   };
 
   return (
-    <div className="container my-5 auth-container">
-      <h1 className="text-center mb-4 auth-title">Bejelentkezés</h1>
+    <div className="container">
+      <h1>Bejelentkezés</h1>
       {error && <div className="alert alert-danger">{error}</div>}
-      <form className="mx-auto auth-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email cím</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label htmlFor="email">Email</label>
+          <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">Jelszó</label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label htmlFor="password">Jelszó</label>
+          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Bejelentkezés</button>
+        <button type="submit" className="btn btn-primary">Bejelentkezés</button>
       </form>
     </div>
   );
