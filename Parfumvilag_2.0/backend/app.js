@@ -40,6 +40,19 @@ app.use('/api/users', userRoutes);
 // Kapcsolódunk a MySQL-hez a db.js segítségével
 const db = require('./db');
 
+app.get('/api/featured-perfumes', (req, res) => {
+  const featuredPerfumes = [
+    { id: 1, name: "Chanel No. 5", brand: "Chanel", gender: "female", description: "Időtlen klasszikus, ikonikus virágos-aldehides illat.", scents: ["Virágos", "Aldehides"], price: 45000, image_url: "https://fimgs.net/himg/o.97897.jpg" },
+    { id: 2, name: "Sauvage", brand: "Dior", gender: "male", description: "Friss, erőteljes, nyers és nemes összetevőkkel.", scents: ["Fás", "Fűszeres", "Friss"], price: 38000, image_url: "https://cdn.notinoimg.com/detail_main_mq/dior/3348901250153_01/sauvage___200828.jpg" },
+    { id: 3, name: "Black Opium", brand: "Yves Saint Laurent", gender: "female", description: "Erőteljes és érzéki illat, kávé és vanília jegyekkel.", scents: ["Orientális", "Fűszeres", "Édes"], price: 44000, image_url: "https://cdn.shopify.com/s/files/1/0259/7733/products/black-opium-le-parfum-90ml_grande.png?v=1679625919" },
+    // ... több parfüm
+  ];
+  res.json(featuredPerfumes);
+});
+
+
+
+
 // Adatbázis tesztelése
 db.query('SELECT 1 + 1 AS solution', (err, results) => {
   if (err) {

@@ -30,12 +30,26 @@ const Login = () => {
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="email">Email cím</label>
-          <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <label htmlFor="email" className="form-label">Email</label>
+          <input 
+            type="email" 
+            className="form-control" 
+            id="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+          />
         </div>
         <div className="mb-3">
-          <label htmlFor="password">Jelszó</label>
-          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <label htmlFor="password" className="form-label">Jelszó</label>
+          <input 
+            type="password" 
+            className="form-control" 
+            id="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+          />
         </div>
         <button type="submit" className="btn btn-primary">Bejelentkezés</button>
       </form>
