@@ -14,9 +14,10 @@ const getUserByEmail = (email, callback) => {
   db.query('SELECT * FROM users WHERE email = ?', [email], callback);
 };
 
+// backend/models/user.js
 const createUser = (user, callback) => {
-  bcrypt.hash(user.password, 10, (err, hash) => {
-    if (err) throw err;
+  bcrypt.hash(user.password, 10, (hashErr, hash) => {
+    if (hashErr) return callback(hashErr);
     const newUser = { ...user, password: hash };
     db.query('INSERT INTO users SET ?', newUser, callback);
   });

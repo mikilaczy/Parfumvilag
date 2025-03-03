@@ -15,7 +15,7 @@ import './style.css';
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Navbar />
       <div className="container my-5">
         <Routes>

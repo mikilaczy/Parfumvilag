@@ -5,7 +5,11 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'x-auth-token']
+}));
 app.use(bodyParser.json());
 
 // Importáljuk az útvonalakat

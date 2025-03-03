@@ -1,20 +1,21 @@
-// frontend/services/authService.js
+// frontend/src/services/authService.js
 import axios from 'axios';
 
 export const register = async (name, email, password) => {
   try {
-    const response = await axios.post('/api/auth/register', { name, email, password });
+    // Megadva a konkret backend URL
+    const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
     return response.data;
   } catch (error) {
-    throw error.response?.data?.error || 'Registration failed';
+    throw error.response?.data?.error || 'Regisztráció sikertelen!';
   }
 };
 
 export const login = async (email, password) => {
   try {
-    const response = await axios.post('/api/auth/login', { email, password });
+    const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
     return response.data;
   } catch (error) {
-    throw error.response?.data?.error || 'Login failed';
+    throw error.response?.data?.error || 'Bejelentkezés sikertelen!';
   }
 };
