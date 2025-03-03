@@ -15,10 +15,11 @@ const featuredPerfumeRoutes = require('./routes/featuredPerfumeRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const perfumeRoutes = require('./routes/perfumeRoutes');
 const perfumeNoteRoutes = require('./routes/perfumeNoteRoutes');
-const reviewRoutes = require('./routes/reviewController');
+const reviewRoutes = require('./routes/reviewRoutes');
 const savedPerfumeRoutes = require('./routes/savedPerfumeRoutes');
 const searchLogRoutes = require('./routes/searchLogRoutes');
 const storeRoutes = require('./routes/storeRoutes');
+
 
 // Használjuk az útvonalakat
 app.use('/api/auth', authRoutes);
