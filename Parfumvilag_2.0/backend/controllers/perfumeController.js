@@ -1,4 +1,4 @@
-const Perfume = require('../models/perfume');
+const Perfume = require('../models/Perfume');
 
 exports.getAllPerfumes = (req, res) => {
   Perfume.getAllPerfumes((err, results) => {
