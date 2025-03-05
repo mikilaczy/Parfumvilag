@@ -33,7 +33,7 @@ const Navbar = () => {
                 className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} 
                 to="/katalogus"
               >
-                Katalógus
+                Hírek
               </NavLink>
             </li>
             <li className="nav-item">
