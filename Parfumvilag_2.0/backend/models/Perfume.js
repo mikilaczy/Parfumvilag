@@ -1,8 +1,14 @@
+// backend/models/perfumeModel.js
 const db = require('../db');
 
 // Összes parfüm lekérése
 const getAllPerfumes = (callback) => {
   db.query('SELECT * FROM perfumes', callback);
+};
+
+// Kiemelt parfümök lekérése
+const getFeaturedPerfumes = (callback) => {
+  db.query('SELECT * FROM perfumes WHERE is_featured = 1', callback);
 };
 
 // Parfüm azonosító alapján
@@ -27,6 +33,7 @@ const deletePerfume = (id, callback) => {
 
 module.exports = {
   getAllPerfumes,
+  getFeaturedPerfumes,
   getPerfumeById,
   createPerfume,
   updatePerfume,

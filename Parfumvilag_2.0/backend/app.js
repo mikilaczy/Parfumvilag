@@ -37,6 +37,8 @@ app.use('/api/search-logs', searchLogRoutes);
 app.use('/api/stores', storeRoutes);
 app.use('/api/users', userRoutes);
 
+
+
 // Kapcsolódunk a MySQL-hez a db.js segítségével
 const db = require('./db');
 

@@ -1,272 +1,236 @@
+// frontend/src/pages/Catalog.js
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Added import for Link
-import axios from 'axios';
 import PerfumeCard from '../components/PerfumeCard';
-import '../style.css';
+import { getAllPerfumes } from '../services/perfumeService';
 
-const Search = () => {
+const Catalog = () => {
   const [perfumes, setPerfumes] = useState([]);
-  const [filteredPerfumes, setFilteredPerfumes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [maxPrice, setMaxPrice] = useState(100000);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedScents, setSelectedScents] = useState([]);
+  const [maxPrice, setMaxPrice] = useState(100000);
+  const [activeFilters, setActiveFilters] = useState('');
+  const [noResults, setNoResults] = useState(false);
   const [error, setError] = useState('');
-  const [suggestions, setSuggestions] = useState([]); // For quick search suggestions
 
   useEffect(() => {
     const fetchPerfumes = async () => {
       try {
-        const response = await axios.get('/api/perfumes');
-        setPerfumes(response.data);
-        setFilteredPerfumes(response.data);
-      } catch (err) {
-        setError('Nem sikerült betölteni a parfümöket.');
-        console.error(err);
+        const perfumesData = await getAllPerfumes(searchTerm);
+        setPerfumes(perfumesData);
+        setNoResults(perfumesData.length === 0);
+      } catch (error) {
+        setError('Nem sikerült betölteni a parfümek listáját!');
+        setPerfumes([]);
+        setNoResults(true);
       }
     };
     fetchPerfumes();
-  }, []);
-
-  // Update suggestions as user types
-  useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setSuggestions([]);
-      return;
-    }
-    const filteredSuggestions = perfumes
-      .filter((perfume) =>
-        (perfume.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          perfume.brand.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        !filteredPerfumes.some((p) => p.id === perfume.id) // Avoid duplicates
-      )
-      .slice(0, 5); // Limit to 5 suggestions
-    setSuggestions(filteredSuggestions);
-  }, [searchTerm, perfumes, filteredPerfumes]);
+  }, [searchTerm, selectedBrands, selectedCategories, selectedScents, maxPrice]);
 
   const applyFilters = () => {
-    const filtered = perfumes.filter((perfume) => {
-      const matchesSearch =
-        searchTerm === '' ||
-        perfume.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        perfume.brand.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesPrice = perfume.price <= maxPrice;
-      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(perfume.brand);
-      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(perfume.gender);
-      const matchesScents = selectedScents.length === 0 || selectedScents.some((scent) => perfume.notes.includes(scent));
+    const filtered = perfumes.filter(p => 
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.brand.toLowerCase().includes(searchTerm.toLowerCase())
+    ).filter(p => 
+      selectedBrands.length === 0 || selectedBrands.includes(p.brand)
+    ).filter(p => 
+      selectedCategories.length === 0 || selectedCategories.includes(p.gender)
+    ).filter(p => 
+      selectedScents.length === 0 || p.scents.some(scent => selectedScents.includes(scent))
+    ).filter(p => 
+      p.price <= maxPrice
+    );
 
-      return matchesSearch && matchesPrice && matchesBrand && matchesCategory && matchesScents;
-    });
-    setFilteredPerfumes(filtered);
-    setSuggestions([]); // Clear suggestions after applying filters
+    setActiveFilters(getActiveFilters());
+    setPerfumes(filtered);
+    setNoResults(filtered.length === 0);
   };
 
   const resetFilters = () => {
     setSearchTerm('');
-    setMaxPrice(100000);
     setSelectedBrands([]);
     setSelectedCategories([]);
     setSelectedScents([]);
-    setFilteredPerfumes(perfumes);
-    setSuggestions([]); // Clear suggestions on reset
+    setMaxPrice(100000);
+    setActiveFilters('');
+    setNoResults(false);
+    const fetchPerfumes = async () => {
+      try {
+        const perfumesData = await getAllPerfumes();
+        setPerfumes(perfumesData);
+      } catch (error) {
+        setError('Nem sikerült betölteni a parfümek listáját!');
+        setPerfumes([]);
+        setNoResults(true);
+      }
+    };
+    fetchPerfumes();
   };
 
-  const handleSuggestionClick = (perfume) => {
-    setSearchTerm(perfume.name);
-    setFilteredPerfumes([perfume]);
-    setSuggestions([]);
+  const getActiveFilters = () => {
+    const filters = [];
+    if (searchTerm) filters.push(`Keresés: ${searchTerm}`);
+    if (selectedBrands.length > 0) filters.push(`Márkák: ${selectedBrands.join(', ')}`);
+    if (selectedCategories.length > 0) filters.push(`Kategóriák: ${selectedCategories.join(', ')}`);
+    if (selectedScents.length > 0) filters.push(`Illatok: ${selectedScents.join(', ')}`);
+    if (maxPrice < 100000) filters.push(`Max ár: ${new Intl.NumberFormat('hu-HU').format(maxPrice)} Ft`);
+    return filters.join(', ');
   };
 
   return (
-    <div className="search-page container my-5">
+    <div className="container">
+      <h2>Katalógus</h2>
       <div className="search-container">
-        <h1 className="search-title mb-3">Parfüm Kereső</h1>
-        <p className="search-subtitle mb-4">
-          Találd meg az ideális parfümöt ajánlásainkkal és árösszehasonlításainkkal!
-        </p>
-
-        {/* Search Input with Suggestions */}
-        <div className="search-input-group mb-4">
-          <div className="input-group">
-            <input
-              type="text"
-              id="searchInput"
-              className="form-control"
-              placeholder="Keresés név vagy márka szerint..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyUp={(e) => e.key === 'Enter' && applyFilters()}
+        <h2>Keresés</h2>
+        <div className="input-group mb-3">
+          <input 
+            type="text" 
+            className="form-control" 
+            placeholder="Keresés..." 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
+          <button 
+            className="btn btn-primary" 
+            type="button" 
+            onClick={applyFilters}
+          >
+            Keresés
+          </button>
+        </div>
+        <div className="brand-filter">
+          <h5>Márkák</h5>
+          <div className="form-check">
+            <input 
+              className="form-check-input brand-checkbox" 
+              type="checkbox" 
+              value="Chanel" 
+              id="brandChanel" 
+              onChange={(e) => setSelectedBrands(prev => e.target.checked ? [...prev, e.target.value] : prev.filter(b => b !== e.target.value))}
             />
-            <button className="btn btn-peach" onClick={applyFilters}>
-              <i className="fas fa-search"></i> Keresés
-            </button>
+            <label className="form-check-label" htmlFor="brandChanel">
+              Chanel
+            </label>
           </div>
-          {suggestions.length > 0 && (
-            <ul className="suggestions-list list-group mt-2">
-              {suggestions.map((perfume) => (
-                <li
-                  key={perfume.id}
-                  className="list-group-item list-group-item-action"
-                  onClick={() => handleSuggestionClick(perfume)}
-                >
-                  {perfume.name} ({perfume.brand})
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="form-check">
+            <input 
+              className="form-check-input brand-checkbox" 
+              type="checkbox" 
+              value="Dior" 
+              id="brandDior" 
+              onChange={(e) => setSelectedBrands(prev => e.target.checked ? [...prev, e.target.value] : prev.filter(b => b !== e.target.value))}
+            />
+            <label className="form-check-label" htmlFor="brandDior">
+              Dior
+            </label>
+          </div>
+          {/* További márkák */}
         </div>
-
-        {/* Filters */}
-        <div className="row g-3 mt-3">
-          <div className="col-md-3">
-            <div className="filter-section brand-filter">
-              <h5>Márkák</h5>
-              {['Chanel', 'Dior', 'Gucci', 'Armani', 'Versace'].map((brand) => (
-                <div className="form-check" key={brand}>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value={brand}
-                    id={brand.toLowerCase()}
-                    checked={selectedBrands.includes(brand)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setSelectedBrands((prev) =>
-                        checked ? [...prev, brand] : prev.filter((b) => b !== brand)
-                      );
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={brand.toLowerCase()}>
-                    {brand}
-                  </label>
-                </div>
-              ))}
-            </div>
+        <div className="category-filter">
+          <h5>Kategóriák</h5>
+          <div className="form-check">
+            <input 
+              className="form-check-input category-checkbox" 
+              type="checkbox" 
+              value="female" 
+              id="categoryFemale" 
+              onChange={(e) => setSelectedCategories(prev => e.target.checked ? [...prev, e.target.value] : prev.filter(c => c !== e.target.value))}
+            />
+            <label className="form-check-label" htmlFor="categoryFemale">
+              Női
+            </label>
           </div>
-          <div className="col-md-3">
-            <div className="filter-section category-filter">
-              <h5>Kategória</h5>
-              {['Női', 'Férfi', 'Unisex'].map((category) => (
-                <div className="form-check" key={category}>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value={category}
-                    id={category.toLowerCase()}
-                    checked={selectedCategories.includes(category)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setSelectedCategories((prev) =>
-                        checked ? [...prev, category] : prev.filter((c) => c !== category)
-                      );
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={category.toLowerCase()}>
-                    {category}
-                  </label>
-                </div>
-              ))}
-            </div>
+          <div className="form-check">
+            <input 
+              className="form-check-input category-checkbox" 
+              type="checkbox" 
+              value="male" 
+              id="categoryMale" 
+              onChange={(e) => setSelectedCategories(prev => e.target.checked ? [...prev, e.target.value] : prev.filter(c => c !== e.target.value))}
+            />
+            <label className="form-check-label" htmlFor="categoryMale">
+              Férfi
+            </label>
           </div>
-          <div className="col-md-3">
-            <div className="filter-section scent-filter">
-              <h5>Illat típus</h5>
-              {['Virágos', 'Fás', 'Orientális', 'Friss', 'Citrusos'].map((scent) => (
-                <div className="form-check" key={scent}>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value={scent}
-                    id={scent.toLowerCase()}
-                    checked={selectedScents.includes(scent)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setSelectedScents((prev) =>
-                        checked ? [...prev, scent] : prev.filter((s) => s !== scent)
-                      );
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={scent.toLowerCase()}>
-                    {scent}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="filter-section price-filter">
-              <h5>Max. ár (Ft)</h5>
-              <input
-                type="range"
-                className="form-range"
-                min="5000"
-                max="100000"
-                step="1000"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(parseInt(e.target.value))}
-              />
-              <span className="price-value">
-                {new Intl.NumberFormat('hu-HU').format(maxPrice)} Ft
-              </span>
-            </div>
+          <div className="form-check">
+            <input 
+              className="form-check-input category-checkbox" 
+              type="checkbox" 
+              value="unisex" 
+              id="categoryUnisex" 
+              onChange={(e) => setSelectedCategories(prev => e.target.checked ? [...prev, e.target.value] : prev.filter(c => c !== e.target.value))}
+            />
+            <label className="form-check-label" htmlFor="categoryUnisex">
+              Unisex
+            </label>
           </div>
         </div>
-        <div className="row mt-3">
-          <div className="col-12">
-            <button className="btn btn-peach" onClick={applyFilters}>Szűrés alkalmazása</button>
-            <button className="btn btn-outline-peach ms-2" onClick={resetFilters}>Szűrők törlése</button>
+        <div className="scent-filter">
+          <h5>Illat típus</h5>
+          <div className="form-check">
+            <input 
+              className="form-check-input scent-checkbox" 
+              type="checkbox" 
+              value="Virágos" 
+              id="scentVirágos" 
+              onChange={(e) => setSelectedScents(prev => e.target.checked ? [...prev, e.target.value] : prev.filter(s => s !== e.target.value))}
+            />
+            <label className="form-check-label" htmlFor="scentVirágos">
+              Virágos
+            </label>
           </div>
+          <div className="form-check">
+            <input 
+              className="form-check-input scent-checkbox" 
+              type="checkbox" 
+              value="Fás" 
+              id="scentFás" 
+              onChange={(e) => setSelectedScents(prev => e.target.checked ? [...prev, e.target.value] : prev.filter(s => s !== e.target.value))}
+            />
+            <label className="form-check-label" htmlFor="scentFás">
+              Fás
+            </label>
+          </div>
+          {/* További illat típusok */}
         </div>
-        <div className="active-filters mt-3" id="activeFilters">
-          {selectedBrands.length > 0 && <p>Márkák: {selectedBrands.join(', ')}</p>}
-          {selectedCategories.length > 0 && <p>Kategóriák: {selectedCategories.join(', ')}</p>}
-          {selectedScents.length > 0 && <p>Illatok: {selectedScents.join(', ')}</p>}
-          {maxPrice !== 100000 && <p>Max. ár: {new Intl.NumberFormat('hu-HU').format(maxPrice)} Ft</p>}
+        <div className="price-filter">
+          <h5>Ár (Ft)</h5>
+          <input 
+            type="range" 
+            className="form-range" 
+            id="priceRange" 
+            min="0" 
+            max="100000" 
+            value={maxPrice} 
+            onChange={(e) => setMaxPrice(parseInt(e.target.value))} 
+          />
+          <span>Maximum: <span id="priceValue">{new Intl.NumberFormat('hu-HU').format(maxPrice)}</span> Ft</span>
+        </div>
+        <div className="active-filters">
+          {activeFilters}
+        </div>
+        <div className="btn-group">
+          <button type="button" className="btn btn-primary" onClick={applyFilters}>Szűrés alkalmazása</button>
+          <button type="button" className="btn btn-outline-secondary ms-2" onClick={resetFilters}>Szűrők törlése</button>
         </div>
       </div>
-
-      <h3 className="results-title mb-4">Találatok ({filteredPerfumes.length})</h3>
-      {error && <div className="alert alert-danger text-center">{error}</div>}
-      <div className="row g-3" id="perfumeList">
-        {filteredPerfumes.length > 0 ? (
-          filteredPerfumes.map((perfume) => (
-            <div key={perfume.id} className="col-lg-4 col-md-6 col-12">
-              <PerfumeCard perfume={perfume} />
-            </div>
-          ))
-        ) : (
-          <div className="col-12 text-center">
-            <div id="noResults">
-              <i className="fas fa-search fa-2x mb-3"></i>
-              <h4>Nincs találat a keresési feltételeknek megfelelően</h4>
-              <p>Próbálj meg kevesebb vagy más szűrőfeltételt beállítani</p>
-            </div>
+      <div className="row" id="perfumeList">
+        {error && <div className="alert alert-danger">{error}</div>}
+        {noResults && (
+          <div id="noResults">
+            <i className="fas fa-search"></i>
+            <h4>Nincs találat a keresési feltételeknek megfelelően</h4>
+            <p>Próbálj meg kevesebb vagy más szűrőfeltételt beállítani</p>
           </div>
         )}
+        {!noResults && perfumes.map(p => (
+          <PerfumeCard key={p.id} perfume={p} />
+        ))}
       </div>
-
-      {/* Quick Search Suggestions Section */}
-      <section className="quick-suggestions-section container mt-5">
-        <h2 className="section-title text-center mb-4">Gyors ajánlások</h2>
-        <div className="row g-3">
-          {['Chanel No. 5', 'Dior Sauvage', 'Gucci Bloom', 'Armani Code', 'Versace Eros'].map((suggestion, index) => (
-            <div key={index} className="col-lg-4 col-md-6 col-12">
-              <div className="suggestion-card card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">{suggestion}</h5>
-                  <p className="card-text">Kattints a kereséshez és fedezd fel az ajánlásokat!</p>
-                  <Link to={`/kereses?query=${encodeURIComponent(suggestion)}`} className="btn btn-outline-peach">
-                    Keresés
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };
 
-export default Search;
+export default Catalog;

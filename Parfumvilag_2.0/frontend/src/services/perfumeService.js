@@ -1,48 +1,32 @@
 import axios from 'axios';
 
-const getAllPerfumes = async (searchTerm = '') => {
+const API_BASE_URL = 'http://localhost:5000/api';
+
+export const getAllPerfumes = async (searchTerm = '') => {
   try {
-    const response = await axios.get(`/api/perfumes?search=${searchTerm}`);
+    const response = await axios.get(`${API_BASE_URL}/perfumes/all`, {
+      params: { search: searchTerm }
+    });
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    throw error.response?.data?.error || 'Nem sikerült betölteni a parfümek listáját!';
   }
 };
 
-const getPerfumeById = async (id) => {
+export const getFeaturedPerfumes = async () => {
   try {
-    const response = await axios.get(`/api/perfumes/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/perfumes/featured`);
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    throw error.response?.data?.error || 'Nem sikerült betölteni a kiemelt parfümök listáját!';
   }
 };
 
-const createPerfume = async (perfume) => {
+export const getPerfumeById = async (id) => {
   try {
-    const response = await axios.post('/api/perfumes', perfume);
+    const response = await axios.get(`${API_BASE_URL}/perfumes/${id}`);
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    throw error.response?.data?.error || 'Nem sikerült betölteni a parfüm részleteit!';
   }
 };
-
-const updatePerfume = async (id, perfume) => {
-  try {
-    const response = await axios.put(`/api/perfumes/${id}`, perfume);
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
-};
-
-const deletePerfume = async (id) => {
-  try {
-    const response = await axios.delete(`/api/perfumes/${id}`);
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
-};
-
-export { getAllPerfumes, getPerfumeById, createPerfume, updatePerfume, deletePerfume };
