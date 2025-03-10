@@ -29,34 +29,43 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <div className="hero-section">
-        <h1>Üdvözöljük a Parfümvilágban</h1>
-        <p>
-          Merülj el az illatok lenyűgöző világában, és találd meg a tökéletes parfümöt, amely kifejezi egyéniségedet.
-        </p>
-        <Link to="/kereses" className="btn btn-primary">Keresés indítása</Link>
-      </div>
+    <div className="home-wrapper">
+      {}
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>Üdvözöljük a Parfümvilágban</h1>
+          <p>
+            Találd meg álmaid parfümjét ajánlásainkkal és árösszehasonlításainkkal – egyszerűen, gyorsan, stílusosan!
+          </p>
+          <div className="hero-actions">
+            <Link to="/kereses" className="btn btn-peach hero-btn">Keresés indítása</Link>
+            <Link to="/katalogus" className="btn btn-outline-peach ms-3 hero-btn">Hírek felfedezése</Link>
+          </div>
+        </div>
+      </section>
 
-      <section className="container my-5">
-        <h2 className="text-center mb-5">Kiemelt Parfümjeink</h2>
-        {error && <div className="alert alert-danger">{error}</div>}
-        <div className="row g-4" id="perfumeList">
+      {}
+      <section className="featured-section container my-5">
+        <h2 className="section-title text-center mb-4">Ajánlott Parfümjeink</h2>
+        {error && <div className="alert alert-danger text-center">{error}</div>}
+        <div className="row g-3" id="perfumeList">
           {featuredPerfumes.length > 0 ? (
             featuredPerfumes.map((perfume) => (
-              <PerfumeCard key={perfume.id} perfume={perfume} />
+              <div key={perfume.id} className="col-lg-4 col-md-6 col-12">
+                <PerfumeCard perfume={perfume} />
+              </div>
             ))
           ) : (
-            <div id="noResults" className="text-center">
-              <i className="fas fa-search fa-3x mb-3"></i>
-              <h4>Nincs találat</h4>
-              <p>Próbálj meg később újra!</p>
+            <div className="col-12 text-center">
+              <div id="noResults">
+                <i className="fas fa-search fa-2x mb-3"></i>
+                <h4>Nincs találat</h4>
+                <p>Próbálja meg később újra!</p>
+              </div>
             </div>
           )}
         </div>
-        <div className="text-center mt-5">
-          <Link to="/kereses" className="btn btn-outline-primary">További parfümök felfedezése</Link>
-        </div>
+
       </section>
     </div>
   );

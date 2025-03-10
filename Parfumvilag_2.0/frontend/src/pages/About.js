@@ -1,88 +1,72 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../style.css';
 
 const About = () => {
   return (
-    <div>
-      <div className="title-section">
-        <h1>Rólunk</h1>
-        <div className="divider"></div>
-        <p>Üdvözlünk a Parfümvilágban, ahol az illatok és az egyéniség tökéletes harmóniát alkotnak!</p>
-      </div>
+    <div className="about-page">
+      <div className="container my-5">
+        <h1 className="about-title text-center">Rólunk – Parfümvilág</h1>
+        <p className="about-subtitle text-center">
+          Fedezd fel velünk az illatok világát – ajánlások és árösszehasonlítás egy helyre!
+        </p>
 
-      <div className="container my-5" id="about-section">
-        {/* Kik vagyunk? */}
-        <div className="row align-items-center mb-5">
-          <div className="col-md-6 order-md-2">
-            <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-              alt="Parfümvilág csapat"
-              className="img-fluid rounded shadow"
-            />
+        {/* Miben segíthetünk? szekció */}
+        <div className="row g-4 mb-5">
+          <h2 className="section-title text-center mb-4">Miben segíthetünk?</h2>
+          <div className="col-lg-4 col-md-6 col-12">
+            <div className="about-card">
+              <i className="fas fa-list-ul about-icon"></i>
+              <h3 className="about-card-title">Kategóriák szerinti ajánlások</h3>
+              <p className="about-card-text">
+                Böngészd végig az illatcsoportokat és márkákat, hogy megtaláld az ideális parfümödet.
+              </p>
+            </div>
           </div>
-          <div className="col-md-6 order-md-1">
-            <div className="perfume-card p-4">
-              <h2 className="perfume-card-title">Kik vagyunk?</h2>
-              <p className="perfume-card-text">
-                A Parfümvilág nem csupán egy webshop, hanem egy egyedülálló platform, amely összegyűjti és
-                összehasonlítja a legjobb online parfümkínálatokat. Küldetésünk, hogy időt és energiát spóroljunk
-                neked, miközben a legmegfelelőbb illatot választod.
+          <div className="col-lg-4 col-md-6 col-12">
+            <div className="about-card">
+              <i className="fas fa-balance-scale about-icon"></i>
+              <h3 className="about-card-title">Árak összehasonlítása</h3>
+              <p className="about-card-text">
+                Hasonlítsd össze az árakat különböző forrásokból, hogy a legjobb ajánlatot találd meg.
+              </p>
+            </div>
+          </div>
+          <div className="col-lg-4 col-md-6 col-12">
+            <div className="about-card">
+              <i className="fas fa-star about-icon"></i>
+              <h3 className="about-card-title">Ajánlott illatok</h3>
+              <p className="about-card-text">
+                Kapj szakértői ajánlásokat új és klasszikus parfümökre, személyre szabottan.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Miben segíthetünk? */}
-        <div className="row mb-5">
-          <div className="col-12 text-center mb-4">
-            <h2>Miben segíthetünk?</h2>
-          </div>
-          <div className="col-md-4">
-            <div className="perfume-card text-center p-4">
-              <i className="fas fa-list-ul fa-2x mb-3" style={{ color: '#6200ea' }}></i>
-              <h5 className="perfume-card-title">Kategóriák szerinti böngészés</h5>
-              <p className="perfume-card-text">
-                Navigálj könnyedén különböző márkák és illatcsoportok között.
-              </p>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="perfume-card text-center p-4">
-              <i className="fas fa-balance-scale fa-2x mb-3" style={{ color: '#6200ea' }}></i>
-              <h5 className="perfume-card-title">Árak összehasonlítása</h5>
-              <p className="perfume-card-text">
-                Találd meg a legjobb ajánlatokat különböző boltokból.
-              </p>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="perfume-card text-center p-4">
-              <i className="fas fa-star fa-2x mb-3" style={{ color: '#6200ea' }}></i>
-              <h5 className="perfume-card-title">Újdonságok és klasszikusok</h5>
-              <p className="perfume-card-text">
-                Fedezd fel az új illatokat és a timeless klasszikusokat.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Célunk */}
-        <div className="row align-items-center mb-5">
+        {/* Kik vagyunk? szekció */}
+        <div className="row g-4 align-items-center mb-5">
           <div className="col-md-6">
-            <img
-              src="https://images.unsplash.com/photo-1503235930437-8c6293ba41f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-              alt="Parfüm üvegek"
-              className="img-fluid rounded shadow"
-            />
+            <div className="about-card">
+              <h2 className="about-card-title">Kik vagyunk?</h2>
+              <p className="about-card-text">
+                A Parfümvilág egy dedikált platform, amely segít megtalálni a tökéletes illatot ajánlásokkal és árösszehasonlításokkal. Küldetésünk, hogy időt spóroljunk neked, miközben az egyéni stílusodhoz illő parfümöt ajánljuk.
+              </p>
+              <img
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                alt="Parfümvilág csapat"
+                className="about-card-img"
+              />
+            </div>
           </div>
           <div className="col-md-6">
-            <div className="perfume-card p-4">
-              <h2 className="perfume-card-title">Célunk</h2>
-              <p className="perfume-card-text">
-                Szeretnénk, hogy mindenki megtalálja a saját, egyedi illatát. Az illatok többet mondanak rólad,
-                mint gondolnád – mi pedig itt vagyunk, hogy segítsünk ebben az utazásban.
+            <div className="about-card">
+              <h2 className="about-card-title">Célunk</h2>
+              <p className="about-card-text">
+                Szeretnénk, hogy mindenki megtalálja az egyedi illatát, amely kifejezi személyiségét. Az illatok története és stílusa inspirál minket – itt vagyunk, hogy útmutatót nyújtsunk ebben az utazásban.
               </p>
-              <a href="/kereses" className="btn btn-primary mt-3">Kezdj keresni most</a>
+              <Link to="/kereses" className="btn btn-peach mt-3">
+                Kezdj keresni most
+              </Link>
             </div>
           </div>
         </div>

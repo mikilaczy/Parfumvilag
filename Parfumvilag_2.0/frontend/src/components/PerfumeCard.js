@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import '../style.css';
 
 const PerfumeCard = ({ perfume }) => {
-  const { id, name, brand, description, price, image_url, notes = [] } = perfume;
+  const { id, name, brand, description, image_url, notes = [] } = perfume;
 
   return (
     <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
       <div className="perfume-card">
         <img
-          src={image_url || 'https://via.placeholder.com/220x220?text=Nincs+kép'}
+          src={image_url || 'https://via.placeholder.com/250x250?text=Nincs+kép'}
           alt={name}
           className="perfume-card-img"
         />
@@ -22,9 +22,8 @@ const PerfumeCard = ({ perfume }) => {
             ))}
           </div>
           <p className="perfume-card-text">{description || 'Nincs leírás'}</p>
-          <p className="price-display">{new Intl.NumberFormat('hu-HU').format(price)} Ft</p>
         </div>
-        <Link to={`/parfume/${id}`} className="perfume-card-link" />
+        <Link to={`/perfume/${id}`} className="perfume-card-link" />
       </div>
     </div>
   );

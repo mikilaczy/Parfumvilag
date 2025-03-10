@@ -5,7 +5,6 @@ import '../style.css';
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -23,10 +22,6 @@ const Navbar = () => {
     window.location.href = '/';
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
-  };
-
   return (
     <nav className="navbar navbar-dark">
       <div className="container">
@@ -38,7 +33,7 @@ const Navbar = () => {
                 className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} 
                 to="/katalogus"
               >
-                Katalógus
+                Hírek
               </NavLink>
             </li>
             <li className="nav-item">
@@ -76,37 +71,24 @@ const Navbar = () => {
                 </li>
               </>
             ) : (
-              <li className="nav-item dropdown">
-                <div 
-                  className="nav-link dropdown-toggle" 
-                  onClick={toggleDropdown} 
-                  role="button"
-                >
-                  Belépés
-                </div>
-                {isDropdownOpen && (
-                  <ul className="dropdown-menu">
-                    <li>
-                      <NavLink 
-                        className="dropdown-item" 
-                        to="/bejelentkezes" 
-                        onClick={() => setIsDropdownOpen(false)} // Close on click
-                      >
-                        Bejelentkezés
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink 
-                        className="dropdown-item" 
-                        to="/regisztracio" 
-                        onClick={() => setIsDropdownOpen(false)} // Close on click
-                      >
-                        Regisztráció
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </li>
+              <>
+                <li className="nav-item">
+                  <NavLink 
+                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} 
+                    to="/bejelentkezes"
+                  >
+                    Bejelentkezés
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink 
+                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} 
+                    to="/regisztracio"
+                  >
+                    Regisztráció
+                  </NavLink>
+                </li>
+              </>
             )}
           </ul>
         </div>
