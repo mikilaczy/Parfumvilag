@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Link importálása a navigációhoz
 import '../style.css';
 
 const Footer = () => {
@@ -16,7 +17,7 @@ const Footer = () => {
                 <i className="fas fa-phone-alt"></i> +36 123 456 789
               </a>
               <a href="mailto:info@parfumvilag.hu" className="contact_link">
-                <i className="fas fa-envelope"></i> parfumvilag.hu
+                <i className="fas fa-envelope"></i> info@parfumvilag.hu
               </a>
             </div>
           </div>
@@ -47,8 +48,14 @@ const Footer = () => {
             <p>10:00 - 18:00</p>
           </div>
         </div>
-        <div className="footer-info text-center">
-          <p>© {new Date().getFullYear()} Parfümvilág - Minden jog fenntartva</p>
+        {/* ÁSZF gomb, vissza az eredeti dizájnhoz */}
+        <div className="footer-aszf">
+          <Link to="/aszf" className="btn btn-peach aszf-btn">
+            Általános Szerződési Feltételek
+          </Link>
+        </div>
+        <div className="footer-info">
+          <p>© 2025 Parfümvilág. Minden jog fenntartva.</p>
         </div>
       </div>
     </footer>

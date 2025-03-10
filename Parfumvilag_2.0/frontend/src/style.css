@@ -233,7 +233,7 @@ body {
 .btn-peach {
   background-color: #e6e6fa; /* Halvány lila gomb, helyett a korábbi peach szín */
   border-color: #e6e6fa;
-  color: #000000; /* Fekete szöveg a gombokon */
+  color: #ffffff; /* Fekete szöveg a gombokon */
   transition: all 0.3s ease;
 }
 
@@ -2136,6 +2136,132 @@ body {
   }
   .form-control {
     padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+.aszf-page {
+  padding: 4rem 2rem;
+  background: #ffffff; /* Tiszta fehér háttér */
+  min-height: 100vh;
+}
+
+.aszf-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #1a1a1a; /* Sötét szöveg */
+  text-align: center;
+  margin-bottom: 2.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.aszf-title::after {
+  content: '';
+  display: block;
+  width: 100px;
+  height: 4px;
+  background: #e6e6fa; /* Halvány lila vonal */
+  margin: 1rem auto;
+  border-radius: 2px;
+}
+
+.aszf-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.aszf-section {
+  margin-bottom: 2rem;
+}
+
+.aszf-section h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #000000; /* Fekete címek */
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.aszf-section p {
+  font-size: 1rem;
+  color: #666666; /* Halvány szürke szöveg */
+  line-height: 1.8;
+}
+
+/* Reszponzivitás */
+@media (max-width: 767px) {
+  .aszf-page {
+    padding: 2rem 1rem;
+  }
+  .aszf-title {
+    font-size: 2.2rem;
+  }
+  .aszf-section h2 {
+    font-size: 1.5rem;
+  }
+  .aszf-section p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .aszf-title {
+    font-size: 1.8rem;
+  }
+  .aszf-section h2 {
+    font-size: 1.3rem;
+  }
+  .aszf-section p {
+    font-size: 0.8rem;
+  }
+}
+/* ÁSZF gomb stílusa, láthatóbb alapértelmezett állapot */
+.footer-aszf {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.aszf-btn {
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 25px;
+  background-color: #e6e6fa; /* Halvány lila gomb */
+  border-color: #e6e6fa;
+  color: #ffffff; /* Mindig fehér szöveg */
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  opacity: 1; /* Teljesen látható alapértelmezett állapot */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Finom árnyék a szöveg olvashatóságáért */
+}
+
+.aszf-btn:hover {
+  background-color: #d8bfd8; /* Sötétebb halvány lila hover */
+  border-color: #d8bfd8;
+  transform: translateY(-3px); /* Feljebb mozdulás animáció */
+  box-shadow: 0 5px 12px rgba(216, 191, 216, 0.3); /* Árnyék hovernél */
+}
+
+/* Reszponzivitás */
+@media (max-width: 767px) {
+  .aszf-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .aszf-btn {
+    padding: 0.5rem 1rem;
     font-size: 0.8rem;
   }
 }
