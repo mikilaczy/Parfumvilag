@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PerfumeCard from '../components/PerfumeCard';
 import { getAllPerfumes } from '../services/perfumeService';
 
-const Catalog = () => {
+const Search = () => {
   const [perfumes, setPerfumes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -13,15 +13,14 @@ const Catalog = () => {
   const [noResults, setNoResults] = useState(false);
   const [error, setError] = useState('');
   const [initialPerfumes, setInitialPerfumes] = useState([]); // Store initial perfumes for reset
-  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false); // State for sorting dropdown visibility
-  const sortDropdownRef = useRef(null); // Ref for handling clicks outside dropdown
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false); // Add this line
 
   useEffect(() => {
     const fetchPerfumes = async () => {
       try {
         const perfumesData = await getAllPerfumes();
         setPerfumes(perfumesData);
-        setInitialPerfumes(perfumesData); // Store initial data for reset
+        setInitialPerfumes(perfumesData);
         setNoResults(perfumesData.length === 0);
       } catch (error) {
         setError('Nem sikerült betölteni a parfümek listáját!');
@@ -30,22 +29,11 @@ const Catalog = () => {
       }
     };
     fetchPerfumes();
-
-    // Close dropdown when clicking outside
-    const handleClickOutside = (event) => {
-      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
-        setIsSortDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const applyFilters = () => {
-    let filtered = [...initialPerfumes]; // Start with initial data
-
-    // Apply search term filter
+    let filtered = [...initialPerfumes];
+    
     if (searchTerm) {
       filtered = filtered.filter(
         (p) =>
@@ -54,24 +42,20 @@ const Catalog = () => {
       );
     }
 
-    // Apply brand filter
     if (selectedBrands.length > 0) {
       filtered = filtered.filter((p) => selectedBrands.includes(p.brand));
     }
 
-    // Apply category (gender) filter
     if (selectedCategories.length > 0) {
       filtered = filtered.filter((p) => selectedCategories.includes(p.gender));
     }
 
-    // Apply scent filter
     if (selectedScents.length > 0) {
       filtered = filtered.filter((p) =>
         p.scents.some((scent) => selectedScents.includes(scent))
       );
     }
 
-    // Apply sorting
     filtered = applySorting(filtered, sortOption);
 
     setPerfumes(filtered);
@@ -97,9 +81,9 @@ const Catalog = () => {
     setSelectedBrands([]);
     setSelectedCategories([]);
     setSelectedScents([]);
-    setSortOption('name-asc'); // Reset to default sorting
+    setSortOption('name-asc');
     setActiveFilters('');
-    setPerfumes(initialPerfumes); // Reset to initial perfumes
+    setPerfumes(initialPerfumes);
     setNoResults(initialPerfumes.length === 0);
   };
 
@@ -156,7 +140,7 @@ const Catalog = () => {
   const handleSortSelection = (option) => {
     setSortOption(option);
     setIsSortDropdownOpen(false);
-    applyFilters(); // Apply sorting immediately
+    applyFilters();
   };
 
   return (
@@ -181,6 +165,7 @@ const Catalog = () => {
           </button>
         </div>
         <div className="filter-grid">
+          {/* Brands */}
           <div className="filter-section brand-filter">
             <h5>Márkák</h5>
             <div className="form-check">
@@ -209,8 +194,9 @@ const Catalog = () => {
                 Dior
               </label>
             </div>
-            {/* Add more brands as needed */}
           </div>
+
+          {/* Categories */}
           <div className="filter-section category-filter">
             <h5>Kategóriák</h5>
             <div className="form-check">
@@ -253,6 +239,8 @@ const Catalog = () => {
               </label>
             </div>
           </div>
+
+          {/* Scents */}
           <div className="filter-section scent-filter">
             <h5>Illat típus</h5>
             <div className="form-check">
@@ -281,9 +269,10 @@ const Catalog = () => {
                 Fás
               </label>
             </div>
-            {/* Add more scents as needed */}
           </div>
-          <div className="filter-section sort-filter" ref={sortDropdownRef}>
+
+          {/* Sorting */}
+          <div className="filter-section sort-filter">
             <h5>Rendezés</h5>
             <button
               className="btn btn-peach sort-toggle"
@@ -343,4 +332,4 @@ const Catalog = () => {
   );
 };
 
-export default Catalog;
+export default Search;
