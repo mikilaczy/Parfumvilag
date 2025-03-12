@@ -27,6 +27,6 @@ export const getPerfumeById = async (id) => {
     const response = await axios.get(`${API_BASE_URL}/perfumes/${id}`);
     return response.data;
   } catch (error) {
-    throw error.response?.data?.error || 'Nem sikerült betölteni a parfüm részleteit!';
+    throw error.response?.data?.error || 'Parfüm nem található!';
   }
 };

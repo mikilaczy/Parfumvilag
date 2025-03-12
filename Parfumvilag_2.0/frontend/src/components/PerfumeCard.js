@@ -1,31 +1,32 @@
+// frontend/src/components/PerfumeCard.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../style.css';
 
 const PerfumeCard = ({ perfume }) => {
-  const { id, name, brand, description, image_url, notes = [] } = perfume;
+  const { id, name, brand, price, image_url } = perfume;
 
   return (
-    <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
-      <div className="perfume-card">
-        <img
-          src={image_url || 'https://via.placeholder.com/250x250?text=Nincs+kép'}
-          alt={name}
-          className="perfume-card-img"
-        />
-        <div className="perfume-card-body">
-          <h5 className="perfume-card-title">{name}</h5>
-          <h6 className="perfume-card-subtitle">{brand}</h6>
-          <div className="scent-tags">
-            {notes.map((note, index) => (
-              <span key={index} className="scent-tag">{note}</span>
-            ))}
+    <Link 
+      to={`/parfume/${id}`} 
+      className="perfume-card-link" 
+      style={{ textDecoration: 'none', color: 'inherit' }}
+    >
+      <div className="col-lg-4 col-md-6 mb-4">
+        <div className="card perfume-card">
+          <img 
+            src={image_url || 'https://via.placeholder.com/220'} 
+            alt={name} 
+            className="card-img-top" 
+          />
+          <div className="card-body">
+            <h5 className="card-title">{name}</h5>
+            <p className="card-subtitle mb-2 text-muted">{brand}</p>
+            <p className="price-display">{new Intl.NumberFormat('hu-HU').format(price)} Ft</p>
           </div>
-          <p className="perfume-card-text">{description || 'Nincs leírás'}</p>
         </div>
-        <Link to={`/perfume/${id}`} className="perfume-card-link" />
       </div>
-    </div>
+    </Link>
   );
 };
 
