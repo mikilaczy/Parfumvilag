@@ -1,3 +1,4 @@
+// Parfumvilag_2.0\frontend\src\pages\Profile.js
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser } from '../services/userService';
@@ -15,7 +16,6 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState(null); // For profile image (base64 or URL)
   const [imageFile, setImageFile] = useState(null); // For the actual file to send to backend
   const [phoneNumber, setPhoneNumber] = useState(''); // For phone number
-  const [achievements, setAchievements] = useState([]); // For achievement badges (mock data)
   const navigate = useNavigate();
   const fileInputRef = useRef(null); // Ref for file input
 
@@ -30,7 +30,6 @@ const Profile = () => {
       setLastUpdated(userData.updated_at ? new Date(userData.updated_at).toLocaleString('hu-HU') : null);
       setProfileImage(userData.profileImage || null); // Assuming profileImage is a URL or base64 string
       setPhoneNumber(userData.phoneNumber || ''); // Assuming phoneNumber is in userData
-      setAchievements(userData.achievements || ['Frequent Buyer', 'Top Reviewer']); // Mock achievements
     } catch (err) {
       setError('Hiba történt a profil betöltése közben. Kérjük, próbálja újra!');
     } finally {
@@ -182,18 +181,6 @@ const Profile = () => {
                 <p><strong>Telefonszám:</strong> {phoneNumber || 'Nincs megadva'}</p>
                 <p><strong>Regisztráció dátuma:</strong> {new Date(user.created_at).toLocaleDateString('hu-HU')}</p>
                 {lastUpdated && <p><strong>Utolsó frissítés:</strong> {lastUpdated}</p>}
-                {achievements.length > 0 && (
-                  <div className="achievements">
-                    <h4>Eredmények</h4>
-                    <div className="achievement-badges">
-                      {achievements.map((achievement, index) => (
-                        <span key={index} className="achievement-badge">
-                          <i className="fas fa-trophy"></i> {achievement}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
                 <div className="profile-actions">
                   <button className="btn btn-outline-peach" onClick={() => setEditing(true)}>Adatok szerkesztése</button>
                   <button className="btn btn-outline-secondary ms-2" onClick={handleLogout}>Kilépés</button>

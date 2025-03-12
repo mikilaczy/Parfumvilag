@@ -15,6 +15,7 @@ import Aszf from './pages/Aszf'; // Új import
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
+
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -30,6 +31,7 @@ function App() {
           <Route path="/profil" element={<Profile />} />
           <Route path="/parfume/:id" element={<PerfumeDetail />} />
           <Route path="/aszf" element={<Aszf />} /> {/* Új útvonal */}
+          
         </Routes>
       </div>
       <Footer />
