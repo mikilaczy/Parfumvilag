@@ -1,31 +1,30 @@
-// frontend/src/components/PerfumeCard.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../style.css';
-
-const PerfumeCard = ({ perfume, onClick }) => {
-  const notes = (perfume?.notes || []).join(', ');
-
+ 
+const PerfumeCard = ({ perfume }) => {
+  const { id, name, brand, description, image_url } = perfume;
+ 
   return (
-    <div
-      className="card perfume-card mb-3"
-      style={{ cursor: 'pointer' }}
-      onClick={onClick}
+    <Link
+      to={`/parfume/${id}`}
+      className="perfume-card-link"
+      style={{ textDecoration: 'none', color: 'inherit' }}
     >
-      <img
-        src={perfume.image_url || 'https://via.placeholder.com/220'}
-        alt={perfume.name}
-        className="card-img-top"
-      />
-      <div className="card-body">
-        <h5 className="card-title">{perfume.name}</h5>
-        <p className="card-subtitle mb-2 text-muted">{perfume.brand}</p>
-        <p className="card-text">{notes}</p>
-        <p className="price-display">
-          {perfume.price && new Intl.NumberFormat('hu-HU').format(perfume.price)} Ft
-        </p>
+      <div className="perfume-card">
+        <img
+          src={image_url || 'https://via.placeholder.com/220'}
+          alt={name}
+          className="perfume-card-img"
+        />
+        <div className="perfume-card-body">
+          <h5 className="perfume-card-title">{name}</h5>
+          <p className="perfume-card-subtitle">{brand}</p>
+          <p className="perfume-card-text">{description || 'Nincs leírás'}</p>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
-
+ 
 export default PerfumeCard;
