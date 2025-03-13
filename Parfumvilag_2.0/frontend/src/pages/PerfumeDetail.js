@@ -10,6 +10,7 @@ const PerfumeDetail = () => {
   const [perfume, setPerfume] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   useEffect(() => {
     const fetchPerfume = async () => {
@@ -27,7 +28,6 @@ const PerfumeDetail = () => {
     fetchPerfume();
   }, [id]);
 
-  // "notes" mező kezelése
   const noteTags = (perfume?.notes || []).map((note, index) => (
     <span key={index} className="scent-tag me-2">
       {note.trim()}
@@ -48,47 +48,73 @@ const PerfumeDetail = () => {
         {error && <div className="alert alert-danger">{error}</div>}
 
         {perfume && (
-          <div className="row mb-5">
-            {/* Bal oldal: Kép és részletek */}
-            <div className="col-md-6">
-              <div className="perfume-detail-card">
-                <img 
-                  src={perfume.image_url || "https://via.placeholder.com/400"} 
-                  alt={perfume.name} 
-                  className="img-fluid perfume-detail-image mb-3"
-                />
-                <h2 className="perfume-detail-title">{perfume.name}</h2>
-                <p className="perfume-detail-text">
-                  <strong>Márka: </strong>
-                  {perfume.brand}
-                </p>
-                <p className="perfume-detail-text">
-                  <strong>Kategória: </strong>
-                  {perfume.gender === "female" ? "Női" : perfume.gender === "male" ? "Férfi" : "Unisex"}
-                </p>
-                <p className="perfume-detail-text">
-                  <strong>Illatok: </strong>
-                  {perfume?.notes && noteTags}
-                </p>
-                <p className="price-display">
-                  {new Intl.NumberFormat("hu-HU").format(perfume.price)} Ft
-                </p>
-                <p className="perfume-detail-text">
-                  <strong>Leírás: </strong>
-                  {perfume.description || "Nincs leírás"}
-                </p>
+          <>
+            {/* Kép és leírás egymás mellett */}
+            <div className="row mb-4">
+              {/* Kép bal oldalon, kisebb méretben */}
+              <div className="col-md-4">
+                {isImageZoomed ? (
+                  <div className="zoomed-image-container">
+                    <img 
+                      src={perfume.image_url || "https://via.placeholder.com/400"} 
+                      alt={perfume.name} 
+                      className="zoomed-image"
+                    />
+                    <button 
+                      className="close-zoom-btn"
+                      onClick={() => setIsImageZoomed(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ) : (
+                  <img 
+                    src={perfume.image_url || "https://via.placeholder.com/400"} 
+                    alt={perfume.name} 
+                    className="img-fluid perfume-detail-image"
+                    onClick={() => setIsImageZoomed(true)}
+                  />
+                )}
+              </div>
+
+              {/* Leírás jobb oldalon */}
+              <div className="col-md-8">
+                <div className="perfume-detail-card">
+                  <h2 className="perfume-detail-title">{perfume.name}</h2>
+                  <p className="perfume-detail-text">
+                    <strong>Márka: </strong>
+                    {perfume.brand}
+                  </p>
+                  <p className="perfume-detail-text">
+                    <strong>Kategória: </strong>
+                    {perfume.gender === "female" ? "Női" : perfume.gender === "male" ? "Férfi" : "Unisex"}
+                  </p>
+                  <p className="perfume-detail-text">
+                    <strong>Illatok: </strong>
+                    {perfume?.notes && noteTags}
+                  </p>
+                  <p className="price-display">
+                    {new Intl.NumberFormat("hu-HU").format(perfume.price)} Ft
+                  </p>
+                  <p className="perfume-detail-text">
+                    <strong>Leírás: </strong>
+                    {perfume.description || "Nincs leírás"}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Jobb oldal: Értékelések */}
-            <div className="col-md-6">
-              <div className="perfume-detail-card">
-                <h3 className="perfume-detail-subtitle">Értékelések</h3>
-                <ReviewForm perfumeId={perfume?.id} />
-                <ReviewList perfumeId={perfume?.id} />
+            {/* Értékelések alattuk, teljes szélességben */}
+            <div className="row">
+              <div className="col-12">
+                <div className="perfume-detail-card">
+                  <h3 className="perfume-detail-subtitle">Értékelések</h3>
+                  <ReviewForm perfumeId={perfume?.id} className="review-form-custom" />
+                  <ReviewList perfumeId={perfume?.id} className="review-list-custom" />
+                </div>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>

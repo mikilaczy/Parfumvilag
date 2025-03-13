@@ -2457,9 +2457,11 @@ body {
 }
 
 .perfume-detail-image {
-  max-width: 400px;
+  width: 100%; /* Teljes szélesség a konténerben */
+  max-width: 200px; /* Kisebb méret alapból */
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
   transition: transform 0.3s ease;
 }
 
@@ -2614,7 +2616,53 @@ body {
   line-height: 1.6;
 }
 
+/* Nagyított kép és "X" gomb stílusa */
+.zoomed-image-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Fekete átlátszó háttér */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.zoomed-image {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.close-zoom-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-size: 2rem;
+  color: #ffffff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.close-zoom-btn:hover {
+  color: #e6e6fa;
+  transform: scale(1.2);
+}
+
 /* Reszponzivitás */
+@media (min-width: 768px) {
+  .perfume-detail-image {
+    max-width: 200px; /* Kisebb méret alapból */
+  }
+}
+
 @media (max-width: 767px) {
   .perfume-detail-page {
     padding: 2rem 1rem;
@@ -2635,7 +2683,8 @@ body {
     font-size: 1.2rem;
   }
   .perfume-detail-image {
-    max-width: 300px;
+    max-width: 150px; /* Még kisebb mobil nézetben */
+    margin-bottom: 1rem;
   }
   .review-form {
     padding: 1rem;
@@ -2665,6 +2714,15 @@ body {
   .review-comment {
     font-size: 0.8rem;
   }
+  .zoomed-image {
+    max-width: 95%;
+    max-height: 95%;
+  }
+  .close-zoom-btn {
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+  }
 }
 
 @media (max-width: 576px) {
@@ -2687,7 +2745,7 @@ body {
     font-size: 1rem;
   }
   .perfume-detail-image {
-    max-width: 250px;
+    max-width: 120px; /* Még kisebb mobil nézetben */
   }
   .review-form {
     padding: 0.8rem;
@@ -2715,6 +2773,402 @@ body {
     font-size: 0.7rem;
   }
   .review-comment {
+    font-size: 0.7rem;
+  }
+  .zoomed-image {
+    max-width: 98%;
+    max-height: 98%;
+  }
+  .close-zoom-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.2rem;
+  }
+}
+
+/* Custom Review Form Styling */
+.review-form-custom {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-form-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.review-form-custom h4 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.review-form-custom .form-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.review-form-custom .form-control {
+  border-radius: 20px;
+  border: 1px solid #e6e6fa;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.9rem;
+  width: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f9f9ff;
+}
+
+.review-form-custom .form-control:focus {
+  border-color: #d4a59a; /* Pasztell rózsaszín árnyalat */
+  box-shadow: 0 0 6px rgba(212, 165, 154, 0.4);
+  outline: none;
+}
+
+.review-form-custom .rating-stars {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.review-form-custom .rating-stars input[type="radio"] {
+  display: none;
+}
+
+.review-form-custom .rating-stars label {
+  font-size: 1.2rem;
+  color: #d4a59a;
+  cursor: pointer;
+  margin-right: 0.3rem;
+}
+
+.review-form-custom .rating-stars label:hover,
+.review-form-custom .rating-stars label:hover ~ label,
+.review-form-custom .rating-stars input[type="radio"]:checked ~ label {
+  color: #d4a59a;
+}
+
+.review-form-custom .btn-submit {
+  background: linear-gradient(135deg, #d4a59a 0%, #e6c4b6 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.review-form-custom .btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(212, 165, 154, 0.3);
+}
+
+/* Custom Review Form Styling */
+.review-form-custom {
+  background: #ffffff;
+  border-radius: 10px; /* Kisebb lekerekítés */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Kisebb árnyék */
+  padding: 1rem; /* Kisebb padding */
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-form-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-form-section {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem; /* Kisebb távolság */
+}
+
+.review-form-custom .form-label {
+  font-size: 0.85rem; /* Kisebb betűméret */
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 0.3rem;
+}
+
+.review-form-custom .form-control {
+  border-radius: 15px; /* Kisebb lekerekítés */
+  border: 1px solid #e6e6fa; /* Halvány lila */
+  padding: 0.6rem 1rem; /* Kisebb padding */
+  font-size: 0.85rem; /* Kisebb betűméret */
+  width: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f9f9ff;
+  resize: none;
+}
+
+.review-form-custom .form-control:focus {
+  border-color: #e6e6fa; /* Halvány lila kiemelés */
+  box-shadow: 0 0 4px rgba(230, 230, 250, 0.4); /* Kisebb shadow */
+  outline: none;
+}
+
+.rating-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px; /* Kisebb csúszka magasság */
+  border-radius: 3px; /* Kisebb lekerekítés */
+  background: #e6e6fa; /* Halvány lila háttér */
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+.rating-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px; /* Kisebb thumb */
+  height: 16px; /* Kisebb thumb */
+  border-radius: 50%;
+  background: #d4a59a; /* Thumb színe változatlan */
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Kisebb shadow */
+  transition: transform 0.3s ease;
+}
+
+.rating-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #d4a59a;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.rating-slider::-webkit-slider-thumb:hover,
+.rating-slider::-moz-range-thumb:hover {
+  transform: scale(1.1); /* Kisebb hover effekt */
+}
+
+.rating-slider:focus {
+  background: #d4a59a; /* Fókuszban eltérő szín */
+}
+
+.slider-value {
+  display: inline-block;
+  margin-left: 0.8rem; /* Kisebb távolság */
+  font-size: 0.8rem; /* Kisebb betűméret */
+  color: #e6e6fa; /* Halvány lila */
+  font-weight: 500;
+}
+
+.review-form-custom .btn-submit {
+  background: linear-gradient(135deg, #e6e6fa 0%, #d4a59a 100%); /* Halvány lila gradiens */
+  color: #ffffff;
+  border: none;
+  border-radius: 20px; /* Kisebb lekerekítés */
+  padding: 0.6rem 1.2rem; /* Kisebb padding */
+  font-size: 0.9rem; /* Kisebb betűméret */
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.review-form-custom .btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 165, 154, 0.3);
+}
+
+/* Custom Review List Styling */
+.review-list-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.review-item-custom {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 3px solid #e6e6fa;
+}
+
+.review-item-custom:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-header-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #e6e6fa;
+  padding-bottom: 0.3rem;
+}
+
+.review-author-custom {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-transform: capitalize;
+}
+
+.review-date-custom {
+  font-size: 0.75rem;
+  color: #666666;
+}
+
+.review-rating-custom {
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+}
+
+.review-rating-custom .rating-category {
+  font-size: 0.85rem;
+  color: #333333;
+  margin-right: 0.3rem;
+  font-weight: 500;
+}
+
+.review-rating-custom .rating-stars {
+  display: inline-flex;
+  color: #1a1a1a; /* Fekete szín a csillagoknak */
+  font-size: 0.85rem;
+}
+
+.review-comment-custom {
+  font-size: 0.85rem;
+  color: #555555;
+  line-height: 1.5;
+  padding-left: 0.3rem;
+  border-left: 2px solid #e6e6fa;
+}
+/* Alert styling */
+.alert {
+  padding: 0.6rem; /* Kisebb padding */
+  border-radius: 8px; /* Kisebb lekerekítés */
+  margin-bottom: 1rem;
+  font-size: 0.85rem; /* Kisebb betűméret */
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* No reviews message */
+.text-center {
+  text-align: center;
+  color: #666666;
+  font-size: 0.9rem; /* Kisebb betűméret */
+}
+
+/* Reszponzivitás az értékelésekhez */
+@media (max-width: 767px) {
+  .review-form-custom {
+    padding: 0.8rem;
+  }
+  .review-form-custom .form-label {
+    font-size: 0.75rem;
+  }
+  .review-form-custom .form-control {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.75rem;
+  }
+  .rating-slider {
+    height: 5px;
+  }
+  .rating-slider::-webkit-slider-thumb,
+  .rating-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+  }
+  .review-form-custom .btn-submit {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+  .slider-value {
+    font-size: 0.7rem;
+  }
+  .review-item-custom {
+    padding: 0.6rem;
+  }
+  .review-author-custom {
+    font-size: 0.9rem;
+  }
+  .review-date-custom {
+    font-size: 0.65rem;
+  }
+  .review-rating-custom .rating-category {
+    font-size: 0.75rem;
+  }
+  .review-comment-custom {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .review-form-custom {
+    padding: 0.6rem;
+  }
+  .review-form-custom .form-label {
+    font-size: 0.7rem;
+  }
+  .review-form-custom .form-control {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+  }
+  .rating-slider {
+    height: 4px;
+  }
+  .rating-slider::-webkit-slider-thumb,
+  .rating-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+  }
+  .review-form-custom .btn-submit {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+  }
+  .slider-value {
+    font-size: 0.65rem;
+  }
+  .review-item-custom {
+    padding: 0.5rem;
+  }
+  .review-author-custom {
+    font-size: 0.8rem;
+  }
+  .review-date-custom {
+    font-size: 0.6rem;
+  }
+  .review-rating-custom .rating-category {
+    font-size: 0.7rem;
+  }
+  .review-comment-custom {
     font-size: 0.7rem;
   }
 }
