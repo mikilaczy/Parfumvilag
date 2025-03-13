@@ -1,4 +1,3 @@
-// Parfumvilag_2.0\frontend\src\App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -11,10 +10,10 @@ import Register from './pages/Register';
 import Search from './pages/Search';
 import Login from './pages/Login';
 import About from './pages/About';
-import Aszf from './pages/Aszf'; // Új import
+import Aszf from './pages/Aszf';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
-
 
 function App() {
   return (
@@ -30,8 +29,7 @@ function App() {
           <Route path="/regisztracio" element={<Register />} />
           <Route path="/profil" element={<Profile />} />
           <Route path="/parfume/:id" element={<PerfumeDetail />} />
-          <Route path="/aszf" element={<Aszf />} /> {/* Új útvonal */}
-          
+          <Route path="/aszf" element={<Aszf />} />
         </Routes>
       </div>
       <Footer />

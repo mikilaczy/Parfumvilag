@@ -2718,3 +2718,60 @@ body {
     font-size: 0.7rem;
   }
 }
+/* frontend/src/style.css */
+/* Modallal kapcsolatos formázás */
+.modal {
+  overflow-y: auto !important;
+}
+
+.modal-dialog {
+  max-width: 90%;
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  border-radius: 12px;
+}
+
+.perfume-card {
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s ease;
+}
+
+.perfume-card:hover {
+  transform: scale(1.02);
+}
+
+.scent-tag {
+  display: inline-block;
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.scent-tag:hover {
+  background-color: #6c7d85;
+  color: #ffffff;
+}
+
+/* Mobil optimitás */
+@media (max-width: 768px) {
+  .modal-content {
+    border-radius: 8px;
+  }
+
+  .perfume-card {
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .scent-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
