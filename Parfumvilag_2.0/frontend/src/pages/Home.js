@@ -30,7 +30,7 @@ const Home = () => {
 
   return (
     <div className="home-wrapper">
-      {/* Simplified Hero Section */}
+      {}
       <section className="hero-section">
         <div className="hero-content">
           <h1>Üdvözöljük a Parfümvilágban</h1>
@@ -44,7 +44,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Section (Refined for Recommendations) */}
+      {}
       <section className="featured-section container my-5">
         <h2 className="section-title text-center mb-4">Ajánlott Parfümjeink</h2>
         {error && <div className="alert alert-danger text-center">{error}</div>}
@@ -60,7 +60,7 @@ const Home = () => {
               <div id="noResults">
                 <i className="fas fa-search fa-2x mb-3"></i>
                 <h4>Nincs találat</h4>
-                <p>Próbálj meg később újra!</p>
+                <p>Próbálja meg később újra!</p>
               </div>
             </div>
           )}

@@ -1,270 +1,333 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Added import for Link
-import axios from 'axios';
 import PerfumeCard from '../components/PerfumeCard';
-import '../style.css';
+import { getAllPerfumes } from '../services/perfumeService';
 
 const Search = () => {
   const [perfumes, setPerfumes] = useState([]);
-  const [filteredPerfumes, setFilteredPerfumes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [maxPrice, setMaxPrice] = useState(100000);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedScents, setSelectedScents] = useState([]);
+  const [sortOption, setSortOption] = useState('name-asc'); // Default sorting: name ascending
+  const [activeFilters, setActiveFilters] = useState('');
+  const [noResults, setNoResults] = useState(false);
   const [error, setError] = useState('');
-  const [suggestions, setSuggestions] = useState([]); // For quick search suggestions
+  const [initialPerfumes, setInitialPerfumes] = useState([]); // Store initial perfumes for reset
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false); // Add this line
 
   useEffect(() => {
     const fetchPerfumes = async () => {
       try {
-        const response = await axios.get('/api/perfumes');
-        setPerfumes(response.data);
-        setFilteredPerfumes(response.data);
-      } catch (err) {
-        setError('Nem sikerült betölteni a parfümöket.');
-        console.error(err);
+        const perfumesData = await getAllPerfumes();
+        setPerfumes(perfumesData);
+        setInitialPerfumes(perfumesData);
+        setNoResults(perfumesData.length === 0);
+      } catch (error) {
+        setError('Nem sikerült betölteni a parfümek listáját!');
+        setPerfumes([]);
+        setNoResults(true);
       }
     };
     fetchPerfumes();
   }, []);
 
-  // Update suggestions as user types
-  useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setSuggestions([]);
-      return;
-    }
-    const filteredSuggestions = perfumes
-      .filter((perfume) =>
-        (perfume.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          perfume.brand.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        !filteredPerfumes.some((p) => p.id === perfume.id) // Avoid duplicates
-      )
-      .slice(0, 5); // Limit to 5 suggestions
-    setSuggestions(filteredSuggestions);
-  }, [searchTerm, perfumes, filteredPerfumes]);
-
   const applyFilters = () => {
-    const filtered = perfumes.filter((perfume) => {
-      const matchesSearch =
-        searchTerm === '' ||
-        perfume.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        perfume.brand.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesPrice = perfume.price <= maxPrice;
-      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(perfume.brand);
-      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(perfume.gender);
-      const matchesScents = selectedScents.length === 0 || selectedScents.some((scent) => perfume.notes.includes(scent));
+    let filtered = [...initialPerfumes];
+    
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (p) =>
+          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.brand.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
-      return matchesSearch && matchesPrice && matchesBrand && matchesCategory && matchesScents;
+    if (selectedBrands.length > 0) {
+      filtered = filtered.filter((p) => selectedBrands.includes(p.brand));
+    }
+
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((p) => selectedCategories.includes(p.gender));
+    }
+
+    if (selectedScents.length > 0) {
+      filtered = filtered.filter((p) =>
+        p.scents.some((scent) => selectedScents.includes(scent))
+      );
+    }
+
+    filtered = applySorting(filtered, sortOption);
+
+    setPerfumes(filtered);
+    setNoResults(filtered.length === 0);
+    setActiveFilters(getActiveFilters());
+  };
+
+  const applySorting = (perfumesList, sortOption) => {
+    return [...perfumesList].sort((a, b) => {
+      switch (sortOption) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
     });
-    setFilteredPerfumes(filtered);
-    setSuggestions([]); // Clear suggestions after applying filters
   };
 
   const resetFilters = () => {
     setSearchTerm('');
-    setMaxPrice(100000);
     setSelectedBrands([]);
     setSelectedCategories([]);
     setSelectedScents([]);
-    setFilteredPerfumes(perfumes);
-    setSuggestions([]); // Clear suggestions on reset
+    setSortOption('name-asc');
+    setActiveFilters('');
+    setPerfumes(initialPerfumes);
+    setNoResults(initialPerfumes.length === 0);
   };
 
-  const handleSuggestionClick = (perfume) => {
-    setSearchTerm(perfume.name);
-    setFilteredPerfumes([perfume]);
-    setSuggestions([]);
+  const getActiveFilters = () => {
+    const filters = [];
+    if (searchTerm) filters.push(`Keresés: ${searchTerm}`);
+    if (selectedBrands.length > 0)
+      filters.push(`Márkák: ${selectedBrands.join(', ')}`);
+    if (selectedCategories.length > 0)
+      filters.push(`Kategóriák: ${selectedCategories.join(', ')}`);
+    if (selectedScents.length > 0)
+      filters.push(`Illatok: ${selectedScents.join(', ')}`);
+    if (sortOption !== 'name-asc')
+      filters.push(`Rendezés: ${getSortLabel(sortOption)}`);
+    return filters.join(', ');
+  };
+
+  const getSortLabel = (option) => {
+    switch (option) {
+      case 'name-asc':
+        return 'Név A-Z-ig';
+      case 'name-desc':
+        return 'Név Z-A-ig';
+      default:
+        return 'Név A-Z-ig';
+    }
+  };
+
+  const handleBrandChange = (e) => {
+    const value = e.target.value;
+    setSelectedBrands((prev) =>
+      e.target.checked ? [...prev, value] : prev.filter((b) => b !== value)
+    );
+  };
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setSelectedCategories((prev) =>
+      e.target.checked ? [...prev, value] : prev.filter((c) => c !== value)
+    );
+  };
+
+  const handleScentChange = (e) => {
+    const value = e.target.value;
+    setSelectedScents((prev) =>
+      e.target.checked ? [...prev, value] : prev.filter((s) => s !== value)
+    );
+  };
+
+  const toggleSortDropdown = () => {
+    setIsSortDropdownOpen(!isSortDropdownOpen);
+  };
+
+  const handleSortSelection = (option) => {
+    setSortOption(option);
+    setIsSortDropdownOpen(false);
+    applyFilters();
   };
 
   return (
-    <div className="search-page container my-5">
+    <div className="catalog-section container">
+      <h1 className="title-section-h1">Katalógus</h1>
       <div className="search-container">
-        <h1 className="search-title mb-3">Parfüm Kereső</h1>
-        <p className="search-subtitle mb-4">
-          Találd meg az ideális parfümöt ajánlásainkkal és árösszehasonlításainkkal!
-        </p>
-
-        {/* Search Input with Suggestions */}
-        <div className="search-input-group mb-4">
-          <div className="input-group">
-            <input
-              type="text"
-              id="searchInput"
-              className="form-control"
-              placeholder="Keresés név vagy márka szerint..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyUp={(e) => e.key === 'Enter' && applyFilters()}
-            />
-            <button className="btn btn-peach" onClick={applyFilters}>
-              <i className="fas fa-search"></i> Keresés
-            </button>
-          </div>
-          {suggestions.length > 0 && (
-            <ul className="suggestions-list list-group mt-2">
-              {suggestions.map((perfume) => (
-                <li
-                  key={perfume.id}
-                  className="list-group-item list-group-item-action"
-                  onClick={() => handleSuggestionClick(perfume)}
-                >
-                  {perfume.name} ({perfume.brand})
-                </li>
-              ))}
-            </ul>
-          )}
+        <h2 className="search-title">Keresés</h2>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Keresés..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button
+            className="btn btn-peach"
+            type="button"
+            onClick={applyFilters}
+          >
+            Keresés
+          </button>
         </div>
-
-        {/* Filters */}
-        <div className="row g-3 mt-3">
-          <div className="col-md-3">
-            <div className="filter-section brand-filter">
-              <h5>Márkák</h5>
-              {['Chanel', 'Dior', 'Gucci', 'Armani', 'Versace'].map((brand) => (
-                <div className="form-check" key={brand}>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value={brand}
-                    id={brand.toLowerCase()}
-                    checked={selectedBrands.includes(brand)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setSelectedBrands((prev) =>
-                        checked ? [...prev, brand] : prev.filter((b) => b !== brand)
-                      );
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={brand.toLowerCase()}>
-                    {brand}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="filter-section category-filter">
-              <h5>Kategória</h5>
-              {['Női', 'Férfi', 'Unisex'].map((category) => (
-                <div className="form-check" key={category}>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value={category}
-                    id={category.toLowerCase()}
-                    checked={selectedCategories.includes(category)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setSelectedCategories((prev) =>
-                        checked ? [...prev, category] : prev.filter((c) => c !== category)
-                      );
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={category.toLowerCase()}>
-                    {category}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="filter-section scent-filter">
-              <h5>Illat típus</h5>
-              {['Virágos', 'Fás', 'Orientális', 'Friss', 'Citrusos'].map((scent) => (
-                <div className="form-check" key={scent}>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value={scent}
-                    id={scent.toLowerCase()}
-                    checked={selectedScents.includes(scent)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setSelectedScents((prev) =>
-                        checked ? [...prev, scent] : prev.filter((s) => s !== scent)
-                      );
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={scent.toLowerCase()}>
-                    {scent}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="filter-section price-filter">
-              <h5>Max. ár (Ft)</h5>
+        <div className="filter-grid">
+          {/* Brands */}
+          <div className="filter-section brand-filter">
+            <h5>Márkák</h5>
+            <div className="form-check">
               <input
-                type="range"
-                className="form-range"
-                min="5000"
-                max="100000"
-                step="1000"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(parseInt(e.target.value))}
+                className="form-check-input brand-checkbox"
+                type="checkbox"
+                value="Chanel"
+                id="brandChanel"
+                onChange={handleBrandChange}
+                checked={selectedBrands.includes('Chanel')}
               />
-              <span className="price-value">
-                {new Intl.NumberFormat('hu-HU').format(maxPrice)} Ft
-              </span>
+              <label className="form-check-label" htmlFor="brandChanel">
+                Chanel
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input brand-checkbox"
+                type="checkbox"
+                value="Dior"
+                id="brandDior"
+                onChange={handleBrandChange}
+                checked={selectedBrands.includes('Dior')}
+              />
+              <label className="form-check-label" htmlFor="brandDior">
+                Dior
+              </label>
             </div>
           </div>
-        </div>
-        <div className="row mt-3">
-          <div className="col-12">
-            <button className="btn btn-peach" onClick={applyFilters}>Szűrés alkalmazása</button>
-            <button className="btn btn-outline-peach ms-2" onClick={resetFilters}>Szűrők törlése</button>
+
+          {/* Categories */}
+          <div className="filter-section category-filter">
+            <h5>Kategóriák</h5>
+            <div className="form-check">
+              <input
+                className="form-check-input category-checkbox"
+                type="checkbox"
+                value="female"
+                id="categoryFemale"
+                onChange={handleCategoryChange}
+                checked={selectedCategories.includes('female')}
+              />
+              <label className="form-check-label" htmlFor="categoryFemale">
+                Női
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input category-checkbox"
+                type="checkbox"
+                value="male"
+                id="categoryMale"
+                onChange={handleCategoryChange}
+                checked={selectedCategories.includes('male')}
+              />
+              <label className="form-check-label" htmlFor="categoryMale">
+                Férfi
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input category-checkbox"
+                type="checkbox"
+                value="unisex"
+                id="categoryUnisex"
+                onChange={handleCategoryChange}
+                checked={selectedCategories.includes('unisex')}
+              />
+              <label className="form-check-label" htmlFor="categoryUnisex">
+                Unisex
+              </label>
+            </div>
+          </div>
+
+          {/* Scents */}
+          <div className="filter-section scent-filter">
+            <h5>Illat típus</h5>
+            <div className="form-check">
+              <input
+                className="form-check-input scent-checkbox"
+                type="checkbox"
+                value="Virágos"
+                id="scentVirágos"
+                onChange={handleScentChange}
+                checked={selectedScents.includes('Virágos')}
+              />
+              <label className="form-check-label" htmlFor="scentVirágos">
+                Virágos
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input scent-checkbox"
+                type="checkbox"
+                value="Fás"
+                id="scentFás"
+                onChange={handleScentChange}
+                checked={selectedScents.includes('Fás')}
+              />
+              <label className="form-check-label" htmlFor="scentFás">
+                Fás
+              </label>
+            </div>
+          </div>
+
+          {/* Sorting */}
+          <div className="filter-section sort-filter">
+            <h5>Rendezés</h5>
+            <button
+              className="btn btn-peach sort-toggle"
+              onClick={toggleSortDropdown}
+            >
+              {getSortLabel(sortOption)} <i className="fas fa-caret-down"></i>
+            </button>
+            {isSortDropdownOpen && (
+              <div className="sort-dropdown-menu">
+                <button
+                  className="sort-dropdown-item"
+                  onClick={() => handleSortSelection('name-asc')}
+                >
+                  Név A-Z-ig
+                </button>
+                <button
+                  className="sort-dropdown-item"
+                  onClick={() => handleSortSelection('name-desc')}
+                >
+                  Név Z-A-ig
+                </button>
+              </div>
+            )}
           </div>
         </div>
-        <div className="active-filters mt-3" id="activeFilters">
-          {selectedBrands.length > 0 && <p>Márkák: {selectedBrands.join(', ')}</p>}
-          {selectedCategories.length > 0 && <p>Kategóriák: {selectedCategories.join(', ')}</p>}
-          {selectedScents.length > 0 && <p>Illatok: {selectedScents.join(', ')}</p>}
-          {maxPrice !== 100000 && <p>Max. ár: {new Intl.NumberFormat('hu-HU').format(maxPrice)} Ft</p>}
+        <div className="active-filters">{activeFilters}</div>
+        <div className="btn-group">
+          <button
+            type="button"
+            className="btn btn-peach"
+            onClick={applyFilters}
+          >
+            Szűrés alkalmazása
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-peach ms-2"
+            onClick={resetFilters}
+          >
+            Szűrők törlése
+          </button>
         </div>
       </div>
-
-      <h3 className="results-title mb-4">Találatok ({filteredPerfumes.length})</h3>
-      {error && <div className="alert alert-danger text-center">{error}</div>}
-      <div className="row g-3" id="perfumeList">
-        {filteredPerfumes.length > 0 ? (
-          filteredPerfumes.map((perfume) => (
-            <div key={perfume.id} className="col-lg-4 col-md-6 col-12">
-              <PerfumeCard perfume={perfume} />
-            </div>
-          ))
-        ) : (
-          <div className="col-12 text-center">
-            <div id="noResults">
-              <i className="fas fa-search fa-2x mb-3"></i>
-              <h4>Nincs találat a keresési feltételeknek megfelelően</h4>
-              <p>Próbálj meg kevesebb vagy más szűrőfeltételt beállítani</p>
-            </div>
+      <div className="row" id="perfumeList">
+        {error && <div className="alert alert-danger">{error}</div>}
+        {noResults && (
+          <div id="noResults">
+            <i className="fas fa-search"></i>
+            <h4>Nincs találat a keresési feltételeknek megfelelően</h4>
+            <p>Próbálj meg kevesebb vagy más szűrőfeltételt beállítani</p>
           </div>
         )}
+        {!noResults &&
+          perfumes.map((p) => <PerfumeCard key={p.id} perfume={p} />)}
       </div>
-
-      {/* Quick Search Suggestions Section */}
-      <section className="quick-suggestions-section container mt-5">
-        <h2 className="section-title text-center mb-4">Gyors ajánlások</h2>
-        <div className="row g-3">
-          {['Chanel No. 5', 'Dior Sauvage', 'Gucci Bloom', 'Armani Code', 'Versace Eros'].map((suggestion, index) => (
-            <div key={index} className="col-lg-4 col-md-6 col-12">
-              <div className="suggestion-card card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">{suggestion}</h5>
-                  <p className="card-text">Kattints a kereséshez és fedezd fel az ajánlásokat!</p>
-                  <Link to={`/kereses?query=${encodeURIComponent(suggestion)}`} className="btn btn-outline-peach">
-                    Keresés
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };

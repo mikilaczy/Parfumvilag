@@ -1,63 +1,25 @@
-const PerfumeNote = require('../models/PerfumeNote');
+// backend/routes/perfumeRoutes.js
+const express = require('express');
+const router = express.Router();
+const PerfumeController = require('../controllers/perfumeController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-exports.getAllPerfumeNotes = (req, res) => {
-  PerfumeNote.getAllPerfumeNotes((err, results) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.status(200).json(results);
-    }
-  });
-};
+// Összes parfüm
+router.get('/all', PerfumeController.getAllPerfumes);
 
-exports.getPerfumeNoteById = (req, res) => {
-  PerfumeNote.getPerfumeNoteById(req.params.id, (err, results) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else if (results.length === 0) {
-      res.status(404).json({ error: 'Perfume Note not found' });
-    } else {
-      res.status(200).json(results[0]);
-    }
-  });
-};
+// Kiemelt parfümök
+router.get('/featured', PerfumeController.getFeaturedPerfumes);
 
-exports.createPerfumeNote = (req, res) => {
-  PerfumeNote.createPerfumeNote(req.body, (err, results) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.status(201).json({ id: results.insertId, ...req.body });
-    }
-  });
-};
+// Parfüm azonosító alapján
+router.get('/:id', PerfumeController.getPerfumeById);
 
-exports.updatePerfumeNote = (req, res) => {
-  PerfumeNote.updatePerfumeNote(req.params.id, req.body, (err, results) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else if (results.affectedRows === 0) {
-      res.status(404).json({ error: 'Perfume Note not found' });
-    } else {
-      PerfumeNote.getPerfumeNoteById(req.params.id, (err, results) => {
-        if (err) {
-          res.status(500).json({ error: err.message });
-        } else {
-          res.status(200).json(results[0]);
-        }
-      });
-    }
-  });
-};
+// Parfüm létrehozása (védett útvonal)
+router.post('/', authMiddleware, PerfumeController.createPerfume);
 
-exports.deletePerfumeNote = (req, res) => {
-  PerfumeNote.deletePerfumeNote(req.params.id, (err, results) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else if (results.affectedRows === 0) {
-      res.status(404).json({ error: 'Perfume Note not found' });
-    } else {
-      res.status(200).json({ message: 'Perfume Note deleted successfully' });
-    }
-  });
-};
+// Parfüm frissítése (védett útvonal)
+router.put('/:id', authMiddleware, PerfumeController.updatePerfume);
+
+// Parfüm törlése (védett útvonal)
+router.delete('/:id', authMiddleware, PerfumeController.deletePerfume);
+
+module.exports = router;

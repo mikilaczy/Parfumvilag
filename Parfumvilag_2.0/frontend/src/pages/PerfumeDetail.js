@@ -1,78 +1,124 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import PerfumeCard from "../components/PerfumeCard";
+import { useParams } from "react-router-dom";
+import { getPerfumeById } from "../services/perfumeService";
 import ReviewForm from "../components/ReviewForm";
 import ReviewList from "../components/ReviewList";
-
+import "../style.css";
+ 
 const PerfumeDetail = () => {
   const { id } = useParams();
   const [perfume, setPerfume] = useState(null);
-
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
+ 
   useEffect(() => {
-    const mockPerfumes = [
-      {
-        id: 1,
-        name: "Chanel No. 5",
-        brand: "Chanel",
-        category: "Női",
-        description: "Időtlen klasszikus, ikonikus virágos-aldehides illat.",
-        scents: ["Virágos", "Aldehides"],
-        price: 45000,
-        image: "https://fimgs.net/himg/o.97897.jpg",
-      },
-      {
-        id: 2,
-        name: "Sauvage",
-        brand: "Dior",
-        category: "Férfi",
-        description: "Friss, erőteljes, nyers és nemes összetevőkkel.",
-        scents: ["Fás", "Fűszeres", "Friss"],
-        price: 38000,
-        image:
-          "https://cdn.notinoimg.com/detail_main_mq/dior/3348901250153_01/sauvage___200828.jpg",
-      },
-      {
-        id: 3,
-        name: "Black Opium",
-        brand: "Yves Saint Laurent",
-        category: "Női",
-        description: "Erőteljes és érzéki illat, kávé és vanília jegyekkel.",
-        scents: ["Orientális", "Fűszeres", "Édes"],
-        price: 44000,
-        image:
-          "https://cdn.shopify.com/s/files/1/0259/7733/products/black-opium-le-parfum-90ml_grande.png?v=1679625919",
-      },
-    ];
-
-    const selectedPerfume = mockPerfumes.find((p) => p.id === parseInt(id));
-    setPerfume(selectedPerfume);
+    const fetchPerfume = async () => {
+      try {
+        const perfumeData = await getPerfumeById(id);
+        setPerfume(perfumeData);
+        setError("");
+      } catch (err) {
+        setError("Nem sikerült betölteni a parfüm részleteit!");
+      } finally {
+        setLoading(false);
+      }
+    };
+ 
+    fetchPerfume();
   }, [id]);
-
-  if (!perfume) {
-    return <div>Loading...</div>;
-  }
-
+ 
+  const noteTags = (perfume?.notes || []).map((note, index) => (
+    <span key={index} className="scent-tag me-2">
+      {note.trim()}
+    </span>
+  ));
+ 
   return (
-    <div className="container">
-      <div className="row">
-        <PerfumeCard perfume={perfume} />
-      </div>
-      <div className="row mt-4">
-        <div className="col-12">
-          <h2>Értékelések</h2>
-          <ReviewForm perfumeId={perfume.id} />
-          <ReviewList perfumeId={perfume.id} />
-        </div>
-      </div>
-      <div className="row mt-4">
-        <div className="col-12">
-          <Link to="/kereses" className="btn btn-outline-primary">
-            Vissza a kereséshez
-          </Link>
-        </div>
+    <div className="perfume-detail-page">
+      <div className="container mt-5">
+        <button
+          className="btn btn-secondary mb-4"
+          onClick={() => window.history.back()}
+        >
+          Vissza a kereséshez
+        </button>
+ 
+        {loading && <div className="text-center">Loading...</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+ 
+        {perfume && (
+          <>
+            {/* Kép és leírás egymás mellett */}
+            <div className="row mb-4">
+              {/* Kép bal oldalon, kisebb méretben */}
+              <div className="col-md-4">
+                {isImageZoomed ? (
+                  <div className="zoomed-image-container">
+                    <img
+                      src={perfume.image_url || "https://via.placeholder.com/400"}
+                      alt={perfume.name}
+                      className="zoomed-image"
+                    />
+                    <button
+                      className="close-zoom-btn"
+                      onClick={() => setIsImageZoomed(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ) : (
+                  <img
+                    src={perfume.image_url || "https://via.placeholder.com/400"}
+                    alt={perfume.name}
+                    className="img-fluid perfume-detail-image"
+                    onClick={() => setIsImageZoomed(true)}
+                  />
+                )}
+              </div>
+ 
+              {/* Leírás jobb oldalon */}
+              <div className="col-md-8">
+                <div className="perfume-detail-card">
+                  <h2 className="perfume-detail-title">{perfume.name}</h2>
+                  <p className="perfume-detail-text">
+                    <strong>Márka: </strong>
+                    {perfume.brand}
+                  </p>
+                  <p className="perfume-detail-text">
+                    <strong>Kategória: </strong>
+                    {perfume.gender === "female" ? "Női" : perfume.gender === "male" ? "Férfi" : "Unisex"}
+                  </p>
+                  <p className="perfume-detail-text">
+                    <strong>Illatok: </strong>
+                    {perfume?.notes && noteTags}
+                  </p>
+                  <p className="price-display">
+                    {new Intl.NumberFormat("hu-HU").format(perfume.price)} Ft
+                  </p>
+                  <p className="perfume-detail-text">
+                    <strong>Leírás: </strong>
+                    {perfume.description || "Nincs leírás"}
+                  </p>
+                </div>
+              </div>
+            </div>
+ 
+            {/* Értékelések alattuk, teljes szélességben */}
+            <div className="row">
+              <div className="col-12">
+                <div className="perfume-detail-card">
+                  <h3 className="perfume-detail-subtitle">Értékelések</h3>
+                  <ReviewForm perfumeId={perfume?.id} className="review-form-custom" />
+                  <ReviewList perfumeId={perfume?.id} className="review-list-custom" />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 };
-
+ 
 export default PerfumeDetail;
