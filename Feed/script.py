@@ -29,6 +29,40 @@ def clean_name(name):
     cleaned_name = cleaned_name.replace("'", "''")
     return cleaned_name
 
+# Illatjegyek kinyerése és beszúrása
+def process_notes(perfume_id, product_highlight):
+    if product_highlight is None:
+        return
+
+    # Szűrjük ki az "Az illat fajtája:" utáni részt, de hagyjuk ki az "Intenzitás:" és "Market type:" részeket
+    notes_section = ""
+    if "Az illat fajtája:" in product_highlight:
+        notes_section = product_highlight.split("Az illat fajtája:")[-1].strip()
+        # Töröljük az "Intenzitás:" és "Market type:" kezdetű részeket
+        for part in ["Intenzitás:", "Market type:","Fenntarthatóság:","Csomagolás:","Konzisztencia:","újratölthető kivitel","Hatóanyag:","Hajkiegészítő típusa:","Bőrtípus:" ]:
+            if part in notes_section:
+                notes_section = notes_section.split(part)[0].strip()
+
+    # Bontsuk szét az értékeket vesszővel elválasztva
+    notes_list = [note.strip() for note in notes_section.split(",") if note.strip()]
+
+    for note_name in notes_list:
+        # Ellenőrizzük, hogy az illatjegy már létezik-e
+        cursor.execute("SELECT id FROM notes WHERE name = %s", (note_name,))
+        note_result = cursor.fetchone()
+        if note_result:
+            note_id = note_result[0]
+        else:
+            # Új illatjegy hozzáadása
+            cursor.execute("INSERT INTO notes (name, type) VALUES (%s, 'unknown')", (note_name,))
+            note_id = cursor.lastrowid
+
+        # Kapcsolat létrehozása a parfüm és az illatjegy között
+        cursor.execute("""
+            INSERT INTO perfume_notes (perfume_id, note_id)
+            VALUES (%s, %s)
+        """, (perfume_id, note_id))
+
 # XML fájl beolvasása
 tree = ET.parse(xml_file_path)
 root = tree.getroot()
@@ -54,6 +88,7 @@ for entry in root.findall("entry"):
     gender = entry.find("gender").text if entry.find("gender") is not None else "unisex"
     size = entry.find("size").text if entry.find("size") is not None else "Unknown Size"
     link = entry.find("link").text if entry.find("link") is not None else "No link available"
+    product_highlight = entry.find("product_highlight").text if entry.find("product_highlight") is not None else None
 
     # Tisztított márkanév, parfüm név és leírás
     cleaned_brand_name = clean_name(brand_name)
@@ -66,6 +101,8 @@ for entry in root.findall("entry"):
             perfume_type = "Eau de Toilette"
         elif "Parfémované vody" in product_type.text:
             perfume_type = "Eau de Parfum"
+        elif "Kolínské vody" in product_type.text:
+            perfume_type = "Eau de Cologne"
         else:
             perfume_type = "Unknown Type"
     else:
@@ -105,6 +142,9 @@ for entry in root.findall("entry"):
         "HUF",
         link
     ))
+
+    # Illatjegyek feldolgozása és beszúrása
+    process_notes(perfume_id, product_highlight)
 
 # Adatbázis módosítások mentése és kapcsolat bezárása
 connection.commit()
