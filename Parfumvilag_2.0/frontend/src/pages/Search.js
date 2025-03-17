@@ -102,12 +102,27 @@ const Search = () => {
                   </button>
                 </li>
 
-                {/* Horizontal Page Numbers */}
+                {/* Horizontal Page Numbers with First Page Always Visible */}
                 <div className="page-numbers">
+                  {/* Always show page 1 */}
+                  <li className={`page-item ${currentPage === 1 ? 'active' : ''}`}>
+                    <button className="page-link" onClick={() => handlePageChange(1)}>
+                      1
+                    </button>
+                  </li>
+
+                  {/* Show ellipsis if currentPage is far from 1 */}
+                  {currentPage > 3 && totalPages > 3 && (
+                    <li className="page-item disabled">
+                      <span className="page-link">...</span>
+                    </li>
+                  )}
+
+                  {/* Dynamic range around current page */}
                   {Array.from({ length: totalPages }, (_, i) => i + 1)
                     .slice(
-                      Math.max(0, currentPage - 3),
-                      Math.min(totalPages, currentPage + 2)
+                      Math.max(2, currentPage - 1), // Start after 1 if possible
+                      Math.min(totalPages, currentPage + 2) // End before last page if needed
                     )
                     .map(page => (
                       <li
@@ -123,13 +138,13 @@ const Search = () => {
                       </li>
                     ))}
 
-                  {/* Ellipsis and Last Page */}
+                  {/* Show ellipsis and last page if far from current */}
                   {currentPage < totalPages - 2 && (
                     <>
                       <li className="page-item disabled">
                         <span className="page-link">...</span>
                       </li>
-                      <li className="page-item">
+                      <li className={`page-item ${currentPage === totalPages ? 'active' : ''}`}>
                         <button
                           className="page-link"
                           onClick={() => handlePageChange(totalPages)}
