@@ -2353,7 +2353,7 @@ body {
   font-size: 1rem;
   font-weight: 500;
   border-radius: 25px;
-  background-color: #e6e6fa; /* Halvány lila gomb */
+  background-color: #000000; /* Halvány lila gomb */
   border-color: #e6e6fa;
   color: #ffffff; /* Mindig fehér szöveg */
   text-transform: uppercase;
