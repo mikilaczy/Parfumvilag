@@ -3377,3 +3377,215 @@ body {
 
   }
 }
+.filter-sidebar {
+  background: linear-gradient(145deg, #f0f8ff 0%, #e6f0fa 100%); /* Halvány kék gradiens */
+  padding: 2rem 1.5rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 3px 0 15px rgba(135, 206, 235, 0.3); /* Halvány kék árnyék */
+  border-right: 1px solid #87CEEB; /* Élénk kék keret */
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 100;
+}
+
+.filter-sidebar:hover {
+  transform: translateX(-5px); /* Finom elmozdulás hovernél */
+  box-shadow: 5px 0 25px rgba(135, 206, 235, 0.5); /* Erősebb kék árnyék */
+}
+
+/* Form elemek - Letisztult és látható dizájn */
+.form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333333; /* Sötét szürke, kontrasztos */
+  margin-bottom: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: color 0.3s ease;
+}
+
+.form-label:hover {
+  color: #87CEEB; /* Élénk kék hover effekt */
+}
+
+/* Select elemek - Egyszerű, de látható */
+.form-select {
+  border-radius: 8px; /* Finoman lekerekített sarkok */
+  border: 2px solid #87CEEB; /* Élénk kék keret */
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  background: #ffffff; /* Fehér háttér */
+  color: #333333; /* Sötét szürke szöveg */
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  appearance: none; /* Eltávolítjuk az alapértelmezett nyilat */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%2387CEEB" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); /* Kék nyíl */
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1.2rem;
+}
+
+.form-select:focus {
+  border-color: #333333; /* Sötét szürke fókusz */
+  box-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+  outline: none;
+}
+
+.form-select:hover {
+  background: #f0f8ff; /* Halvány kék háttér hovernél */
+  border-color: #333333;
+  transform: scale(1.02); /* Kicsi nagyítás */
+}
+
+/* Keresés gomb - Letisztult, látható és animált */
+.btn-peach {
+  background: linear-gradient(135deg, #87CEEB 0%, #ADD8E6 100%); /* Halvány kék gradiens */
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff; /* Fehér szöveg */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 5px 15px rgba(135, 206, 235, 0.4);
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  position: sticky;
+  bottom: 10px;
+  width: 100%;
+  animation: pulseGlow 2.5s infinite ease-in-out; /* Folyamatos ragyogás */
+}
+
+.btn-peach:hover {
+  background: linear-gradient(135deg, #00B7EB 0%, #87CEEB 100%); /* Élénk kék hover */
+  transform: translateY(-5px) scale(1.05); /* Feljebb és nagyobb */
+  box-shadow: 0 8px 20px rgba(0, 183, 235, 0.6);
+  color: #ffffff;
+}
+
+/* Animációk - Fullos és lenyűgöző */
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 5px #87CEEB; }
+  50% { box-shadow: 0 0 20px #87CEEB, 0 0 30px rgba(135, 206, 235, 0.7); }
+  100% { box-shadow: 0 0 5px #87CEEB; }
+}
+
+@keyframes slideInLeft {
+  0% { transform: translateX(-100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes rotateIn {
+  0% { transform: rotate(-20deg) scale(0.9); opacity: 0; }
+  100% { transform: rotate(0) scale(1); opacity: 1; }
+}
+
+.filter-sidebar {
+  animation: slideInLeft 0.8s ease-out; /* Sidebar balról csúszik be */
+}
+
+.form-label {
+  animation: fadeInUp 1s ease-out; /* Címkék felcsúsznak */
+}
+
+.form-select {
+  animation: fadeInUp 1.2s ease-out 0.2s; /* Select-ek késleltetve csúsznak fel */
+}
+
+.btn-peach {
+  animation: rotateIn 1s ease-out; /* Gomb forgó belépés */
+}
+
+/* Reszponzív dizájn - Letisztult és jól látható minden eszközön */
+@media (max-width: 991px) {
+  .filter-sidebar {
+    position: static;
+    height: auto;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid #87CEEB;
+  }
+  .form-select {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+  .btn-peach {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .filter-sidebar {
+    padding: 1rem;
+  }
+  .form-label {
+    font-size: 0.9rem;
+  }
+  .form-select {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    background-size: 1rem;
+  }
+  .btn-peach {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+  }
+}
+
+/* Egyéb stíluselemek megtartása a kontextusból */
+.perfume-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  border: 1px solid #87CEEB;
+}
+
+.perfume-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border-color: #87CEEB;
+}
+
+.scent-tag {
+  background: #87CEEB;
+  color: #ffffff;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.scent-tag:hover {
+  background: #00B7EB;
+  transform: scale(1.05);
+}
+
+/* Mobil optimalizálás */
+@media (max-width: 768px) {
+  .modal-content {
+    border-radius: 8px;
+  }
+  .perfume-card {
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  .scent-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+
