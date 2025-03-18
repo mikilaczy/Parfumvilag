@@ -106,7 +106,7 @@ const Sidebar = () => {
           <option value="">Összes</option>
           <option value="male">Férfi</option>
           <option value="female">Női</option>
-          <option value="unisex">Unisex</option>
+          <option value="unisex">Unisex</option>a
         </select>
       </div>
 
