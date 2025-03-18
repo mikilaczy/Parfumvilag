@@ -3489,3 +3489,157 @@ body {
 .achievement-badge { background: #87CEEB; color: #fff; padding: .4rem .8rem; border-radius: 12px; font-size: .9rem; transition: all .3s; }
 .achievement-badge:hover { background: #00B7EB; transform: scale(1.1); }
 
+/* Footer reszponzivitás */
+.footer_section {
+  background: #333;
+  color: #fff;
+  padding: 2rem 0;
+  text-align: center;
+  position: relative;
+  animation: fadeInUp 1.2s ease-out;
+}
+
+.footer_section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(135,206,235,.1), transparent);
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  min-height: 120px;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 .8rem;
+}
+
+@media (max-width: 991px) {
+  .footer_section {
+    padding: 1.5rem 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: .5rem;
+    padding: 0 .5rem;
+  }
+
+  .footer-col {
+    align-items: center;
+    padding: .5rem;
+  }
+
+  .footer-title {
+    font-size: 1.2rem;
+    margin-bottom: .5rem;
+  }
+
+  .footer-title::after {
+    width: 30px;
+  }
+
+  .contact_link {
+    font-size: .9rem;
+  }
+
+  .contact_link i {
+    margin-right: .4rem;
+    font-size: .9rem;
+  }
+
+  .footer-logo {
+    font-size: 1.6rem;
+    margin-bottom: .5rem;
+  }
+
+  .social-link {
+    font-size: 1rem;
+    margin: 0 .3rem;
+  }
+
+  .footer-info p {
+    font-size: .7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer_section {
+    padding: 1rem 0;
+  }
+
+  .footer-grid {
+    gap: .3rem;
+    padding: 0 .3rem;
+  }
+
+  .footer-col {
+    padding: .3rem;
+  }
+
+  .footer-title {
+    font-size: 1rem;
+  }
+
+  .footer-title::after {
+    width: 25px;
+  }
+
+  .contact_link {
+    font-size: .8rem;
+  }
+
+  .contact_link i {
+    font-size: .8rem;
+  }
+
+  .footer-logo {
+    font-size: 1.4rem;
+  }
+
+  .social-link {
+    font-size: .9rem;
+    margin: 0 .2rem;
+  }
+
+  .footer-info p {
+    font-size: .6rem;
+  }
+}
+
+/* Animációk (ha szükségesek) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
