@@ -17,7 +17,7 @@ const Search = ({ searchTerm: propSearchTerm }) => {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState(searchTermFromUrl);
   const [suggestions, setSuggestions] = useState([]);
-  const perfumesPerPage = 50;
+  const perfumesPerPage = 24;
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
 
