@@ -1,25 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllPerfumes } from '../services/perfumeService';
+import { getAllBrands } from '../services/brandService';
+import { getAllNotes } from '../services/noteService';
 
 const Sidebar = () => {
-  const [allPerfumes, setAllPerfumes] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [notes, setNotes] = useState([]);
   const [brandFilter, setBrandFilter] = useState('');
   const [scentFilter, setScentFilter] = useState('');
   const [genderFilter, setGenderFilter] = useState('');
   const [sortOption, setSortOption] = useState('name-asc');
+  const [isOpen, setIsOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPerfumes = async () => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const perfumesData = await getAllPerfumes(''); // Üres keresés az összes parfümhöz
-        setAllPerfumes(perfumesData);
+        const brandsData = await getAllBrands();
+        const notesData = await getAllNotes();
+        setBrands(brandsData);
+        setNotes(notesData);
       } catch (error) {
-        console.error('Hiba a sidebar adatbetöltésnél:', error.message);
+        console.error('Hiba az adatok betöltésénél:', error);
       }
     };
-    fetchPerfumes();
+    fetchData();
   }, []);
 
   const handleSearch = () => {
@@ -28,99 +40,100 @@ const Sidebar = () => {
     if (scentFilter) queryParams.set('scent', scentFilter);
     if (genderFilter) queryParams.set('gender', genderFilter);
     if (sortOption) queryParams.set('sort', sortOption);
-
-    console.log('Szűrők alkalmazása:', queryParams.toString()); // Ellenőrzés
     navigate(`/kereses?${queryParams.toString()}`);
+    setIsOpen(false);
   };
 
-  const uniqueBrands = [...new Set(allPerfumes.map((p) => p.brand))];
-  const uniqueScents = [...new Set(allPerfumes.map((p) => p.scentType))];
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
-    <div
-      className="sidebar bg-light p-3 d-flex flex-column"
-      style={{
-        width: '250px',
-        height: '100vh',
-        position: 'fixed',
-        overflowY: 'auto', // Görgethető, ha túl hosszú
-      }}
-    >
-      {/* Rendezés */}
-      <div className="mb-3">
-        <label htmlFor="sort" className="form-label">Rendezés</label>
-        <select
-          id="sort"
-          className="form-select"
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-        >
-          <option value="name-asc">Név (A-Z)</option>
-          <option value="name-desc">Név (Z-A)</option>
-          <option value="price-asc">Ár (növekvő)</option>
-          <option value="price-desc">Ár (csökkenő)</option>
-        </select>
-      </div>
-
-      {/* Márka szűrő */}
-      <div className="mb-3">
-        <label htmlFor="brand" className="form-label">Márka</label>
-        <select
-          id="brand"
-          className="form-select"
-          value={brandFilter}
-          onChange={(e) => setBrandFilter(e.target.value)}
-        >
-          <option value="">Összes</option>
-          {uniqueBrands.map((brand) => (
-            <option key={brand} value={brand}>{brand}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Illatfajta szűrő */}
-      <div className="mb-3">
-        <label htmlFor="scent" className="form-label">Illatfajta</label>
-        <select
-          id="scent"
-          className="form-select"
-          value={scentFilter}
-          onChange={(e) => setScentFilter(e.target.value)}
-        >
-          <option value="">Összes</option>
-          {uniqueScents.map((scent) => (
-            <option key={scent} value={scent}>{scent}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Nem szűrő */}
-      <div className="mb-3">
-        <label htmlFor="gender" className="form-label">Nem</label>
-        <select
-          id="gender"
-          className="form-select"
-          value={genderFilter}
-          onChange={(e) => setGenderFilter(e.target.value)}
-        >
-          <option value="">Összes</option>
-          <option value="male">Férfi</option>
-          <option value="female">Női</option>
-          <option value="unisex">Unisex</option>a
-        </select>
-      </div>
-
-      {/* Keresés gomb alul, láthatóan */}
-      <div className="mt-3">
-        <button
-          className="btn btn-peach w-100"
-          onClick={handleSearch}
-          style={{ position: 'sticky', bottom: '10px' }} // Látható marad
-        >
-          Keresés
+    <>
+      {windowWidth <= 991 && (
+        <button className="filter-toggle" onClick={toggleSidebar}>
+          <i className="fas fa-filter"></i> {isOpen ? 'Bezár' : 'Szűrők'}
         </button>
+      )}
+
+      <div className={`sidebar d-flex flex-column ${windowWidth <= 991 && !isOpen ? 'hidden' : ''}`}>
+        <div className="mb-3">
+          <label htmlFor="sort" className="form-label">
+            Rendezés
+          </label>
+          <select
+            id="sort"
+            className="form-select"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="name-asc">Név (A-Z)</option>
+            <option value="name-desc">Név (Z-A)</option>
+            <option value="price-asc">Ár (növekvő)</option>
+            <option value="price-desc">Ár (csökkenő)</option>
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="brand" className="form-label">
+            Márka
+          </label>
+          <select
+            id="brand"
+            className="form-select"
+            value={brandFilter}
+            onChange={(e) => setBrandFilter(e.target.value)}
+          >
+            <option value="">Összes</option>
+            {brands.map((brand) => (
+              <option key={brand.id} value={brand.name}>
+                {brand.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="scent" className="form-label">
+            Illatjegy
+          </label>
+          <select
+            id="scent"
+            className="form-select"
+            value={scentFilter}
+            onChange={(e) => setScentFilter(e.target.value)}
+          >
+            <option value="">Összes</option>
+            {notes.map((note) => (
+              <option key={note.id} value={note.name}>
+                {note.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="gender" className="form-label">
+            Nem
+          </label>
+          <select
+            id="gender"
+            className="form-select"
+            value={genderFilter}
+            onChange={(e) => setGenderFilter(e.target.value)}
+          >
+            <option value="">Összes</option>
+            <option value="male">Férfi</option>
+            <option value="female">Női</option>
+            <option value="unisex">Unisex</option>
+          </select>
+        </div>
+
+        <div className="mt-3">
+          <button className="btn btn-peach w-100" onClick={handleSearch}>
+            Keresés
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

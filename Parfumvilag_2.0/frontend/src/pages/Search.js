@@ -19,12 +19,19 @@ const Search = ({ searchTerm: propSearchTerm }) => {
   const [suggestions, setSuggestions] = useState([]);
   const perfumesPerPage = 24;
   const [totalPages, setTotalPages] = useState(1);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchPerfumes = async () => {
       try {
-        const perfumesData = await getAllPerfumes(searchTermFromUrl); // API hívás a keresési kifejezéssel
+        const perfumesData = await getAllPerfumes(searchTermFromUrl);
         setInitialPerfumes(perfumesData);
         filterAndSortPerfumes(perfumesData);
       } catch (error) {
@@ -33,7 +40,7 @@ const Search = ({ searchTerm: propSearchTerm }) => {
       }
     };
     fetchPerfumes();
-  }, [searchTermFromUrl]); // Csak a searchTermFromUrl változásakor újratöltés
+  }, [searchTermFromUrl]);
 
   useEffect(() => {
     if (initialPerfumes.length > 0) {
@@ -54,18 +61,15 @@ const Search = ({ searchTerm: propSearchTerm }) => {
 
   const filterAndSortPerfumes = (data) => {
     let filtered = [...data];
-
-    // Kliensoldali szűrés a sidebar paraméterekhez
     if (brandFilter) {
       filtered = filtered.filter((p) => p.brand === brandFilter);
     }
     if (scentFilter) {
-      filtered = filtered.filter((p) => p.scentType === scentFilter);
+      filtered = filtered.filter((p) => p.notes && Array.isArray(p.notes) && p.notes.includes(scentFilter));
     }
     if (genderFilter) {
       filtered = filtered.filter((p) => p.gender === genderFilter);
     }
-
     filtered.sort((a, b) => {
       switch (sortOption) {
         case 'name-asc': return a.name.localeCompare(b.name);
@@ -75,9 +79,6 @@ const Search = ({ searchTerm: propSearchTerm }) => {
         default: return 0;
       }
     });
-
-    console.log('Szűrt és rendezett parfümök:', filtered);
-
     setCurrentPage(1);
     const startIndex = 0;
     const endIndex = perfumesPerPage;
@@ -89,7 +90,7 @@ const Search = ({ searchTerm: propSearchTerm }) => {
     setCurrentPage(page);
     const filtered = initialPerfumes
       .filter((p) => !brandFilter || p.brand === brandFilter)
-      .filter((p) => !scentFilter || p.scentType === scentFilter)
+      .filter((p) => !scentFilter || (p.notes && p.notes.includes(scentFilter)))
       .filter((p) => !genderFilter || p.gender === genderFilter)
       .sort((a, b) => {
         switch (sortOption) {
@@ -122,11 +123,9 @@ const Search = ({ searchTerm: propSearchTerm }) => {
     const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-
     if (endPage - startPage + 1 < maxPagesToShow) {
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
-
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
@@ -136,7 +135,13 @@ const Search = ({ searchTerm: propSearchTerm }) => {
   return (
     <div className="d-flex">
       <Sidebar />
-      <div className="flex-grow-1" style={{ marginLeft: '250px' }}>
+      <div
+        className="flex-grow-1"
+        style={{
+          marginLeft: windowWidth > 991 ? '250px' : '0',
+          width: '100%',
+        }}
+      >
         <div className="search-page container-fluid mt-4">
           <div className="row justify-content-center mb-4">
             <div className="col-md-6 position-relative">
