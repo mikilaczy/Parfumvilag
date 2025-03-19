@@ -182,6 +182,26 @@ body {
   overflow: hidden;
   animation: fadeInUp 1.5s ease-out;
 }
+.footer_section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.footer_section .container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
 
 .footer-grid {
   display: grid;
