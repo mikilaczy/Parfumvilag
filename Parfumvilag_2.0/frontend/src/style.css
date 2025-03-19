@@ -182,26 +182,6 @@ body {
   overflow: hidden;
   animation: fadeInUp 1.5s ease-out;
 }
-.footer_section::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: 50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(230, 230, 250, 0.1), transparent); /* Halvány lila gradiens */
-  transform: translateX(-50%);
-  z-index: 0;
-}
-
-.footer_section .container {
-  position: relative;
-  z-index: 1;
-  max-width: 1200px; 
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
 
 .footer-grid {
   display: grid;
@@ -941,143 +921,7 @@ body {
   }
 }
 
-/* Sorting Filter Styling */
-.sort-filter {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  max-width: 100%;
-  position: relative;
-}
 
-.sort-filter:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.sort-filter h5 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.sort-toggle {
-  width: 100%;
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  border-radius: 20px;
-  border: 1px solid #e6e6fa;
-  background-color: #ffffff;
-  color: #000000;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-
-.sort-toggle:hover {
-  border-color: #d8bfd8;
-  background-color: #e6e6fa;
-  color: #000000;
-}
-
-.sort-toggle i {
-  margin-left: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.sort-toggle:hover i {
-  transform: rotate(180deg);
-}
-
-.sort-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: #ffffff;
-  border: 1px solid #e6e6fa;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  max-height: 200px;
-  overflow-y: auto;
-  animation: fadeInUp 0.3s ease-out;
-}
-
-.sort-dropdown-item {
-  width: 100%;
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  color: #1a1a1a;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.sort-dropdown-item:hover {
-  background-color: #e6e6fa;
-  color: #000000;
-}
-
-@media (min-width: 768px) {
-  .sort-filter h5 {
-    font-size: 1.2rem;
-  }
-  .sort-toggle {
-    font-size: 1rem;
-    padding: 0.7rem 1.2rem;
-  }
-  .sort-dropdown-item {
-    font-size: 1rem;
-    padding: 0.7rem 1.2rem;
-  }
-}
-
-@media (max-width: 767px) {
-  .sort-filter h5 {
-    font-size: 1rem;
-  }
-  .sort-toggle {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.8rem;
-  }
-  .sort-dropdown-item {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.8rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .sort-filter h5 {
-    font-size: 0.9rem;
-  }
-  .sort-toggle {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.7rem;
-  }
-  .sort-dropdown-item {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.7rem;
-  }
-}
-/* Responsive Adjustments for Filters */
-.filter-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
 /* Profile Page Styling */
 .profile-card {
   background: #ffffff;
@@ -1090,98 +934,8 @@ body {
   animation: slideInLeft 1s ease-out;
 }
 
-.profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-}
 
-.profile-title {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 2rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
 
-.profile-title::after {
-  content: '';
-  display: block;
-  width: 80px;
-  height: 4px;
-  background: #e6e6fa;
-  margin: 1rem auto;
-  border-radius: 2px;
-}
-
-.profile-subtitle {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #000000;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.profile-details {
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: background 0.3s ease;
-}
-
-.profile-details p {
-  font-size: 1.1rem;
-  color: #666666;
-  margin-bottom: 0.8rem;
-  line-height: 1.6;
-}
-
-.profile-actions {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.profile-content {
-  padding: 1rem;
-}
-
-/* Form Styling */
-.form-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #000000;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  border-radius: 20px;
-  border: 1px solid #e6e6fa;
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #ffffff;
-}
-
-.form-control:focus {
-  border-color: #e6e6fa;
-  box-shadow: 0 0 6px rgba(230, 230, 250, 0.4);
-  outline: none;
-}
-
-.form-control.is-invalid {
-  border-color: #dc3545;
-}
-
-.invalid-feedback {
-  font-size: 0.8rem;
-  color: #dc3545;
-  margin-top: 0.25rem;
-}
 
 /* Profile Image */
 .profile-image-section {
@@ -1203,66 +957,6 @@ body {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Progress Bar */
-.progress-bar-container {
-  width: 200px;
-  height: 20px;
-  background-color: #e9ecef;
-  border-radius: 10px;
-  overflow: hidden;
-  animation: pulse 2s infinite ease-in-out;
-}
-
-.progress-bar {
-  height: 100%;
-  background-color: #e6e6fa;
-  transition: width 0.3s linear;
-}
-
-/* Achievements */
-.achievements {
-  margin-top: 1.5rem;
-}
-
-.achievement-badges {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.achievement-badge {
-  background: #e6e6fa;
-  color: #333333;
-  padding: 0.4rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.achievement-badge:hover {
-  transform: scale(1.1);
-  background-color: #d8bfd8;
-}
-
-.achievement-badge i {
-  margin-right: 0.5rem;
-  font-size: 1rem;
-}
-
-/* Social Links */
-.social-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Profile Header (Removed dark mode toggle) */
-.profile-header {
-  margin-bottom: 2rem;
-}
 
 /* Responsive Adjustments */
 @media (max-width: 767px) {
@@ -1334,62 +1028,6 @@ body {
   }
 }
 
-/* Profile Image Upload Hint */
-.text-muted {
-  font-size: 0.9rem;
-  color: #666666;
-  text-align: center;
-  transition: color 0.3s ease;
-}
-
-.text-muted:hover {
-  color: #000000;
-}
-
-@media (max-width: 767px) {
-  .text-muted {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .text-muted {
-    font-size: 0.7rem;
-  }
-}
-
-/* Form Styling */
-.form-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #000000;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  border-radius: 20px;
-  border: 1px solid #e6e6fa;
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #ffffff;
-}
-
-.form-control:focus {
-  border-color: #e6e6fa;
-  box-shadow: 0 0 6px rgba(230, 230, 250, 0.4);
-  outline: none;
-}
-
-.form-control.is-invalid {
-  border-color: #dc3545;
-}
-
-.invalid-feedback {
-  font-size: 0.8rem;
-  color: #dc3545;
-  margin-top: 0.25rem;
-}
 
 /* Responsive Adjustments */
 @media (max-width: 767px) {
@@ -1452,21 +1090,7 @@ body {
   margin-bottom: 2rem;
 }
 
-.aszf-section h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #000000; /* Fekete címek */
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
 
-.aszf-section p {
-  font-size: 1rem;
-  color: #666666; /* Halvány szürke szöveg */
-  line-height: 1.8;
-}
 
 /* Reszponzivitás */
 @media (max-width: 767px) {
@@ -1502,27 +1126,6 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.aszf-btn {
-  padding: 0.8rem 1.6rem;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 25px;
-  background-color: #000000; /* Halvány lila gomb */
-  border-color: #e6e6fa;
-  color: #ffffff; /* Mindig fehér szöveg */
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-  opacity: 1; /* Teljesen látható alapértelmezett állapot */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Finom árnyék a szöveg olvashatóságáért */
-}
-
-.aszf-btn:hover {
-  background-color: #d8bfd8; /* Sötétebb halvány lila hover */
-  border-color: #d8bfd8;
-  transform: translateY(-3px); /* Feljebb mozdulás animáció */
-  box-shadow: 0 5px 12px rgba(216, 191, 216, 0.3); /* Árnyék hovernél */
-}
-
 /* Reszponzivitás */
 @media (max-width: 767px) {
   .aszf-btn {
@@ -1536,238 +1139,6 @@ body {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
   }
-}
-/* Eredeti stílusok (nem írom át, feltételezem, hogy léteznek) */
-
-/* Filter Modal */
-.filter-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.filter-modal-content {
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  padding: 2rem;
-  max-width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  animation: fadeInUp 0.3s ease-out;
-}
-
-.filter-modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
-  color: #666666;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.filter-modal-close:hover {
-  color: #000000;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
-}
-/* Perfume Detail Page */
-.perfume-detail-page {
-  padding: 4rem 2rem;
-  background: #ffffff; /* Tiszta fehér háttér */
-  min-height: 100vh;
-}
-
-.perfume-detail-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-  border: 1px solid rgba(230, 230, 250, 0.3);
-}
-
-.perfume-detail-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-  border-color: #e6e6fa;
-}
-
-.perfume-detail-image {
-  width: 100%; /* Teljes szélesség a konténerben */
-  max-width: 200px; /* Kisebb méret alapból */
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.perfume-detail-image:hover {
-  transform: scale(1.03);
-}
-
-.perfume-detail-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.perfume-detail-subtitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #e6e6fa;
-  padding-bottom: 0.5rem;
-}
-
-.perfume-detail-text {
-  font-size: 0.9rem;
-  color: #666666;
-  margin-bottom: 0.8rem;
-  line-height: 1.6;
-}
-
-.price-display {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #e6e6fa;
-  margin-bottom: 1rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-/* Review Form Styling */
-.review-form {
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.review-form:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.review-form h4 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.review-form .form-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #000000;
-  margin-bottom: 0.5rem;
-}
-
-.review-form .form-control {
-  border-radius: 20px;
-  border: 1px solid #e6e6fa;
-  padding: 0.8rem 1.2rem;
-  font-size: 0.9rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #ffffff;
-}
-
-.review-form .form-control:focus {
-  border-color: #e6e6fa;
-  box-shadow: 0 0 6px rgba(230, 230, 250, 0.4);
-  outline: none;
-}
-
-.review-form .btn-peach {
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 1rem;
-  border-radius: 25px;
-  margin-top: 1rem;
-}
-
-/* Review List Styling */
-.review-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.review-item {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  padding: 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.review-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.review-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.review-author {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  text-transform: capitalize;
-}
-
-.review-date {
-  font-size: 0.8rem;
-  color: #666666;
-}
-
-.review-rating {
-  font-size: 0.9rem;
-  color: #e6e6fa;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-}
-
-.review-rating i {
-  margin-right: 0.3rem;
-  color: #e6e6fa;
-}
-
-.review-comment {
-  font-size: 0.9rem;
-  color: #777777;
-  line-height: 1.6;
 }
 
 /* Nagyított kép és "X" gomb stílusa */
@@ -2187,12 +1558,6 @@ body {
   color: #666666;
 }
 
-.review-rating-custom {
-  margin-bottom: 0.3rem;
-  display: flex;
-  align-items: center;
-}
-
 .review-rating-custom .rating-category {
   font-size: 0.85rem;
   color: #333333;
@@ -2204,40 +1569,6 @@ body {
   display: inline-flex;
   color: #1a1a1a; /* Fekete szín a csillagoknak */
   font-size: 0.85rem;
-}
-
-.review-comment-custom {
-  font-size: 0.85rem;
-  color: #555555;
-  line-height: 1.5;
-  padding-left: 0.3rem;
-  border-left: 2px solid #e6e6fa;
-}
-/* Alert styling */
-.alert {
-  padding: 0.6rem; /* Kisebb padding */
-  border-radius: 8px; /* Kisebb lekerekítés */
-  margin-bottom: 1rem;
-  font-size: 0.85rem; /* Kisebb betűméret */
-}
-
-.alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-.alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-/* No reviews message */
-.text-center {
-  text-align: center;
-  color: #666666;
-  font-size: 0.9rem; /* Kisebb betűméret */
 }
 
 /* Reszponzivitás az értékelésekhez */
@@ -2326,9 +1657,6 @@ body {
     font-size: 0.7rem;
   }
 }
- 
-/* src/styles/styles.css */
-
 /* Filter Sidebar */
 .filter-sidebar {
   background: #ffffff;
@@ -2473,47 +1801,6 @@ body {
   }
 }
 
-/* frontend/src/style.css */
-/* Modallal kapcsolatos formázás */
-.modal {
-  overflow-y: auto !important;
-}
-
-.modal-dialog {
-  max-width: 90%;
-  margin: 1.75rem auto;
-}
-
-.modal-content {
-  border-radius: 12px;
-}
-
-.perfume-card {
-  border: 1px solid #e9ecef;
-  transition: transform 0.2s ease;
-}
-
-.perfume-card:hover {
-  transform: scale(1.02);
-}
-
-.scent-tag {
-  display: inline-block;
-  background-color: #e9ecef;
-  color: #495057;
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-  transition: background-color 0.3s ease;
-}
-
-.scent-tag:hover {
-  background-color: #6c7d85;
-  color: #ffffff;
-}
-
 /* Mobil optimitás */
 @media (max-width: 768px) {
   .modal-content {
@@ -2532,37 +1819,6 @@ body {
   }
 }
 
-
-
-/* Navbar */
-.navbar {
-  background: #333;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-  padding: 1rem 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-radius: 0 0 6px 6px;
-}
-.navbar-content { display: flex; align-items: center; }
-.navbar-brand { font-size: 1.8rem; font-weight: 600; color: #fff; text-decoration: none; margin-right: auto; transition: color .3s; }
-.navbar-brand:hover { color: #87CEEB; }
-.nav-link { font-size: 1rem; font-weight: 500; color: #fff; padding: .5rem 1rem; border-radius: 4px; text-decoration: none; transition: all .3s; }
-.nav-link:hover { color: #87CEEB; background: rgba(135,206,235,.1); }
-.nav-link.active { color: #87CEEB; background: rgba(135,206,235,.15); font-weight: 600; }
-.profile-link i { font-size: 1.3rem; margin-right: .5rem; color: #87CEEB; }
-.logout-btn { border-radius: 20px; padding: .5rem 1.2rem; font-weight: 500; border: 1px solid #fff; background: transparent; color: #fff; transition: all .3s; }
-.logout-btn:hover { background: #87CEEB; color: #333; border-color: #87CEEB; transform: translateY(-2px); }
-
-/* Dropdown */
-.dropdown-toggle { cursor: pointer; display: flex; align-items: center; padding: .5rem 1rem; border-radius: 4px; color: #fff; }
-.dropdown-toggle:hover { color: #87CEEB; background: rgba(135,206,235,.1); }
-.dropdown-toggle::after { content: '\25BC'; margin-left: .5rem; font-size: .8rem; color: #fff; transition: transform .3s; }
-.dropdown-toggle:hover::after { transform: rotate(180deg); }
-.dropdown-menu { position: absolute; top: 100%; right: 0; background: #333; border: 1px solid rgba(135,206,235,.3); border-radius: 5px; padding: .5rem 0; min-width: 150px; z-index: 1001; box-shadow: 0 3px 10px rgba(0,0,0,.1); }
-.dropdown-item { color: #fff; font-size: 1rem; padding: .5rem 1rem; text-decoration: none; transition: all .3s; }
-.dropdown-item:hover { background: rgba(135,206,235,.1); color: #87CEEB; }
-
 /* Hero Section */
 .hero-section { background: linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2)), url('https://images.unsplash.com/photo-1585203892280-cdcd274e6f89?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover; color: #fff; padding: 4rem 2rem 3rem; text-align: center; position: relative; }
 .hero-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle,rgba(135,206,235,.1),transparent); z-index: 1; }
@@ -2575,10 +1831,6 @@ body {
 .btn-peach:hover { background: #00B7EB; transform: translateY(-2px); box-shadow: 0 3px 8px rgba(135,206,235,.3); }
 .btn-outline-peach { color: #87CEEB; border: 2px solid #87CEEB; background: transparent; transition: all .3s; }
 .btn-outline-peach:hover { background: #87CEEB; color: #fff; transform: translateY(-2px); box-shadow: 0 3px 8px rgba(135,206,235,.3); }
-
-/* Filter Sidebar */
-.filter-sidebar { background: linear-gradient(145deg,#f0f8ff,#e6f0fa); padding: 1.5rem; position: sticky; top: 0; height: 100vh; overflow-y: auto; box-shadow: 2px 0 10px rgba(135,206,235,.2); border-right: 1px solid #87CEEB; transition: transform .3s; animation: slideInLeft .6s ease-out; }
-.filter-sidebar:hover { transform: translateX(-3px); box-shadow: 3px 0 15px rgba(135,206,235,.3); }
 
 /* Form Elements */
 .form-label { font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: .7rem; text-transform: uppercase; letter-spacing: 1.5px; transition: color .3s; animation: fadeInUp .8s ease-out; }
