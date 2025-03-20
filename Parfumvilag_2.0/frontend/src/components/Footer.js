@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Link importálása a navigációhoz
+import { Link } from 'react-router-dom';
 import '../style.css';
 
 const Footer = () => {
@@ -10,7 +10,12 @@ const Footer = () => {
           <div className="footer-col">
             <h4 className="footer-title">Kapcsolat</h4>
             <div className="contact_link_box">
-              <a href="https://www.google.com/maps?q=Budapest" target="_blank" rel="noopener noreferrer" className="contact_link">
+              <a
+                href="https://www.google.com/maps?q=Budapest"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact_link"
+              >
                 <i className="fas fa-map-marker-alt"></i> Budapest
               </a>
               <a href="tel:+36123456789" className="contact_link">
@@ -25,19 +30,44 @@ const Footer = () => {
             <h4 className="footer-title">Parfümvilág</h4>
             <p>Keress minket bizalommal! Az alábbi platformokon is elérhetőek vagyunk:</p>
             <div className="footer_social">
-              <a href="https://facebook.com/parfumvilag" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a
+                href="https://facebook.com/parfumvilag"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
                 <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="https://twitter.com/parfumvilag" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a
+                href="https://twitter.com/parfumvilag"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
                 <i className="fab fa-twitter"></i>
               </a>
-              <a href="https://linkedin.com/company/parfumvilag" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a
+                href="https://linkedin.com/company/parfumvilag"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
                 <i className="fab fa-linkedin-in"></i>
               </a>
-              <a href="https://instagram.com/parfumvilag" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a
+                href="https://instagram.com/parfumvilag"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
                 <i className="fab fa-instagram"></i>
               </a>
-              <a href="https://pinterest.com/parfumvilag" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a
+                href="https://pinterest.com/parfumvilag"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
                 <i className="fab fa-pinterest"></i>
               </a>
             </div>
@@ -48,7 +78,6 @@ const Footer = () => {
             <p>10:00 - 18:00</p>
           </div>
         </div>
-        {/* ÁSZF gomb, vissza az eredeti dizájnhoz */}
         <div className="footer-aszf">
           <Link to="/aszf" className="btn btn-peach aszf-btn">
             Általános Szerződési Feltételek

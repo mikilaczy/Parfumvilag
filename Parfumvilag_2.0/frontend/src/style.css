@@ -218,11 +218,12 @@ body {
   background-color: #e6e6fa; /* Halvány lila elválasztó */
   margin: 0.4rem auto; 
 }
-
 .contact_link_box {
   display: flex;
   flex-direction: column;
   gap: 0.6rem; 
+  position: relative;
+  z-index: 10; /* Biztosítjuk, hogy a linkek a tetején legyenek */
 }
 
 .contact_link {
@@ -233,7 +234,10 @@ body {
   align-items: center;
   justify-content: center;
   transition: color 0.3s ease, transform 0.3s ease;
-  animation: fadeInUp 1.5s ease-out 0.2s;
+  animation: fadeInUp 1.5s ease-out 0.2s forwards;
+  pointer-events: auto !important; /* Kattintható marad */
+  position: relative;
+  z-index: 15; /* Magasabb z-index a linkeknek */
 }
 
 .contact_link:hover {
@@ -253,7 +257,7 @@ body {
 }
 
 .footer_detail {
-  animation: fadeInUp 1.5s ease-out 0.4s;
+  animation: fadeInUp 1.5s ease-out 0.4s forwards;
 }
 
 .footer_detail p {
@@ -281,13 +285,18 @@ body {
   justify-content: center;
   gap: 1rem; 
   margin-top: 0.8rem; 
-  animation: slideInLeft 1.5s ease-out 0.6s;
+  animation: slideInLeft 1.5s ease-out 0.6s forwards;
+  position: relative;
+  z-index: 10; /* Biztosítjuk, hogy a közösségi linkek is kattinthatóak legyenek */
 }
 
 .social-link {
   font-size: 1.2rem; 
   color: #ffffff; /* Fehér ikonok */
   transition: color 0.3s ease, transform 0.3s ease;
+  pointer-events: auto !important; /* Kattintható marad */
+  position: relative;
+  z-index: 15; /* Magasabb z-index a linkeknek */
 }
 
 .social-link:hover {
