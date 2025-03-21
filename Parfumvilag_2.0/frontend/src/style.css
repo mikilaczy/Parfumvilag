@@ -92,6 +92,591 @@ body {
   margin-top: 1.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Fekete árnyék */
 }
+/* Perfume Detail Container */
+.perfume-detail-container {
+  background: linear-gradient(135deg, #f7f9fc 0%, #e9ecef 100%);
+  min-height: 100vh;
+  padding: 3rem 0;
+}
+
+.perfume-detail-container .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Vissza gomb */
+.perfume-detail-container .back-btn {
+  background: none;
+  border: none;
+  color: #3498db;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.perfume-detail-container .back-btn:hover {
+  color: #2980b9;
+}
+
+/* Parfüm neve és kedvencek gomb */
+.perfume-detail-container .perfume-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.perfume-detail-container .perfume-title-top {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* Kedvencek gomb (szivecske) */
+.perfume-detail-container .favorite-btn {
+  background: transparent;
+  border: none;
+  color: #95a5a6;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.perfume-detail-container .favorite-btn:hover,
+.perfume-detail-container .favorite-btn.active {
+  color: #e74c3c;
+  transform: scale(1.2);
+}
+
+.perfume-detail-container .favorite-btn::before {
+  content: '♥';
+}
+
+/* Kép */
+.perfume-detail-container .perfume-image-wrapper {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.perfume-detail-container .perfume-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.perfume-detail-container .perfume-image:hover {
+  transform: scale(1.02);
+}
+
+/* Nagyított kép */
+.perfume-detail-container .zoomed-image-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.perfume-detail-container .zoomed-image {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.perfume-detail-container .close-zoom-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.perfume-detail-container .close-zoom-btn:hover {
+  color: #ff4d4d;
+}
+
+/* Parfüm információk */
+.perfume-detail-container .perfume-info {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.perfume-detail-container .perfume-brand,
+.perfume-detail-container .perfume-gender,
+.perfume-detail-container .perfume-notes,
+.perfume-detail-container .perfume-description {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.perfume-detail-container .perfume-brand strong,
+.perfume-detail-container .perfume-gender strong,
+.perfume-detail-container .perfume-notes strong,
+.perfume-detail-container .perfume-description strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.perfume-detail-container .perfume-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #3498db;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  background: rgba(52, 152, 219, 0.1);
+  padding: 0.5rem 1.5rem;
+  border-radius: 15px;
+}
+
+/* Illat címkék */
+.perfume-detail-container .scent-tag {
+  background: #e8f4f8;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  padding: 0.4rem 1rem;
+  border-radius: 15px;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin: 0 0.5rem 0.5rem 0;
+  display: inline-block;
+  transition: background 0.3s ease;
+}
+
+.perfume-detail-container .scent-tag:hover {
+  background: #d1e8f2;
+}
+
+/* Értékelések szekció */
+.perfume-detail-container .reviews-section {
+  margin-top: 3rem;
+}
+
+.perfume-detail-container .reviews-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  text-align: left;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Értékelés űrlap */
+.perfume-detail-container .review-form {
+  max-width: 600px;
+  margin: 0;
+  text-align: left;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  width: 100%; /* Teljes szélesség */
+}
+
+.perfume-detail-container .login-required-message {
+  font-size: 1rem;
+  color: #e74c3c;
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.perfume-detail-container .rating-category {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* A címke és a csillagok között legyen tér */
+  width: 100%;
+}
+
+.perfume-detail-container .rating-category label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2c3e50;
+  width: 150px;
+}
+
+.perfume-detail-container .star-rating {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1; /* A csillagok kitöltik a maradék helyet */
+  justify-content: flex-start;
+}
+
+.perfume-detail-container .star {
+  font-size: 1.5rem;
+  color: #dfe6e9;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.perfume-detail-container .star.filled {
+  color: #f1c40f;
+}
+
+.perfume-detail-container .star:hover,
+.perfume-detail-container .star:hover ~ .star {
+  color: #f1c40f;
+  transform: scale(1.1);
+}
+
+.perfume-detail-container .review-comment {
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box; /* Biztosítjuk, hogy a padding ne növelje a szélességet */
+}
+
+.perfume-detail-container .review-comment:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.perfume-detail-container .submit-review-btn {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%; /* Teljes szélességű gomb */
+}
+
+.perfume-detail-container .submit-review-btn:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Értékelések lista */
+.perfume-detail-container .reviews-list {
+  max-width: 600px;
+  margin: 0;
+  width: 100%; /* Teljes szélesség */
+}
+
+.perfume-detail-container .no-reviews {
+  text-align: left;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.perfume-detail-container .review-item {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  width: 100%; /* Teljes szélesség */
+  box-sizing: border-box;
+}
+
+.perfume-detail-container .review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.perfume-detail-container .review-user {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.perfume-detail-container .review-date {
+  font-size: 0.9rem;
+  color: #95a5a6;
+}
+
+.perfume-detail-container .review-ratings {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.perfume-detail-container .rating-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* A címke és a csillagok között legyen tér */
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.perfume-detail-container .rating-display span {
+  font-size: 0.95rem;
+  color: #2c3e50;
+  width: 150px;
+}
+
+.perfume-detail-container .review-ratings .star-rating {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1; /* A csillagok kitöltik a maradék helyet */
+  justify-content: flex-start;
+}
+
+.perfume-detail-container .review-ratings .star {
+  font-size: 1.2rem;
+  color: #dfe6e9;
+}
+
+.perfume-detail-container .review-ratings .star.filled {
+  color: #f1c40f;
+}
+
+.perfume-detail-container .review-comment {
+  font-size: 1rem;
+  color: #7f8c8d;
+  line-height: 1.6;
+  background: #f7f9fc;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 100%; /* Teljes szélesség */
+  box-sizing: border-box;
+}
+
+/* Visszajelzés üzenet */
+.perfume-detail-container .message-prompt {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.perfume-detail-container .message-prompt p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.perfume-detail-container .message-prompt button {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.perfume-detail-container .message-prompt button:hover {
+  background: #2980b9;
+}
+
+/* Bejelentkezés üzenet (modális) */
+.perfume-detail-container .login-prompt {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+  z-index: 1000;
+  text-align: center;
+  max-width: 350px;
+  width: 90%;
+  border: 1px solid rgba(230, 230, 250, 0.3);
+  transition: all 0.3s ease;
+}
+
+.perfume-detail-container .login-prompt:hover {
+  transform: translate(-50%, -50%) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.perfume-detail-container .login-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.perfume-detail-container .login-prompt h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.perfume-detail-container .login-prompt p {
+  font-size: 0.95rem;
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+}
+
+.perfume-detail-container .login-btn {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 0.5rem;
+}
+
+.perfume-detail-container .login-btn:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.perfume-detail-container .cancel-btn {
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.perfume-detail-container .cancel-btn:hover {
+  background: #dfe6e9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.perfume-detail-container .close-btn {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.perfume-detail-container .close-btn:hover {
+  color: #e74c3c;
+}
+
+/* Reszponzivitás */
+@media (max-width: 768px) {
+  .perfume-detail-container {
+    padding: 2rem 0;
+  }
+
+  .perfume-detail-container .perfume-title-top {
+    font-size: 1.8rem;
+  }
+
+  .perfume-detail-container .favorite-btn {
+    font-size: 1.5rem;
+  }
+
+  .perfume-detail-container .perfume-brand,
+  .perfume-detail-container .perfume-gender,
+  .perfume-detail-container .perfume-notes,
+  .perfume-detail-container .perfume-description {
+    font-size: 1rem;
+  }
+
+  .perfume-detail-container .perfume-price {
+    font-size: 1.4rem;
+  }
+
+  .perfume-detail-container .perfume-image {
+    max-width: 350px;
+  }
+
+  .perfume-detail-container .reviews-title {
+    font-size: 1.4rem;
+  }
+
+  .perfume-detail-container .star {
+    font-size: 1.2rem;
+  }
+
+  .perfume-detail-container .review-comment {
+    min-height: 80px;
+  }
+
+  .perfume-detail-container .submit-review-btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .perfume-detail-container .rating-category {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .perfume-detail-container .rating-category label {
+    width: auto;
+  }
+
+  .perfume-detail-container .rating-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .perfume-detail-container .rating-display span {
+    width: auto;
+  }
+}
 /* Perfume Card */
 .perfume-card {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
