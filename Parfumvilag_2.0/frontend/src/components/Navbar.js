@@ -73,6 +73,17 @@ const Navbar = () => {
                   Rólunk
                 </NavLink>
               </li>
+              {isLoggedIn && (
+                <li className="nav-item">
+                  <NavLink
+                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                    to="/kedvencek"
+                    onClick={() => windowWidth <= 991 && toggleMenu()}
+                  >
+                    Kedvencek
+                  </NavLink>
+                </li>
+              )}
             </ul>
             <ul className="navbar-nav navbar-right">
               {isLoggedIn ? (
