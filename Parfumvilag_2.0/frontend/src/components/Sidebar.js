@@ -1,63 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAllNotes } from '../services/noteService'; // getAllBrands helyett fetch-et használunk
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAllNotes } from "../services/noteService";
+import { getAllBrands } from "../services/brandService";
 
 const Sidebar = () => {
   const [brands, setBrands] = useState([]);
   const [notes, setNotes] = useState([]);
-  const [brandFilter, setBrandFilter] = useState('');
-  const [scentFilter, setScentFilter] = useState('');
-  const [genderFilter, setGenderFilter] = useState('');
-  const [sortOption, setSortOption] = useState('name-asc');
+  const [brandFilter, setBrandFilter] = useState("");
+  const [scentFilter, setScentFilter] = useState("");
+  const [genderFilter, setGenderFilter] = useState("");
+  const [sortOption, setSortOption] = useState("name-asc");
   const [isOpen, setIsOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
-  const [selectedBrands, setSelectedBrands] = useState([]);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/brands')
-      .then(res => res.json())
-      .then(data => {
-        if (data.message) {
-          setBrands([]); // Ha nincs adat, üres lista
-        } else {
-          setBrands(data); // Márkák betöltése
-        }
-      })
-      .catch(err => console.error('Hiba a márkák betöltésekor:', err));
+    const fetchData = async () => {
+      try {
+        const brandsData = await getAllBrands();
+        const notesData = await getAllNotes();
+        setBrands(brandsData);
+        setNotes(notesData);
+      } catch (error) {
+        console.error("Hiba az adatok betöltésénél:", error);
+      }
+    };
+    fetchData();
   }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:5000/api/notes')
-      .then(res => res.json())
-      .then(data => {
-        if (data.message) {
-          setNotes([]); // Ha nincs adat, üres lista
-        } else {
-          setNotes(data); // Márkák betöltése
-        }
-      })
-      .catch(err => console.error('Hiba a márkák betöltésekor:', err));
-  }, []);
-
 
   const handleSearch = () => {
     const queryParams = new URLSearchParams();
-    if (brandFilter) queryParams.set('brand', brandFilter);
-    if (scentFilter) queryParams.set('scent', scentFilter);
-    if (genderFilter) queryParams.set('gender', genderFilter);
-    if (sortOption) queryParams.set('sort', sortOption);
+    if (brandFilter) queryParams.set("brands", brandFilter);
+    if (scentFilter) queryParams.set("perfume_notes", scentFilter);
+    if (genderFilter) queryParams.set("gender", genderFilter);
+    if (sortOption) queryParams.set("sort", sortOption);
     navigate(`/kereses?${queryParams.toString()}`);
     setIsOpen(false);
   };
- 
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -65,13 +51,15 @@ const Sidebar = () => {
     <>
       {windowWidth <= 991 && (
         <button className="filter-toggle" onClick={toggleSidebar}>
-          <i className="fas fa-filter"></i> {isOpen ? 'Bezár' : 'Szűrők'}
+          <i className="fas fa-filter"></i> {isOpen ? "Bezár" : "Szűrők"}
         </button>
       )}
 
-      <div className={`sidebar d-flex flex-column ${windowWidth <= 991 && !isOpen ? 'hidden' : ''}`}>
-        {error && <div className="alert alert-danger">{error}</div>}
-
+      <div
+        className={`sidebar d-flex flex-column ${
+          windowWidth <= 991 && !isOpen ? "hidden" : ""
+        }`}
+      >
         <div className="mb-3">
           <label htmlFor="sort" className="form-label">
             Rendezés
@@ -100,15 +88,11 @@ const Sidebar = () => {
             onChange={(e) => setBrandFilter(e.target.value)}
           >
             <option value="">Összes</option>
-            {brands.length > 0 ? (
-              brands.map((brand) => (
-                <option key={brand.id} value={brand.name}>
-                  {brand.name}
-                </option>
-              ))
-            ) : (
-              <option value="">Nincsenek márkák</option>
-            )}
+            {brands.map((brand) => (
+              <option key={brand.id} value={brand.name}>
+                {brand.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -123,15 +107,11 @@ const Sidebar = () => {
             onChange={(e) => setScentFilter(e.target.value)}
           >
             <option value="">Összes</option>
-            {notes.length > 0 ? (
-              notes.map((note) => (
-                <option key={note.id} value={note.name}>
-                  {note.name}
-                </option>
-              ))
-            ) : (
-              <option value="">Nincsenek illatjegyek</option>
-            )}
+            {notes.map((note) => (
+              <option key={note.id} value={note.name}>
+                {note.name}
+              </option>
+            ))}
           </select>
         </div>
 

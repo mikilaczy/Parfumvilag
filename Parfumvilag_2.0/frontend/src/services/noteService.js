@@ -1,11 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
-const getAllNotes = async () => {
+const API_BASE_URL = "http://localhost:5000/api/notes"; // Ellenőrizd a portot
+export const getAllNotes = async () => {
   try {
-    const response = await axios.get('/api/notes');
+    const response = await axios.get(`${API_BASE_URL}/all`);
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    throw new Error("Nem sikerült betölteni az illat jegyeket!");
   }
 };
 
@@ -20,7 +21,7 @@ const getNoteById = async (id) => {
 
 const createNote = async (note) => {
   try {
-    const response = await axios.post('/api/notes', note);
+    const response = await axios.post("/api/notes", note);
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -45,6 +46,4 @@ const deleteNote = async (id) => {
   }
 };
 
-
-
-export { getAllNotes, getNoteById, createNote, updateNote, deleteNote };
+export { getNoteById, createNote, updateNote, deleteNote };

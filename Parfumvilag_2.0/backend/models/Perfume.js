@@ -1,34 +1,36 @@
 // backend/models/perfumeModel.js
-const db = require('../db');
+const db = require("../db");
 
 // Összes parfüm lekérése
 const getAllPerfumes = (callback) => {
-  db.query('SELECT * FROM perfumes', callback);
+  db.query("SELECT * FROM perfumes", (err, results) => {
+    if (err) return callback(err);
+    callback(null, results || []);
+  });
 };
-
 // Kiemelt parfümök lekérése
 const getFeaturedPerfumes = (callback) => {
-  db.query('SELECT * FROM perfumes WHERE is_featured = 1', callback);
+  db.query("SELECT * FROM perfumes WHERE is_featured = 1", callback);
 };
 
 // Parfüm azonosító alapján
 const getPerfumeById = (id, callback) => {
-  db.query('SELECT * FROM perfumes WHERE id = ?', [id], callback);
+  db.query("SELECT * FROM perfumes WHERE id = ?", [id], callback);
 };
 
 // Parfüm létrehozása
 const createPerfume = (perfume, callback) => {
-  db.query('INSERT INTO perfumes SET ?', perfume, callback);
+  db.query("INSERT INTO perfumes SET ?", perfume, callback);
 };
 
 // Parfüm frissítése
 const updatePerfume = (id, perfume, callback) => {
-  db.query('UPDATE perfumes SET ? WHERE id = ?', [perfume, id], callback);
+  db.query("UPDATE perfumes SET ? WHERE id = ?", [perfume, id], callback);
 };
 
 // Parfüm törlése
 const deletePerfume = (id, callback) => {
-  db.query('DELETE FROM perfumes WHERE id = ?', [id], callback);
+  db.query("DELETE FROM perfumes WHERE id = ?", [id], callback);
 };
 
 module.exports = {
@@ -37,5 +39,5 @@ module.exports = {
   getPerfumeById,
   createPerfume,
   updatePerfume,
-  deletePerfume
+  deletePerfume,
 };
