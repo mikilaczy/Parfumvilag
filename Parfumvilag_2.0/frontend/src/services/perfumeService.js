@@ -1,18 +1,23 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5000/api/perfumes'; // Ellenőrizd a backend portját
 
-export const getAllPerfumes = async (searchTerm = '') => {
+export const getAllPerfumes = async (params = {}) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/perfumes/all`, {
-      params: { search: searchTerm },
+    const response = await axios.get(`${API_BASE_URL}/all`, {
+      params: {
+        query: params.query || '',
+        brand: params.brand || '',
+        scent: params.scent || '',
+        gender: params.gender || '',
+        sort: params.sort || 'name-asc',
+        page: params.page || 1,
+        per_page: params.per_page || 24
+      }
     });
-    console.log('API válasz (getAllPerfumes):', response.data); // Ellenőrzés
     return response.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.error || 'Nem sikerült betölteni a parfümök listáját!';
-    console.error('Hiba a getAllPerfumes-ben:', errorMessage);
-    throw new Error(errorMessage);
+    throw error.response?.data?.error || 'Hiba a parfümök lekérésekor!';
   }
 };
 

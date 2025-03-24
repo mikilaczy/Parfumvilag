@@ -3,10 +3,9 @@ const Note = require('../models/Note');
 exports.getAllNotes = (req, res) => {
   Note.getAllNotes((err, results) => {
     if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.status(200).json(results);
+      return res.status(500).json({ error: 'Adatbázis-hiba!' });
     }
+    res.status(200).json(results);
   });
 };
 

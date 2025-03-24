@@ -6,7 +6,7 @@ import { getAllPerfumes } from '../services/perfumeService';
 
 const Search = ({ searchTerm: propSearchTerm }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchTermFromUrl = searchParams.get('query') || propSearchTerm || '';
+  const searchTermFromUrl = searchParams.get('query') || '';
   const brandFilter = searchParams.get('brand') || '';
   const scentFilter = searchParams.get('scent') || '';
   const genderFilter = searchParams.get('gender') || '';
@@ -31,17 +31,25 @@ const Search = ({ searchTerm: propSearchTerm }) => {
   useEffect(() => {
     const fetchPerfumes = async () => {
       try {
-        const perfumesData = await getAllPerfumes(searchTermFromUrl);
-        setInitialPerfumes(perfumesData);
-        filterAndSortPerfumes(perfumesData);
+        const perfumesData = await getAllPerfumes({
+          query: searchTermFromUrl,
+          brand: brandFilter,
+          scent: scentFilter,
+          gender: genderFilter,
+          sort: sortOption,
+          page: currentPage,
+          per_page: perfumesPerPage
+        });
+        setPerfumes(perfumesData);
+        setInitialPerfumes(perfumesData); // Csak az első alkalommal
+        setError('');
       } catch (error) {
-        setError(error.message);
+        setError('Nem sikerült betölteni a parfümök listáját!');
         setPerfumes([]);
       }
     };
     fetchPerfumes();
-  }, [searchTermFromUrl]);
-
+  }, [searchTermFromUrl, brandFilter, scentFilter, genderFilter, sortOption, currentPage]);
   useEffect(() => {
     if (initialPerfumes.length > 0) {
       filterAndSortPerfumes(initialPerfumes);
@@ -61,31 +69,53 @@ const Search = ({ searchTerm: propSearchTerm }) => {
 
   const filterAndSortPerfumes = (data) => {
     let filtered = [...data];
+    
+    // Keresés
+    if (searchTerm) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+  
+    // Márka szűrés
     if (brandFilter) {
-      filtered = filtered.filter((p) => p.brand === brandFilter);
+      filtered = filtered.filter(p => p.brand === brandFilter);
     }
+  
+    // Illatjegy szűrés (ha a scents tömb)
     if (scentFilter) {
-      filtered = filtered.filter((p) => p.notes && Array.isArray(p.notes) && p.notes.includes(scentFilter));
+      filtered = filtered.filter(p => 
+        p.scents && p.scents.includes(scentFilter) // Ellenőrizd a tömb létezését
+      );
     }
+  
+    // Nem szűrés
     if (genderFilter) {
-      filtered = filtered.filter((p) => p.gender === genderFilter);
+      filtered = filtered.filter(p => p.gender === genderFilter);
     }
-    filtered.sort((a, b) => {
-      switch (sortOption) {
-        case 'name-asc': return a.name.localeCompare(b.name);
-        case 'name-desc': return b.name.localeCompare(a.name);
-        case 'price-asc': return (a.price || 0) - (b.price || 0);
-        case 'price-desc': return (b.price || 0) - (a.price || 0);
-        default: return 0;
-      }
-    });
-    setCurrentPage(1);
-    const startIndex = 0;
-    const endIndex = perfumesPerPage;
-    setPerfumes(filtered.slice(startIndex, endIndex));
+  
+    // Rendezés
+    switch (sortOption) {
+      case 'name-asc':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'name-desc':
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case 'price-asc':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      default:
+        break;
+    }
+  
+    setPerfumes(filtered);
     setTotalPages(Math.ceil(filtered.length / perfumesPerPage));
   };
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
     const filtered = initialPerfumes

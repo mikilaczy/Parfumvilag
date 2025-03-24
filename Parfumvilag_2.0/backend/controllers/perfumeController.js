@@ -2,19 +2,72 @@
 const Perfume = require('../models/Perfume');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const db = require('../db'); // Importáld a db-t
 require('dotenv').config();
 
 // Összes parfüm
 exports.getAllPerfumes = (req, res) => {
-  Perfume.getAllPerfumes((err, results) => {
+  const {
+    query = '',
+    brand = '',
+    scent = '',
+    gender = '',
+    sort = 'name-asc',
+    page = 1,
+    per_page = 24
+  } = req.query;
+
+  const offset = (page - 1) * per_page;
+
+  let sql = `SELECT * FROM perfumes WHERE 1=1`;
+  const params = [];
+
+  if (query) {
+    sql += ` AND (name LIKE ? OR brand LIKE ?)`;
+    params.push(`%${query}%`, `%${query}%`);
+  }
+  if (brand) {
+    sql += ` AND brand = ?`;
+    params.push(brand);
+  }
+  if (scent) {
+    sql += ` AND notes LIKE ?`;
+    params.push(`%${scent}%`);
+  }
+  if (gender) {
+    sql += ` AND gender = ?`;
+    params.push(gender);
+  }
+
+  switch (sort) {
+    case 'name-asc':
+      sql += ` ORDER BY name ASC`;
+      break;
+    case 'name-desc':
+      sql += ` ORDER BY name DESC`;
+      break;
+    case 'price-asc':
+      sql += ` ORDER BY price ASC`;
+      break;
+    case 'price-desc':
+      sql += ` ORDER BY price DESC`;
+      break;
+    default:
+      break;
+  }
+
+  sql += ` LIMIT ? OFFSET ?`;
+  params.push(parseInt(per_page), parseInt(offset));
+
+  db.query(sql, params, (err, results) => {
     if (err) {
+      console.error('SQL Hiba:', err);
       res.status(500).json({ error: 'Adatbázis-hiba!' });
       return;
     }
     res.status(200).json(results);
   });
 };
-
 // Kiemelt parfümök
 exports.getFeaturedPerfumes = (req, res) => {
   Perfume.getFeaturedPerfumes((err, results) => {

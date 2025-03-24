@@ -3,13 +3,11 @@ const Brand = require('../models/Brand');
 exports.getAllBrands = (req, res) => {
   Brand.getAllBrands((err, results) => {
     if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.status(200).json(results);
+      return res.status(500).json({ error: 'Adatbázis-hiba!' });
     }
+    res.status(200).json(results);
   });
-};
-
+}
 exports.getBrandById = (req, res) => {
   Brand.getBrandById(req.params.id, (err, results) => {
     if (err) {

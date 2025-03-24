@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-const getAllBrands = async () => {
+const API_BASE_URL = 'http://localhost:5000/api/brands'; // Ellenőrizd a portot
+export const getAllBrands = async () => {
   try {
-    const response = await axios.get('/api/brands');
+    const response = await axios.get(`${API_BASE_URL}/all`);
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    throw new Error('Nem sikerült betölteni a márkákat!');
   }
 };
 
@@ -45,4 +46,4 @@ const deleteBrand = async (id) => {
   }
 };
 
-export { getAllBrands, getBrandById, createBrand, updateBrand, deleteBrand };
+export {  getBrandById, createBrand, updateBrand, deleteBrand };
