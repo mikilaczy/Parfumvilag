@@ -1,13 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api/notes'; // Ellenőrizd a portot
-
-export const getAllNotes = async () => {
+const getAllNotes = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/all`);
+    const response = await axios.get('/api/notes');
     return response.data;
   } catch (error) {
-    throw new Error('Nem sikerült betölteni az illatjegyeket!');
+    throw error.response.data;
   }
 };
 
@@ -47,4 +45,6 @@ const deleteNote = async (id) => {
   }
 };
 
-export {  getNoteById, createNote, updateNote, deleteNote };
+
+
+export { getAllNotes, getNoteById, createNote, updateNote, deleteNote };
