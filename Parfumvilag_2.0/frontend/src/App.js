@@ -11,6 +11,7 @@ import Search from './pages/Search';
 import Login from './pages/Login';
 import About from './pages/About';
 import Aszf from './pages/Aszf';
+import Favorites from './pages/Favorites';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
@@ -37,6 +38,7 @@ function App() {
             <Route path="/profil" element={<Profile />} />
             <Route path="/parfume/:id" element={<PerfumeDetail />} />
             <Route path="/aszf" element={<Aszf />} />
+            <Route path="/kedvencek" element={<Favorites />} />
           </Routes>
         </div>
         <Footer />

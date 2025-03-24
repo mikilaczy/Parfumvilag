@@ -17,22 +17,29 @@ const Favorites = () => {
 
       try {
         const token = localStorage.getItem('token');
-        // 1. Lépés: Kedvencek lekérdezése
-        const favoritesResponse = await fetch('/api/favorites', {
+        if (!token) {
+          throw new Error('Nincs érvényes token');
+        }
+
+        const favoritesResponse = await fetch('http://localhost:5000/api/favorites', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (!favoritesResponse.ok) {
-          throw new Error('Hiba a kedvencek lekérdezésekor');
+          throw new Error(`Hiba a kedvencek lekérdezésekor: ${favoritesResponse.status}`);
+        }
+
+        const contentType = favoritesResponse.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('A szerver nem JSON-t adott vissza');
         }
 
         const favoritesData = await favoritesResponse.json();
 
-        // 2. Lépés: Parfümök adatainak lekérdezése
         const perfumePromises = favoritesData.map(async (fav) => {
-          const perfumeResponse = await fetch(`/api/perfumes/${fav.perfume_id}`, {
+          const perfumeResponse = await fetch(`http://localhost:5000/api/perfumes/${fav.perfume_id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -40,6 +47,11 @@ const Favorites = () => {
 
           if (!perfumeResponse.ok) {
             throw new Error(`Hiba a parfüm lekérdezésekor: ${fav.perfume_id}`);
+          }
+
+          const perfumeContentType = perfumeResponse.headers.get('Content-Type');
+          if (!perfumeContentType || !perfumeContentType.includes('application/json')) {
+            throw new Error(`A szerver nem JSON-t adott vissza a parfümnél: ${fav.perfume_id}`);
           }
 
           return await perfumeResponse.json();
@@ -57,7 +69,6 @@ const Favorites = () => {
     fetchFavorites();
   }, [isLoggedIn]);
 
-  // Ha a felhasználó nincs bejelentkezve, átirányítjuk a bejelentkezés oldalra
   if (!isLoggedIn) {
     return <Navigate to="/bejelentkezes" />;
   }

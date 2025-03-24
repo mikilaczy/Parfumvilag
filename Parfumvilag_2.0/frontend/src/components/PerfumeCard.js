@@ -99,7 +99,7 @@ const PerfumeCard = ({ perfume }) => {
             className="perfume-card-img"
           />
           <div className="perfume-card-body">
-            <h5 className="perfume-card-title">{name}</h5>
+            <h3 className="perfume-card-title">{name}</h3>
             <p className="perfume-card-subtitle">{brand}</p>
             <p className="perfume-card-text">{price ? `${price} Ft` : 'Ár nem elérhető'}</p>
           </div>
