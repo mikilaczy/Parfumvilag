@@ -45,4 +45,6 @@ const deleteNote = async (id) => {
   }
 };
 
+
+
 export { getAllNotes, getNoteById, createNote, updateNote, deleteNote };
