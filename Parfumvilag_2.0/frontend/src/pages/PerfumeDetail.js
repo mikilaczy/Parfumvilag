@@ -191,13 +191,6 @@ const PerfumeDetail = () => {
         {perfume && (
           <div className="perfume-title-wrapper">
             <h1 className="perfume-title-top">{perfume.name}</h1>
-            <button
-              className={`favorite-btn ${isFavorite ? 'active' : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                toggleFavorite();
-              }}
-            />
           </div>
         )}
 
@@ -245,9 +238,45 @@ const PerfumeDetail = () => {
               <p className="perfume-price">
                 {new Intl.NumberFormat("hu-HU").format(perfume.price)} Ft
               </p>
+              {/* Kedvencek gomb az ár alatt, középen */}
+              <div className="favorite-btn-wrapper">
+                <button
+                  className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavorite();
+                  }}
+                />
+              </div>
               <p className="perfume-description">
                 <strong>Leírás:</strong> {perfume.description || "Nincs leírás"}
               </p>
+            </div>
+
+            {/* Webáruházak szekció */}
+            <div className="stores-section">
+              <h2 className="stores-title">Elérhető webáruházak</h2>
+              {perfume.stores && perfume.stores.length > 0 ? (
+                <div className="stores-list">
+                  {perfume.stores.map((store, index) => (
+                    <a
+                      key={index}
+                      href={store.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="store-item"
+                    >
+                      <span className="store-name">{store.store_name}</span>
+                      <span className="store-price">
+                        {new Intl.NumberFormat("hu-HU").format(store.price)} {store.currency}
+                      </span>
+                      <span className="store-link">Megnézem →</span>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <p className="no-stores">Jelenleg nem érhető el webáruházban.</p>
+              )}
             </div>
 
             {/* Értékelések szekció */}
