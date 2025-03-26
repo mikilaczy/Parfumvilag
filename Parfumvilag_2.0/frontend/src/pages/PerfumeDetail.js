@@ -244,7 +244,7 @@ const PerfumeDetail = () => {
             {/* Leírás és adatok a kép alatt */}
             <div className="perfume-info">
               <p className="perfume-brand">
-                <strong>Márka:</strong> {perfume.brand}
+                <strong>Márka:</strong> {perfume.brand_name}
               </p>
               <p className="perfume-gender">
                 <strong>Kategória:</strong>{" "}
@@ -286,20 +286,20 @@ const PerfumeDetail = () => {
               {perfume.stores && perfume.stores.length > 0 ? (
                 <div className="stores-list">
                   {perfume.stores.map((store, index) => (
-                    <a
-                      key={index}
-                      href={store.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="store-item"
-                    >
+                    <div key={index} className="store-item">
+                      {/* Áruház neve (nem kattintható) */}
                       <span className="store-name">{store.store_name}</span>
-                      <span className="store-price">
-                        {new Intl.NumberFormat("hu-HU").format(store.price)}{" "}
-                        {store.currency}
-                      </span>
-                      <span className="store-link">Megnézem →</span>
-                    </a>
+
+                      {/* "Megnézem" link (csak erre lehet kattintani) */}
+                      <a
+                        href={store.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="store-link"
+                      >
+                        Megnézem →
+                      </a>
+                    </div>
                   ))}
                 </div>
               ) : (

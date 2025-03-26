@@ -3510,3 +3510,20 @@ body {
     padding: 0.7rem 1rem;
   }
 }
+.store-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.store-name {
+  flex-grow: 1; /* A név elfoglalja a rendelkezésre álló helyet */
+}
+
+.store-link {
+  margin-left: 20px;
+  color: #007bff;
+  text-decoration: none;
+}
