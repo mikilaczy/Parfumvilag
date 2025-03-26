@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import PerfumeCard from '../components/PerfumeCard';
-import Sidebar from '../components/Sidebar';
-import { getAllPerfumes } from '../services/perfumeService';
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import PerfumeCard from "../components/PerfumeCard";
+import Sidebar from "../components/Sidebar";
+import { getAllPerfumes } from "../services/perfumeService";
 
 const Search = ({ searchTerm: propSearchTerm }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchTermFromUrl = searchParams.get('query') || propSearchTerm || '';
-  const brandFilter = searchParams.get('brand') || '';
-  const scentFilter = searchParams.get('scent') || '';
-  const genderFilter = searchParams.get('gender') || '';
-  const sortOption = searchParams.get('sort') || 'name-asc';
+  const searchTermFromUrl = searchParams.get("query") || propSearchTerm || "";
+  const brandFilter = searchParams.get("brand") || "";
+  const scentFilter = searchParams.get("scent") || "";
+  const genderFilter = searchParams.get("gender") || "";
+  const sortOption = searchParams.get("sort") || "name-asc";
   const [perfumes, setPerfumes] = useState([]);
   const [initialPerfumes, setInitialPerfumes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState(searchTermFromUrl);
   const [suggestions, setSuggestions] = useState([]);
   const perfumesPerPage = 24;
@@ -24,8 +24,8 @@ const Search = ({ searchTerm: propSearchTerm }) => {
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -34,29 +34,31 @@ const Search = ({ searchTerm: propSearchTerm }) => {
         const response = await getAllPerfumes({
           query: searchTerm,
           brand: brandFilter,
-          scent: scentFilter,
+          note: scentFilter, // <-- Küldd 'note' paraméterként
           gender: genderFilter,
           sort: sortOption,
           page: currentPage,
-          per_page: 24
+          per_page: 24,
         });
 
         setPerfumes(response.perfumes);
         setTotalPages(response.totalPages);
-        setError('');
+        setError("");
       } catch (err) {
-        setError('Nem sikerült betölteni a parfümök listáját!');
+        setError("Failed to load perfumes!");
         setPerfumes([]);
       }
     };
 
     fetchPerfumes();
-  }, [searchTerm, brandFilter, scentFilter, genderFilter, sortOption, currentPage]);
-  useEffect(() => {
-    if (initialPerfumes.length > 0) {
-      filterAndSortPerfumes(initialPerfumes);
-    }
-  }, [brandFilter, scentFilter, genderFilter, sortOption, initialPerfumes]);
+  }, [
+    searchTerm,
+    brandFilter,
+    scentFilter,
+    genderFilter,
+    sortOption,
+    currentPage,
+  ]);
 
   useEffect(() => {
     if (searchTerm.trim() && initialPerfumes.length > 0) {
@@ -69,33 +71,6 @@ const Search = ({ searchTerm: propSearchTerm }) => {
     }
   }, [searchTerm, initialPerfumes]);
 
-  const filterAndSortPerfumes = (data) => {
-    let filtered = [...data];
-    if (brandFilter) {
-      filtered = filtered.filter((p) => p.brand === brandFilter);
-    }
-    if (scentFilter) {
-      filtered = filtered.filter((p) => p.notes && Array.isArray(p.notes) && p.notes.includes(scentFilter));
-    }
-    if (genderFilter) {
-      filtered = filtered.filter((p) => p.gender === genderFilter);
-    }
-    filtered.sort((a, b) => {
-      switch (sortOption) {
-        case 'name-asc': return a.name.localeCompare(b.name);
-        case 'name-desc': return b.name.localeCompare(a.name);
-        case 'price-asc': return (a.price || 0) - (b.price || 0);
-        case 'price-desc': return (b.price || 0) - (a.price || 0);
-        default: return 0;
-      }
-    });
-    setCurrentPage(1);
-    const startIndex = 0;
-    const endIndex = perfumesPerPage;
-    setPerfumes(filtered.slice(startIndex, endIndex));
-    setTotalPages(Math.ceil(filtered.length / perfumesPerPage));
-  };
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
     const filtered = initialPerfumes
@@ -104,25 +79,32 @@ const Search = ({ searchTerm: propSearchTerm }) => {
       .filter((p) => !genderFilter || p.gender === genderFilter)
       .sort((a, b) => {
         switch (sortOption) {
-          case 'name-asc': return a.name.localeCompare(b.name);
-          case 'name-desc': return b.name.localeCompare(a.name);
-          case 'price-asc': return (a.price || 0) - (b.price || 0);
-          case 'price-desc': return (b.price || 0) - (a.price || 0);
-          default: return 0;
+          case "name-asc":
+            return a.name.localeCompare(b.name);
+          case "name-desc":
+            return b.name.localeCompare(a.name);
+          case "price-asc":
+            return (a.price || 0) - (b.price || 0);
+          case "price-desc":
+            return (b.price || 0) - (a.price || 0);
+          default:
+            return 0;
         }
       });
     const startIndex = (page - 1) * perfumesPerPage;
     const endIndex = startIndex + perfumesPerPage;
     setPerfumes(filtered.slice(startIndex, endIndex));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSearch = () => {
+    setCurrentPage(1);
+    navigate(`/kereses?${queryParams.toString()}`);
     const queryParams = new URLSearchParams(searchParams);
     if (searchTerm.trim()) {
-      queryParams.set('query', searchTerm);
+      queryParams.set("query", searchTerm);
     } else {
-      queryParams.delete('query');
+      queryParams.delete("query");
     }
     setSearchParams(queryParams);
     setSuggestions([]);
@@ -148,8 +130,8 @@ const Search = ({ searchTerm: propSearchTerm }) => {
       <div
         className="flex-grow-1"
         style={{
-          marginLeft: windowWidth > 991 ? '250px' : '0',
-          width: '100%',
+          marginLeft: windowWidth > 991 ? "250px" : "0",
+          width: "100%",
         }}
       >
         <div className="search-page container-fluid mt-4">
@@ -162,20 +144,27 @@ const Search = ({ searchTerm: propSearchTerm }) => {
                   placeholder="Keresés név szerint..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                 />
                 <button className="btn btn-peach" onClick={handleSearch}>
                   Keresés
                 </button>
               </div>
               {suggestions.length > 0 && (
-                <ul className="list-group position-absolute w-100" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
+                <ul
+                  className="list-group position-absolute w-100"
+                  style={{
+                    zIndex: 1000,
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                  }}
+                >
                   {suggestions.map((perfume) => (
                     <li
                       key={perfume.id}
                       className="list-group-item list-group-item-action"
                       onClick={() => navigate(`/parfume/${perfume.id}`)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     >
                       {perfume.name}
                     </li>
@@ -202,7 +191,9 @@ const Search = ({ searchTerm: propSearchTerm }) => {
           {totalPages > 1 && (
             <nav className="pagination mt-4">
               <ul className="pagination-list justify-content-center align-items-center">
-                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                <li
+                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                >
                   <button
                     className="page-link prev-next"
                     onClick={() => handlePageChange(currentPage - 1)}
@@ -214,7 +205,10 @@ const Search = ({ searchTerm: propSearchTerm }) => {
                   {currentPage > 3 && (
                     <>
                       <li className="page-item">
-                        <button className="page-link" onClick={() => handlePageChange(1)}>
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(1)}
+                        >
                           1
                         </button>
                       </li>
@@ -225,7 +219,9 @@ const Search = ({ searchTerm: propSearchTerm }) => {
                   )}
                   {getPageNumbers().map((page) => (
                     <li
-                      className={`page-item ${currentPage === page ? 'active' : ''}`}
+                      className={`page-item ${
+                        currentPage === page ? "active" : ""
+                      }`}
                       key={page}
                     >
                       <button
@@ -252,7 +248,11 @@ const Search = ({ searchTerm: propSearchTerm }) => {
                     </>
                   )}
                 </div>
-                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                <li
+                  className={`page-item ${
+                    currentPage === totalPages ? "disabled" : ""
+                  }`}
+                >
                   <button
                     className="page-link prev-next"
                     onClick={() => handlePageChange(currentPage + 1)}
