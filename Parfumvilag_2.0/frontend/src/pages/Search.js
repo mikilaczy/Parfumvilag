@@ -31,17 +31,27 @@ const Search = ({ searchTerm: propSearchTerm }) => {
   useEffect(() => {
     const fetchPerfumes = async () => {
       try {
-        const perfumesData = await getAllPerfumes(searchTermFromUrl);
-        setInitialPerfumes(perfumesData);
-        filterAndSortPerfumes(perfumesData);
-      } catch (error) {
-        setError(error.message);
+        const response = await getAllPerfumes({
+          query: searchTerm,
+          brand: brandFilter,
+          scent: scentFilter,
+          gender: genderFilter,
+          sort: sortOption,
+          page: currentPage,
+          per_page: 24
+        });
+
+        setPerfumes(response.perfumes);
+        setTotalPages(response.totalPages);
+        setError('');
+      } catch (err) {
+        setError('Nem sikerült betölteni a parfümök listáját!');
         setPerfumes([]);
       }
     };
-    fetchPerfumes();
-  }, [searchTermFromUrl]);
 
+    fetchPerfumes();
+  }, [searchTerm, brandFilter, scentFilter, genderFilter, sortOption, currentPage]);
   useEffect(() => {
     if (initialPerfumes.length > 0) {
       filterAndSortPerfumes(initialPerfumes);

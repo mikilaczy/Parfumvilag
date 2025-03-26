@@ -2,16 +2,93 @@
 const Perfume = require('../models/Perfume');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const db = require('../db');
 require('dotenv').config();
 
 // Összes parfüm
 exports.getAllPerfumes = (req, res) => {
-  Perfume.getAllPerfumes((err, results) => {
+  const {
+    query = '',
+    brand = '',
+    scent = '',
+    gender = '',
+    sort = 'name-asc',
+    page = 1,
+    per_page = 24
+  } = req.query;
+
+  const offset = (page - 1) * per_page;
+
+  let sql = `
+    SELECT p.* 
+    FROM perfumes p
+    LEFT JOIN brands b ON p.brand_id = b.id
+    LEFT JOIN perfume_notes pn ON p.id = pn.perfume_id
+    LEFT JOIN notes n ON pn.note_id = n.id
+    WHERE 1=1
+  `;
+  const params = [];
+
+  if (query) {
+    sql += ` AND (p.name LIKE ? OR b.name LIKE ?)`;
+    params.push(`%${query}%`, `%${query}%`);
+  }
+  if (brand) {
+    sql += ` AND b.name = ?`;
+    params.push(brand);
+  }
+  if (scent) {
+    sql += ` AND n.name = ?`;
+    params.push(scent);
+  }
+  if (gender) {
+    sql += ` AND p.gender = ?`;
+    params.push(gender);
+  }
+
+  switch (sort) {
+    case 'name-asc':
+      sql += ` ORDER BY p.name ASC`;
+      break;
+    case 'name-desc':
+      sql += ` ORDER BY p.name DESC`;
+      break;
+    case 'price-asc':
+      sql += ` ORDER BY p.price ASC`;
+      break;
+    case 'price-desc':
+      sql += ` ORDER BY p.price DESC`;
+      break;
+    default:
+      break;
+  }
+
+  const countSql = `SELECT COUNT(*) AS total FROM (${sql}) AS subquery`;
+  db.query(countSql, params, (err, countResults) => {
     if (err) {
-      res.status(500).json({ error: 'Adatbázis-hiba!' });
-      return;
+      console.error('SQL Hiba (count):', err);
+      return res.status(500).json({ error: 'Adatbázis-hiba!' });
     }
-    res.status(200).json(results);
+
+    const totalCount = countResults[0].total;
+    const totalPages = Math.ceil(totalCount / per_page);
+
+    sql += ` LIMIT ? OFFSET ?`;
+    params.push(parseInt(per_page), offset);
+
+    db.query(sql, params, (err, results) => {
+      if (err) {
+        console.error('SQL Hiba:', err);
+        return res.status(500).json({ error: 'Adatbázis-hiba!' });
+      }
+
+      res.status(200).json({
+        perfumes: results,
+        totalPages: totalPages,
+        currentPage: parseInt(page),
+        totalCount: totalCount
+      });
+    });
   });
 };
 
