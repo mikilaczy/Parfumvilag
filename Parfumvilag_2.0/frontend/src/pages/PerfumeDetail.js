@@ -21,7 +21,7 @@ const PerfumeDetail = () => {
   const [comment, setComment] = useState("");
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   // Parfüm adatainak betöltése
   useEffect(() => {
@@ -46,31 +46,39 @@ const PerfumeDetail = () => {
       if (!isLoggedIn) return;
 
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) {
-          setMessage('Hiányzó autentikációs token. Kérlek, jelentkezz be újra.');
+          setMessage(
+            "Hiányzó autentikációs token. Kérlek, jelentkezz be újra."
+          );
           return;
         }
 
-        const response = await fetch('/api/favorites', {
+        const response = await fetch("/api/favorites", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (!response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('A szerver nem JSON-t adott vissza, valószínűleg autentikációs probléma.');
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new Error(
+              "A szerver nem JSON-t adott vissza, valószínűleg autentikációs probléma."
+            );
           }
           const errorData = await response.json();
-          throw new Error(`Hiba a kedvencek lekérdezésekor: ${response.status} - ${errorData.message || response.statusText}`);
+          throw new Error(
+            `Hiba a kedvencek lekérdezésekor: ${response.status} - ${
+              errorData.message || response.statusText
+            }`
+          );
         }
 
         const favorites = await response.json();
         setIsFavorite(favorites.some((fav) => fav.perfume_id === parseInt(id)));
       } catch (error) {
-        console.error('Hiba a kedvencek ellenőrzésekor:', error);
+        console.error("Hiba a kedvencek ellenőrzésekor:", error);
         setMessage(`Nem sikerült ellenőrizni a kedvenceket: ${error.message}`);
       }
     };
@@ -86,17 +94,17 @@ const PerfumeDetail = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('user_id');
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("user_id");
 
       if (!token || !userId) {
-        setMessage('Hiányzó autentikációs adatok. Kérlek, jelentkezz be újra.');
+        setMessage("Hiányzó autentikációs adatok. Kérlek, jelentkezz be újra.");
         return;
       }
 
       if (isFavorite) {
         const response = await fetch(`/api/favorites/${id}`, {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -104,15 +112,17 @@ const PerfumeDetail = () => {
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(`Hiba a kedvenc törlésekor: ${response.status} - ${errorText}`);
+          throw new Error(
+            `Hiba a kedvenc törlésekor: ${response.status} - ${errorText}`
+          );
         }
 
-        setMessage('Parfüm eltávolítva a kedvencekből.');
+        setMessage("Parfüm eltávolítva a kedvencekből.");
       } else {
-        const response = await fetch('/api/favorites', {
-          method: 'POST',
+        const response = await fetch("/api/favorites", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
@@ -123,15 +133,17 @@ const PerfumeDetail = () => {
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(`Hiba a kedvenc hozzáadásakor: ${response.status} - ${errorText}`);
+          throw new Error(
+            `Hiba a kedvenc hozzáadásakor: ${response.status} - ${errorText}`
+          );
         }
 
-        setMessage('Parfüm hozzáadva a kedvencekhez.');
+        setMessage("Parfüm hozzáadva a kedvencekhez.");
       }
 
       setIsFavorite(!isFavorite);
     } catch (error) {
-      console.error('Hiba a kedvencek kezelésekor:', error);
+      console.error("Hiba a kedvencek kezelésekor:", error);
       setMessage(`Hiba történt: ${error.message}`);
     }
   };
@@ -144,8 +156,15 @@ const PerfumeDetail = () => {
       return;
     }
 
-    if (ratings.sillage === 0 || ratings.longevity === 0 || ratings.value === 0 || ratings.overall === 0) {
-      setMessage("Kérlek, adj értékelést minden szempont alapján (1-5 csillag)!");
+    if (
+      ratings.sillage === 0 ||
+      ratings.longevity === 0 ||
+      ratings.value === 0 ||
+      ratings.overall === 0
+    ) {
+      setMessage(
+        "Kérlek, adj értékelést minden szempont alapján (1-5 csillag)!"
+      );
       return;
     }
 
@@ -153,8 +172,8 @@ const PerfumeDetail = () => {
       id: reviews.length + 1,
       ratings,
       comment,
-      user: localStorage.getItem('username') || "Névtelen",
-      date: new Date().toLocaleDateString('hu-HU'),
+      user: localStorage.getItem("username") || "Névtelen",
+      date: new Date().toLocaleDateString("hu-HU"),
     };
 
     setReviews([newReview, ...reviews]);
@@ -181,10 +200,7 @@ const PerfumeDetail = () => {
   return (
     <div className="perfume-detail-container">
       <div className="container">
-        <button
-          className="back-btn"
-          onClick={() => window.history.back()}
-        >
+        <button className="back-btn" onClick={() => window.history.back()}>
           ← Vissza a kereséshez
         </button>
 
@@ -227,13 +243,24 @@ const PerfumeDetail = () => {
 
             {/* Leírás és adatok a kép alatt */}
             <div className="perfume-info">
-              <p className="perfume-brand"><strong>Márka:</strong> {perfume.brand}</p>
+              <p className="perfume-brand">
+                <strong>Márka:</strong> {perfume.brand}
+              </p>
               <p className="perfume-gender">
                 <strong>Kategória:</strong>{" "}
-                {perfume.gender === "female" ? "Női" : perfume.gender === "male" ? "Férfi" : "Unisex"}
+                {perfume.gender === "female"
+                  ? "Női"
+                  : perfume.gender === "male"
+                  ? "Férfi"
+                  : "Unisex"}
               </p>
               <p className="perfume-notes">
-                <strong>Illatok:</strong> {perfume?.notes && noteTags}
+                <strong>Illatjegyek:</strong>{" "}
+                {perfume.notes?.map((note, index) => (
+                  <span key={index} className="scent-tag">
+                    {note}
+                  </span>
+                ))}
               </p>
               <p className="perfume-price">
                 {new Intl.NumberFormat("hu-HU").format(perfume.price)} Ft
@@ -241,7 +268,7 @@ const PerfumeDetail = () => {
               {/* Kedvencek gomb az ár alatt, középen */}
               <div className="favorite-btn-wrapper">
                 <button
-                  className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+                  className={`favorite-btn ${isFavorite ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
                     toggleFavorite();
@@ -268,14 +295,17 @@ const PerfumeDetail = () => {
                     >
                       <span className="store-name">{store.store_name}</span>
                       <span className="store-price">
-                        {new Intl.NumberFormat("hu-HU").format(store.price)} {store.currency}
+                        {new Intl.NumberFormat("hu-HU").format(store.price)}{" "}
+                        {store.currency}
                       </span>
                       <span className="store-link">Megnézem →</span>
                     </a>
                   ))}
                 </div>
               ) : (
-                <p className="no-stores">Jelenleg nem érhető el webáruházban.</p>
+                <p className="no-stores">
+                  Jelenleg nem érhető el webáruházban.
+                </p>
               )}
             </div>
 
@@ -292,10 +322,14 @@ const PerfumeDetail = () => {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <span
                           key={star}
-                          className={`star ${ratings.sillage >= star ? 'filled' : ''}`}
-                          onMouseEnter={() => handleStarHover('sillage', star)}
-                          onMouseLeave={() => handleStarHover('sillage', ratings.sillage)}
-                          onClick={() => handleStarClick('sillage', star)}
+                          className={`star ${
+                            ratings.sillage >= star ? "filled" : ""
+                          }`}
+                          onMouseEnter={() => handleStarHover("sillage", star)}
+                          onMouseLeave={() =>
+                            handleStarHover("sillage", ratings.sillage)
+                          }
+                          onClick={() => handleStarClick("sillage", star)}
                         >
                           ★
                         </span>
@@ -308,10 +342,16 @@ const PerfumeDetail = () => {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <span
                           key={star}
-                          className={`star ${ratings.longevity >= star ? 'filled' : ''}`}
-                          onMouseEnter={() => handleStarHover('longevity', star)}
-                          onMouseLeave={() => handleStarHover('longevity', ratings.longevity)}
-                          onClick={() => handleStarClick('longevity', star)}
+                          className={`star ${
+                            ratings.longevity >= star ? "filled" : ""
+                          }`}
+                          onMouseEnter={() =>
+                            handleStarHover("longevity", star)
+                          }
+                          onMouseLeave={() =>
+                            handleStarHover("longevity", ratings.longevity)
+                          }
+                          onClick={() => handleStarClick("longevity", star)}
                         >
                           ★
                         </span>
@@ -324,10 +364,14 @@ const PerfumeDetail = () => {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <span
                           key={star}
-                          className={`star ${ratings.value >= star ? 'filled' : ''}`}
-                          onMouseEnter={() => handleStarHover('value', star)}
-                          onMouseLeave={() => handleStarHover('value', ratings.value)}
-                          onClick={() => handleStarClick('value', star)}
+                          className={`star ${
+                            ratings.value >= star ? "filled" : ""
+                          }`}
+                          onMouseEnter={() => handleStarHover("value", star)}
+                          onMouseLeave={() =>
+                            handleStarHover("value", ratings.value)
+                          }
+                          onClick={() => handleStarClick("value", star)}
                         >
                           ★
                         </span>
@@ -340,10 +384,14 @@ const PerfumeDetail = () => {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <span
                           key={star}
-                          className={`star ${ratings.overall >= star ? 'filled' : ''}`}
-                          onMouseEnter={() => handleStarHover('overall', star)}
-                          onMouseLeave={() => handleStarHover('overall', ratings.overall)}
-                          onClick={() => handleStarClick('overall', star)}
+                          className={`star ${
+                            ratings.overall >= star ? "filled" : ""
+                          }`}
+                          onMouseEnter={() => handleStarHover("overall", star)}
+                          onMouseLeave={() =>
+                            handleStarHover("overall", ratings.overall)
+                          }
+                          onClick={() => handleStarClick("overall", star)}
                         >
                           ★
                         </span>
@@ -385,7 +433,9 @@ const PerfumeDetail = () => {
                             {[...Array(5)].map((_, index) => (
                               <span
                                 key={index}
-                                className={`star ${index < review.ratings.sillage ? 'filled' : ''}`}
+                                className={`star ${
+                                  index < review.ratings.sillage ? "filled" : ""
+                                }`}
                               >
                                 ★
                               </span>
@@ -398,7 +448,11 @@ const PerfumeDetail = () => {
                             {[...Array(5)].map((_, index) => (
                               <span
                                 key={index}
-                                className={`star ${index < review.ratings.longevity ? 'filled' : ''}`}
+                                className={`star ${
+                                  index < review.ratings.longevity
+                                    ? "filled"
+                                    : ""
+                                }`}
                               >
                                 ★
                               </span>
@@ -411,7 +465,9 @@ const PerfumeDetail = () => {
                             {[...Array(5)].map((_, index) => (
                               <span
                                 key={index}
-                                className={`star ${index < review.ratings.value ? 'filled' : ''}`}
+                                className={`star ${
+                                  index < review.ratings.value ? "filled" : ""
+                                }`}
                               >
                                 ★
                               </span>
@@ -424,7 +480,9 @@ const PerfumeDetail = () => {
                             {[...Array(5)].map((_, index) => (
                               <span
                                 key={index}
-                                className={`star ${index < review.ratings.overall ? 'filled' : ''}`}
+                                className={`star ${
+                                  index < review.ratings.overall ? "filled" : ""
+                                }`}
                               >
                                 ★
                               </span>
@@ -445,14 +503,17 @@ const PerfumeDetail = () => {
         {message && (
           <div className="message-prompt">
             <p>{message}</p>
-            <button onClick={() => setMessage('')}>Bezár</button>
+            <button onClick={() => setMessage("")}>Bezár</button>
           </div>
         )}
 
         {/* Bejelentkezés üzenet modális */}
         {showLoginPrompt && (
           <>
-            <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)} />
+            <div
+              className="login-prompt-overlay"
+              onClick={() => setShowLoginPrompt(false)}
+            />
             <div className="login-prompt">
               <button
                 className="close-btn"
@@ -464,7 +525,7 @@ const PerfumeDetail = () => {
               <p>Be kell jelentkezni, hogy menteni tudjunk a kedvencek közé.</p>
               <button
                 className="login-btn"
-                onClick={() => navigate('/bejelentkezes')}
+                onClick={() => navigate("/bejelentkezes")}
               >
                 Bejelentkezés
               </button>

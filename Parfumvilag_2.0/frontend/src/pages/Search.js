@@ -8,7 +8,7 @@ const Search = ({ searchTerm: propSearchTerm }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTermFromUrl = searchParams.get("query") || propSearchTerm || "";
   const brandFilter = searchParams.get("brand") || "";
-  const scentFilter = searchParams.get("scent") || "";
+  const scentFilter = searchParams.get("note") || "";
   const genderFilter = searchParams.get("gender") || "";
   const sortOption = searchParams.get("sort") || "name-asc";
   const [perfumes, setPerfumes] = useState([]);
@@ -99,8 +99,12 @@ const Search = ({ searchTerm: propSearchTerm }) => {
 
   const handleSearch = () => {
     setCurrentPage(1);
+    if (brandFilter) queryParams.set("brand", brandFilter.trim());
+    if (scentFilter) queryParams.set("note", scentFilter.trim().toLowerCase()); // Normalizálás
+    if (genderFilter) queryParams.set("gender", genderFilter);
     navigate(`/kereses?${queryParams.toString()}`);
     const queryParams = new URLSearchParams(searchParams);
+
     if (searchTerm.trim()) {
       queryParams.set("query", searchTerm);
     } else {

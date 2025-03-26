@@ -48,6 +48,11 @@ const Sidebar = () => {
   }, []);
 
   const handleSearch = () => {
+    console.log("Küldött paraméterek:", {
+      brandFilter,
+      scentFilter,
+      genderFilter,
+    });
     const queryParams = new URLSearchParams();
     if (brandFilter) queryParams.set("brand", brandFilter);
     if (scentFilter) queryParams.set("note", scentFilter);

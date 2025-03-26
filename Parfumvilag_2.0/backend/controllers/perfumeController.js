@@ -18,20 +18,32 @@ exports.getAllPerfumes = (req, res) => {
     page = 1,
     per_page = 24,
   } = req.query;
+  console.log("Beérkező paraméterek:", { brand, note, gender });
   const offset = (page - 1) * per_page;
-
-  // 1. SQL lekérdezés dinamikus összeállítása
-  let sql = `
-    SELECT DISTINCT p.* 
-    FROM perfumes p
-    LEFT JOIN brands b ON p.brand_id = b.id
-    LEFT JOIN perfume_notes pn ON p.id = pn.perfume_id
-    LEFT JOIN notes n ON pn.note_id = n.id
-    WHERE 1=1
-  `;
-
   const params = [];
   const conditions = [];
+
+  // JOIN-ok dinamikus hozzáadása
+  let joinClause = `
+    LEFT JOIN perfume_notes pn ON p.id = pn.perfume_id
+    LEFT JOIN notes n ON pn.note_id = n.id
+  `;
+
+  if (note) {
+    joinClause = `
+      INNER JOIN perfume_notes pn ON p.id = pn.perfume_id
+      INNER JOIN notes n ON pn.note_id = n.id
+    `;
+  }
+
+  // SQL lekérdezés összeállítása
+  let sql = `
+    SELECT DISTINCT p.*
+    FROM perfumes p
+    LEFT JOIN brands b ON p.brand_id = b.id
+    ${joinClause}
+    WHERE 1=1
+  `;
 
   // Feltételek hozzáadása
   if (query) {
@@ -48,7 +60,7 @@ exports.getAllPerfumes = (req, res) => {
   }
   if (gender) {
     conditions.push("p.gender = ?");
-    params.push(gender);
+    params.push(gender); // gender értéke 'male', 'female' vagy 'unisex' kell legyen
   }
 
   // Feltételek összefűzése
@@ -56,7 +68,7 @@ exports.getAllPerfumes = (req, res) => {
     sql += " AND " + conditions.join(" AND ");
   }
 
-  // Rendezés
+  // Rendezés hozzáadása
   switch (sort) {
     case "name-asc":
       sql += " ORDER BY p.name ASC";
@@ -74,31 +86,39 @@ exports.getAllPerfumes = (req, res) => {
 
   // Lapozás hozzáadása
   sql += " LIMIT ? OFFSET ?";
-  params.push(parseInt(per_page), offset);
+  params.push(parseInt(per_page, 10), offset); // per_page és offset számokként
 
-  // 2. COUNT lekérdezés javítva
+  // COUNT lekérdezés
   const countSql = `
     SELECT COUNT(DISTINCT p.id) AS total
     FROM perfumes p
     LEFT JOIN brands b ON p.brand_id = b.id
-    LEFT JOIN perfume_notes pn ON p.id = pn.perfume_id
-    LEFT JOIN notes n ON pn.note_id = n.id
+    ${joinClause}
     WHERE 1=1
     ${conditions.length > 0 ? " AND " + conditions.join(" AND ") : ""}
   `;
 
-  // 3. Adatbázis lekérdezések futtatása
+  // COUNT paraméterek (LIMIT/OFFSET nélkül)
+  const countParams = [...params.slice(0, -2)];
+
+  // Naplózáson alapuló hibakeresés
+
+  console.log("Generált SQL:", sql);
+  console.log("Paraméterek:", params);
+  console.log("COUNT SQL:", countSql);
+  console.log("COUNT Paraméterek:", countParams);
+
+  // Adatbázis lekérdezések futtatása
   db.query(sql, params, (err, results) => {
     if (err) {
-      console.error("SQL Error:", err);
-      return res.status(500).json({ error: "Database error!" });
+      console.error("SQL Hiba:", err);
+      return res.status(500).json({ error: "Adatbázis hiba!" });
     }
 
-    db.query(countSql, params.slice(0, -2), (countErr, countResults) => {
-      // LIMIT/OFFSET eltávolítva
+    db.query(countSql, countParams, (countErr, countResults) => {
       if (countErr) {
-        console.error("Count SQL Error:", countErr);
-        return res.status(500).json({ error: "Database error!" });
+        console.error("COUNT SQL Hiba:", countErr);
+        return res.status(500).json({ error: "Adatbázis hiba!" });
       }
 
       const totalCount = countResults[0]?.total || 0;
@@ -107,7 +127,7 @@ exports.getAllPerfumes = (req, res) => {
       res.status(200).json({
         perfumes: results,
         totalPages,
-        currentPage: parseInt(page),
+        currentPage: parseInt(page, 10),
       });
     });
   });
@@ -126,23 +146,62 @@ exports.getFeaturedPerfumes = (req, res) => {
 
 // Parfüm azonosító alapján
 exports.getPerfumeById = (req, res) => {
-  const perfumeId = req.params.id;
-  Perfume.getPerfumeById(perfumeId, (err, results) => {
+  const perfumeId = parseInt(req.params.id);
+
+  // 1. Lekérdezés: Parfüm alapadatok + illatjegyek
+  const perfumeSql = `
+    SELECT 
+      p.*, 
+      b.name AS brand_name,
+      GROUP_CONCAT(DISTINCT n.name) AS notes
+    FROM perfumes p
+    LEFT JOIN brands b ON p.brand_id = b.id
+    LEFT JOIN perfume_notes pn ON p.id = pn.perfume_id
+    LEFT JOIN notes n ON pn.note_id = n.id
+    WHERE p.id = ?
+    GROUP BY p.id
+  `;
+
+  // 2. Lekérdezés: Üzletek
+  const storesSql = `
+    SELECT 
+      store_name, 
+      url, 
+      price, 
+      currency 
+    FROM stores 
+    WHERE perfume_id = ?
+  `;
+
+  // Első lekérdezés futtatása
+  db.query(perfumeSql, [perfumeId], (err, perfumeResult) => {
     if (err) {
-      res.status(500).json({ error: "Adatbázis-hiba!" });
-      return;
+      console.error("SQL Hiba:", err);
+      return res.status(500).json({ error: "Adatbázis hiba!" });
     }
-    if (results.length === 0) {
-      res.status(404).json({ error: "Nincs ilyen parfüm!" });
-      return;
+
+    if (perfumeResult.length === 0) {
+      return res.status(404).json({ error: "Parfüm nem található!" });
     }
-    // Ellenőrzés: a 'notes' mező kelljen a visszatérési adatban
-    const perfumeData = results[0];
-    perfumeData.notes = perfumeData.notes || []; // Ha tömbként van
-    res.status(200).json(perfumeData);
+
+    // Második lekérdezés futtatása
+    db.query(storesSql, [perfumeId], (storeErr, storeResult) => {
+      if (storeErr) {
+        console.error("SQL Hiba (üzletek):", storeErr);
+        return res.status(500).json({ error: "Adatbázis hiba!" });
+      }
+
+      // Adatok összeállítása
+      const perfumeData = {
+        ...perfumeResult[0],
+        notes: perfumeResult[0].notes ? perfumeResult[0].notes.split(",") : [],
+        stores: storeResult, // Üzletek külön tömbben
+      };
+
+      res.status(200).json(perfumeData);
+    });
   });
 };
-
 // Parfüm létrehozása (védett útvonal)
 exports.createPerfume = (req, res) => {
   Perfume.createPerfume(req.body, (err, results) => {

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../style.css';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../style.css";
 
 const PerfumeCard = ({ perfume }) => {
   const { id, name, brand, price, image_url } = perfume;
   const [isFavorite, setIsFavorite] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   // Kedvencek ellenőrzése az API-n keresztül
   useEffect(() => {
@@ -15,22 +15,22 @@ const PerfumeCard = ({ perfume }) => {
       if (!isLoggedIn) return;
 
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('/api/favorites', {
+        const token = localStorage.getItem("token");
+        const response = await fetch("/api/favorites", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (!response.ok) {
-          throw new Error('Hiba a kedvencek lekérdezésekor');
+          throw new Error("Hiba a kedvencek lekérdezésekor");
         }
 
         const favorites = await response.json();
         // Ellenőrizzük, hogy a parfüm a kedvencek között van-e
         setIsFavorite(favorites.some((fav) => fav.perfume_id === id));
       } catch (error) {
-        console.error('Hiba a kedvencek ellenőrzésekor:', error);
+        console.error("Hiba a kedvencek ellenőrzésekor:", error);
       }
     };
 
@@ -45,27 +45,27 @@ const PerfumeCard = ({ perfume }) => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('user_id');
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("user_id");
 
       if (isFavorite) {
         // Törlés a kedvencekből
         const response = await fetch(`/api/favorites/${id}`, {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (!response.ok) {
-          throw new Error('Hiba a kedvenc törlésekor');
+          throw new Error("Hiba a kedvenc törlésekor");
         }
       } else {
         // Hozzáadás a kedvencekhez
-        const response = await fetch('/api/favorites', {
-          method: 'POST',
+        const response = await fetch("/api/favorites", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
@@ -75,13 +75,13 @@ const PerfumeCard = ({ perfume }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Hiba a kedvenc hozzáadásakor');
+          throw new Error("Hiba a kedvenc hozzáadásakor");
         }
       }
 
       setIsFavorite(!isFavorite);
     } catch (error) {
-      console.error('Hiba a kedvencek kezelésekor:', error);
+      console.error("Hiba a kedvencek kezelésekor:", error);
     }
   };
 
@@ -91,21 +91,21 @@ const PerfumeCard = ({ perfume }) => {
         <Link
           to={`/parfume/${id}`}
           className="perfume-card-link"
-          style={{ textDecoration: 'none', color: 'inherit' }}
+          style={{ textDecoration: "none", color: "inherit" }}
         >
           <img
-            src={image_url || 'https://via.placeholder.com/220'}
+            src={image_url || "https://via.placeholder.com/220"}
             alt={name}
             className="perfume-card-img"
           />
           <div className="perfume-card-body">
             <h3 className="perfume-card-title">{name}</h3>
-            <p className="perfume-card-subtitle">{brand}</p>
-            <p className="perfume-card-text">{price ? `${price} Ft` : 'Ár nem elérhető'}</p>
+
+            <p className="perfume-card-text">{price} Ft</p>
           </div>
         </Link>
         <button
-          className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+          className={`favorite-btn ${isFavorite ? "active" : ""}`}
           onClick={(e) => {
             e.preventDefault();
             toggleFavorite();
@@ -116,7 +116,10 @@ const PerfumeCard = ({ perfume }) => {
       {/* Bejelentkezés üzenet modális */}
       {showLoginPrompt && (
         <>
-          <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)} />
+          <div
+            className="login-prompt-overlay"
+            onClick={() => setShowLoginPrompt(false)}
+          />
           <div className="login-prompt">
             <button
               className="close-btn"
@@ -128,7 +131,7 @@ const PerfumeCard = ({ perfume }) => {
             <p>Be kell jelentkezni, hogy menteni tudjunk  a kedvencek közé.</p>
             <button
               className="login-btn"
-              onClick={() => navigate('/bejelentkezes')}
+              onClick={() => navigate("/bejelentkezes")}
             >
               Bejelentkezés
             </button>
