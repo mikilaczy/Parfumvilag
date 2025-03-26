@@ -202,6 +202,7 @@ exports.getPerfumeById = (req, res) => {
     });
   });
 };
+
 // Parfüm létrehozása (védett útvonal)
 exports.createPerfume = (req, res) => {
   Perfume.createPerfume(req.body, (err, results) => {

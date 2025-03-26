@@ -262,9 +262,22 @@ const PerfumeDetail = () => {
                   </span>
                 ))}
               </p>
-              <p className="perfume-price">
-                {new Intl.NumberFormat("hu-HU").format(perfume.price)} Ft
-              </p>
+              {perfume.stores?.length > 0 ? (
+                <p className="perfume-price">
+                  {new Intl.NumberFormat("hu-HU").format(
+                    Math.min(
+                      ...perfume.stores
+                        .map((store) => Number(store.price))
+                        .filter((price) => !isNaN(price))
+                    )
+                  )}{" "}
+                  Ft
+                </p>
+              ) : (
+                <p className="perfume-price text-muted">
+                  Ár információ nem elérhető
+                </p>
+              )}
               {/* Kedvencek gomb az ár alatt, középen */}
               <div className="favorite-btn-wrapper">
                 <button
