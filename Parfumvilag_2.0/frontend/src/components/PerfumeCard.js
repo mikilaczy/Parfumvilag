@@ -3,11 +3,23 @@ import { Link, useNavigate } from "react-router-dom";
 import "../style.css";
 
 const PerfumeCard = ({ perfume }) => {
-  const { id, name, brand, price, image_url } = perfume;
+  const {
+    id,
+    name,
+    brand_name: brand, // Ha a backend brand_name néven küldi
+    price,
+    image_url,
+  } = perfume || {};
   const [isFavorite, setIsFavorite] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+  const formattedPrice = () => {
+    if (price === undefined || price === null)
+      return "Ár információ nem elérhető";
+    return new Intl.NumberFormat("hu-HU").format(price) + " Ft";
+  };
 
   // Kedvencek ellenőrzése az API-n keresztül
   useEffect(() => {
@@ -101,7 +113,7 @@ const PerfumeCard = ({ perfume }) => {
           <div className="perfume-card-body">
             <h3 className="perfume-card-title">{name}</h3>
 
-            <p className="perfume-card-text">{price} Ft</p>
+            <p className="perfume-card-text">{formattedPrice()}</p>
           </div>
         </Link>
         <button

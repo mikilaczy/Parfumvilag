@@ -27,18 +27,23 @@ exports.getAllPerfumes = (req, res) => {
   let joinClause = `
     LEFT JOIN perfume_notes pn ON p.id = pn.perfume_id
     LEFT JOIN notes n ON pn.note_id = n.id
+    LEFT JOIN stores s ON p.id = s.perfume_id
   `;
 
   if (note) {
     joinClause = `
       INNER JOIN perfume_notes pn ON p.id = pn.perfume_id
       INNER JOIN notes n ON pn.note_id = n.id
+      LEFT JOIN stores s ON p.id = s.perfume_id
+      
     `;
   }
 
   // SQL lekérdezés összeállítása
   let sql = `
-    SELECT DISTINCT p.*
+    SELECT 
+      p.*,
+      MIN(s.price) AS price
     FROM perfumes p
     LEFT JOIN brands b ON p.brand_id = b.id
     ${joinClause}
@@ -67,7 +72,7 @@ exports.getAllPerfumes = (req, res) => {
   if (conditions.length > 0) {
     sql += " AND " + conditions.join(" AND ");
   }
-
+  sql += " GROUP BY p.id"; // Fontos: csoportosítás a MIN() függvényhez
   // Rendezés hozzáadása
   switch (sort) {
     case "name-asc":
@@ -77,10 +82,10 @@ exports.getAllPerfumes = (req, res) => {
       sql += " ORDER BY p.name DESC";
       break;
     case "price-asc":
-      sql += " ORDER BY p.price ASC";
+      sql += " ORDER BY price ASC";
       break;
     case "price-desc":
-      sql += " ORDER BY p.price DESC";
+      sql += " ORDER BY price DESC";
       break;
   }
 
@@ -90,13 +95,16 @@ exports.getAllPerfumes = (req, res) => {
 
   // COUNT lekérdezés
   const countSql = `
-    SELECT COUNT(DISTINCT p.id) AS total
-    FROM perfumes p
-    LEFT JOIN brands b ON p.brand_id = b.id
-    ${joinClause}
-    WHERE 1=1
-    ${conditions.length > 0 ? " AND " + conditions.join(" AND ") : ""}
-  `;
+    SELECT COUNT(*) AS total 
+    FROM (
+      SELECT p.id
+      FROM perfumes p
+      LEFT JOIN brands b ON p.brand_id = b.id
+      ${joinClause}
+      WHERE 1=1
+      ${conditions.length > 0 ? " AND " + conditions.join(" AND ") : ""}
+      GROUP BY p.id
+    ) AS subquery`;
 
   // COUNT paraméterek (LIMIT/OFFSET nélkül)
   const countParams = [...params.slice(0, -2)];
