@@ -1,11 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const PerfumeController = require('../controllers/perfumeController');
+const PerfumeController = require("../controllers/perfumeController");
 
-// Összes parfüm
-router.get('/all', PerfumeController.getAllPerfumes);
-router.get('/:id', PerfumeController.getPerfumeById);
-// Kiemelt parfümök
-router.get('/featured', PerfumeController.getFeaturedPerfumes);
+router.get("/batch", PerfumeController.getPerfumesByIds);
+
+router.get("/all", PerfumeController.getAllPerfumes);
+router.get("/random", PerfumeController.getRandomPerfumes);
+router.get("/featured", PerfumeController.getFeaturedPerfumes); // Might need adjustment based on DB
+router.get("/:id", PerfumeController.getPerfumeById);
 
 module.exports = router;

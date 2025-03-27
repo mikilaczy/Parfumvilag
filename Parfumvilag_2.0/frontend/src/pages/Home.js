@@ -1,71 +1,95 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import PerfumeCard from '../components/PerfumeCard';
-import axios from 'axios';
-import '../style.css';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import PerfumeCard from "../components/PerfumeCard";
+import { getRandomPerfumes } from "../services/perfumeService";
+import "../style.css"; // Ensure styles are imported
 
 const Home = () => {
-  const [featuredPerfumes, setFeaturedPerfumes] = useState([]);
+  const [randomPerfumes, setRandomPerfumes] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFeaturedPerfumes = async () => {
+    const fetchRandomPerfumes = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const response = await axios.get('/api/featured-perfumes');
-        const perfumesData = await Promise.all(
-          response.data.map(async (fp) => {
-            const perfumeResponse = await axios.get(`/api/perfumes/${fp.perfume_id}`);
-            return perfumeResponse.data;
-          })
-        );
-        setFeaturedPerfumes(perfumesData);
+        const perfumesData = await getRandomPerfumes(4); // Fetch 4 random perfumes
+        setRandomPerfumes(perfumesData);
       } catch (err) {
-        console.error('Error fetching featured perfumes:', err);
-        setError('Nem sikerült betölteni a kiemelt parfümöket.');
-        setFeaturedPerfumes([]);
+        console.error("Error fetching random perfumes:", err);
+        setError(
+          err.message || "Nem sikerült betölteni az ajánlott parfümöket."
+        );
+        setRandomPerfumes([]);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchFeaturedPerfumes();
+    fetchRandomPerfumes();
   }, []);
 
   return (
     <div className="home-wrapper">
-      {}
+      {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-content">
-          <h1>Üdvözöljük a Parfümvilágban</h1>
-          <p>
-            Találd meg álmaid parfümjét ajánlásainkkal és árösszehasonlításainkkal – egyszerűen, gyorsan, stílusosan!
+        <div className="hero-content container">
+          <h1 className="display-4 fw-bold">Üdvözöljük a Parfümvilágban</h1>
+          <p className="lead col-lg-8 mx-auto">
+            Találd meg álmaid parfümjét ajánlásainkkal és
+            árösszehasonlításainkkal – egyszerűen, gyorsan, stílusosan!
           </p>
-          <div className="hero-actions">
-            <Link to="/kereses" className="btn btn-peach hero-btn">Keresés indítása</Link>
-            <Link to="/katalogus" className="btn btn-outline-peach ms-3 hero-btn">Hírek felfedezése</Link>
+          <div className="hero-actions d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <Link to="/kereses" className="btn btn-primary btn-lg px-4 gap-3">
+              Keresés indítása
+            </Link>
+            <Link
+              to="/katalogus"
+              className="btn btn-outline-secondary btn-lg px-4"
+            >
+              Hírek felfedezése
+            </Link>
           </div>
         </div>
       </section>
 
-      {}
+      {/* Recommended Perfumes Section */}
       <section className="featured-section container my-5">
-        <h2 className="section-title text-center mb-4">Ajánlott Parfümjeink</h2>
-        {error && <div className="alert alert-danger text-center">{error}</div>}
-        <div className="row g-3" id="perfumeList">
-          {featuredPerfumes.length > 0 ? (
-            featuredPerfumes.map((perfume) => (
-              <div key={perfume.id} className="col-lg-4 col-md-6 col-12">
-                <PerfumeCard perfume={perfume} />
-              </div>
-            ))
-          ) : (
-            <div className="col-12 text-center">
-              <div id="noResults">
-                <i className="fas fa-search fa-2x mb-3"></i>
-                <h4>Nincs találat</h4>
-                <p>Próbálja meg később újra!</p>
-              </div>
+        <h2 className="section-title text-center mb-4">Kiemelt Ajánlataink</h2>
+        {loading && (
+          <div className="text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Betöltés...</span>
             </div>
-          )}
-        </div>
-
+          </div>
+        )}
+        {error && <div className="alert alert-danger text-center">{error}</div>}
+        {!loading && !error && (
+          // Alkalmazzuk az id="perfumeList"-et és a g-3 gap-et
+          <div className="row g-3" id="perfumeList">
+            {randomPerfumes.length > 0 ? (
+              randomPerfumes.map((perfume) => (
+                // Használjuk a Bootstrap oszlopokat és a stretch igazítást
+                <div
+                  key={perfume.id}
+                  className="col-lg-3 col-md-4 col-sm-6 col-12 d-flex align-items-stretch"
+                >
+                  <PerfumeCard perfume={perfume} />
+                </div>
+              ))
+            ) : (
+              <div className="col-12 text-center">
+                <div id="noResults" className="card p-4">
+                  <i className="fas fa-box-open fa-3x mb-3 text-secondary"></i>
+                  <h4>Nincs ajánlott parfüm</h4>
+                  <p className="text-muted">
+                    Jelenleg nem tudunk parfümöt ajánlani.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </section>
     </div>
   );

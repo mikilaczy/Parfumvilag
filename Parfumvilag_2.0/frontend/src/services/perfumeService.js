@@ -24,7 +24,20 @@ export const getAllPerfumes = async ({
     throw new Error(errorMessage);
   }
 };
-
+export const getRandomPerfumes = async (limit = 5) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/perfumes/random`, {
+      params: { limit },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching random perfumes:",
+      error.response?.data || error.message
+    );
+    throw new Error("Nem sikerült betölteni a véletlen parfümöket.");
+  }
+};
 export const getFeaturedPerfumes = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL}/perfumes/featured`);

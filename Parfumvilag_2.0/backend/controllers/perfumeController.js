@@ -140,7 +140,30 @@ exports.getAllPerfumes = (req, res) => {
     });
   });
 };
-
+exports.getRandomPerfumes = async (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 5; // Default to 5, allow query param override
+  const sql = `
+      SELECT
+          p.id, p.name, p.image_url, b.name AS brand_name, MIN(s.price) AS price
+      FROM perfumes p
+      LEFT JOIN brands b ON p.brand_id = b.id
+      LEFT JOIN stores s ON p.id = s.perfume_id
+      GROUP BY p.id
+      ORDER BY RAND()
+      LIMIT ?
+  `;
+  try {
+    // Use the promisified query from User model or create one here
+    const { queryAsync } = require("../models/User"); // Assuming User model exports it
+    const results = await queryAsync(sql, [limit]);
+    res.status(200).json(results);
+  } catch (err) {
+    console.error("Error fetching random perfumes:", err);
+    res
+      .status(500)
+      .json({ error: "Adatbázis hiba a véletlen parfümök lekérdezésekor." });
+  }
+};
 // Kiemelt parfümök
 exports.getFeaturedPerfumes = (req, res) => {
   Perfume.getFeaturedPerfumes((err, results) => {
@@ -254,6 +277,47 @@ exports.deletePerfume = (req, res) => {
   });
 };
 
+exports.getPerfumesByIds = async (req, res, next) => {
+  // Use next for error handling
+  const idsString = req.query.ids; // Get comma-separated IDs from query: ?ids=1,5,12
+  if (!idsString) {
+    return res.status(400).json({ error: "Hiányzó 'ids' query paraméter." });
+  }
+
+  const ids = idsString
+    .split(",")
+    .map((id) => parseInt(id.trim(), 10))
+    .filter((id) => !isNaN(id) && id > 0); // Validate and parse IDs
+
+  if (ids.length === 0) {
+    return res.json([]); // Return empty array if no valid IDs provided
+  }
+
+  const sql = `
+      SELECT
+          p.id, p.name, p.image_url, p.gender, p.description, b.name AS brand_name, MIN(s.price) AS price
+          -- Add other fields you need
+      FROM perfumes p
+      LEFT JOIN brands b ON p.brand_id = b.id
+      LEFT JOIN stores s ON p.id = s.perfume_id
+      WHERE p.id IN (?) -- Use IN clause with the array of IDs
+      GROUP BY p.id
+      -- ORDER BY FIELD(p.id, ?) -- Optional: Keep original order
+  `;
+  // const orderParams = [ids, ids]; // Parameters for ORDER BY FIELD
+
+  try {
+    const { queryAsync } = require("../models/User"); // Assuming User model exports it
+    // Pass the array of IDs directly to the IN clause placeholder
+    const results = await queryAsync(sql, [ids]);
+    res.status(200).json(results);
+  } catch (err) {
+    console.error("Error fetching perfumes by IDs:", err);
+    next(err); // Pass error to central handler
+    // res.status(500).json({ error: "Adatbázis hiba a parfümök lekérdezésekor." });
+  }
+};
+
 exports.toggleFavorite = async (req, res) => {
   const { perfume_id } = req.body;
   const user_id = req.user.id;
@@ -266,13 +330,15 @@ exports.toggleFavorite = async (req, res) => {
     );
 
     if (existing.length > 0) {
-      await db.query("DELETE FROM saved_perfumes WHERE id = ?", [existing[0].id]);
+      await db.query("DELETE FROM saved_perfumes WHERE id = ?", [
+        existing[0].id,
+      ]);
       res.json({ isFavorite: false });
     } else {
-      await db.query("INSERT INTO saved_perfumes (user_id, perfume_id) VALUES (?, ?)", [
-        user_id,
-        perfume_id,
-      ]);
+      await db.query(
+        "INSERT INTO saved_perfumes (user_id, perfume_id) VALUES (?, ?)",
+        [user_id, perfume_id]
+      );
       res.json({ isFavorite: true });
     }
   } catch (err) {

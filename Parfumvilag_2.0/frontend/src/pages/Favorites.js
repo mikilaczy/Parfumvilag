@@ -1,84 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
-import PerfumeCard from '../components/PerfumeCard';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import PerfumeCard from "../components/PerfumeCard";
+import { getMyFavoritePerfumesDetails } from "../services/savedPerfumeService";
+import { AuthContext } from "../App";
+import "../style.css"; // Ensure styles are imported
 
 const Favorites = () => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-  const [favorites, setFavorites] = useState([]);
+  const { isLoggedIn } = useContext(AuthContext);
+  const [favoritePerfumes, setFavoritePerfumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
- 
   useEffect(() => {
-    const fetchFavorites = async () => {
+    if (!isLoggedIn) {
+      navigate("/bejelentkezes");
+      return;
+    }
+
+    const fetchFavoriteDetails = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        // 1. Token ellenőrzése
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Hiányzó token! Jelentkezz be újra.');
-        }
-
-        // 2. Kedvencek lekérdezése
-        const favoritesResponse = await fetch('http://localhost:5000/api/favorites', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        if (!favoritesResponse.ok) {
-          const errorText = await favoritesResponse.text();
-          throw new Error(`Hiba (${favoritesResponse.status}): ${errorText}`);
-        }
-
-        // 3. JSON válasz ellenőrzése
-        const favoritesData = await favoritesResponse.json();
-        if (!Array.isArray(favoritesData)) {
-          throw new Error('Érvénytelen válaszformátum');
-        }
-
-        // 4. Parfüm részletek lekérdezése (hibakezeléssel)
-        const perfumes = await Promise.allSettled(
-          favoritesData.map(async (fav) => {
-            const response = await fetch(`http://localhost:5000/api/perfumes/${fav.perfume_id}`, {
-              headers: { Authorization: `Bearer ${token}` }
-            });
-            if (!response.ok) throw new Error(`Parfüm ${fav.perfume_id} nem elérhető`);
-            return response.json();
-          })
-        );
-
-        // 5. Sikeres és sikertelen eredmények szűrése
-        const successfulPerfumes = perfumes
-          .filter(result => result.status === 'fulfilled')
-          .map(result => result.value);
-
-        const failedPerfumes = perfumes
-          .filter(result => result.status === 'rejected')
-          .map(result => result.reason.message);
-
-        if (failedPerfumes.length > 0) {
-          console.warn('Nem sikerült betölteni:', failedPerfumes);
-        }
-
-        setFavorites(successfulPerfumes);
-        
+        const perfumesData = await getMyFavoritePerfumesDetails();
+        setFavoritePerfumes(perfumesData);
       } catch (err) {
-        setError(err.message);
+        console.error("Hiba a kedvenc parfümök adatainak lekérésekor:", err);
+        setError(err.message || "Nem sikerült betölteni a kedvenceket.");
+        setFavoritePerfumes([]);
       } finally {
         setLoading(false);
       }
     };
 
-    if (isLoggedIn) fetchFavorites();
-  }, [isLoggedIn]);
+    fetchFavoriteDetails();
+  }, [isLoggedIn, navigate]);
+
+  if (loading) {
+    return (
+      <div className="container text-center p-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Kedvencek betöltése...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container my-5">
+        <div className="alert alert-danger text-center">{error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="favorites-page">
-      <h1 className="text-center mb-4">Kedvenc Parfümjeim</h1>
-      {favorites.length === 0 ? (
-        <p className="text-center">Még nincsenek kedvenc parfümjeid.</p>
+    <div className="favorites-page container my-5">
+      <h1 className="text-center mb-4 section-title">Kedvenc Parfümjeim</h1>
+      {favoritePerfumes.length === 0 ? (
+        <div id="noResults" className="text-center card p-4">
+          <i className="fas fa-heart-broken fa-3x mb-3 text-secondary"></i>
+          <h4>Nincsenek kedvenceid</h4>
+          <p className="text-muted">
+            Jelöld meg a parfümöket egy szívvel, hogy ide kerüljenek!
+          </p>
+        </div>
       ) : (
-        <div className="row">
-          {favorites.map((perfume) => (
-            <div key={perfume.id} className="col-md-4 mb-4">
+        // Alkalmazzuk az id="perfumeList"-et és a g-3 gap-et
+        <div className="row g-3" id="perfumeList">
+          {favoritePerfumes.map((perfume) => (
+            // Használjuk a Bootstrap oszlopokat és a stretch igazítást
+            <div
+              key={perfume.id}
+              className="col-lg-3 col-md-4 col-sm-6 col-12 d-flex align-items-stretch"
+            >
               <PerfumeCard perfume={perfume} />
             </div>
           ))}

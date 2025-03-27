@@ -3532,8 +3532,532 @@ body {
   padding-right: 100px; /* Hely a gombnak */
 }
 
-
-
 .favorite-btn.active {
   color: #ff6b6b;
 }
+/* --- Perfume Card --- */
+.perfume-card {
+  /* ... (meglévő stílusok: background, border-radius, box-shadow, transition, etc.) ... */
+  display: flex; /* Flexbox a belső elrendezéshez */
+  flex-direction: column; /* Oszlopos elrendezés */
+  height: 100%; /* Fontos, hogy a kártyák egyforma magasak legyenek a gridben/flex containerben */
+  position: relative; /* A kedvenc gomb abszolút pozicionálásához */
+  overflow: hidden; /* Lekerekítéshez */
+}
+
+.perfume-card-link {
+  /* Ha a kártya tartalma egy linken belül van */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Kitölti a kártyát */
+  text-decoration: none;
+  color: inherit;
+}
+
+.perfume-card-img {
+  width: 100%;
+  height: 200px; /* Fix magasság */
+  object-fit: contain; /* Vagy 'cover', attól függően, hogy szeretnéd levágni vagy sem */
+  /* border-bottom: 5px solid #87ceeb; */ /* Ezt esetleg átgondolnám, lehet egyszerűbb border nélkül */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Egységesített átmenet */
+}
+
+.perfume-card:hover .perfume-card-img {
+  opacity: 0.9;
+  transform: scale(1.05); /* Kicsit finomabb nagyítás */
+}
+
+.perfume-card-body {
+  padding: 1rem; /* Kisebb padding alapból */
+  flex-grow: 1; /* Kitölti a maradék helyet */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Tartalom (cím, ár) és gomb elkülönítése */
+}
+
+.perfume-card-title {
+  font-size: 1.1rem; /* Kisebb betűméret */
+  font-weight: 600; /* Vastagabb */
+  margin-bottom: 0.4rem;
+  /* Opcionális: szöveg levágása, ha túl hosszú */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Csak egy sor */
+  /* Vagy több sorhoz: */
+  /* display: -webkit-box;
+   -webkit-line-clamp: 2; /* Max 2 sor */
+  /* -webkit-box-orient: vertical;
+   white-space: normal; */
+}
+
+.perfume-card-text {
+  /* Ár */
+  font-size: 1rem;
+  font-weight: 500; /* Kevésbé vastag */
+  color: #555; /* Sötétebb szürke */
+  margin-bottom: 0.5rem; /* Kevesebb margó */
+}
+
+/* Favorite button - a meglévő stílus jó alap */
+.favorite-btn {
+  position: absolute;
+  bottom: 0.8rem; /* Kicsit feljebb */
+  right: 0.8rem;
+  /* ... (meglévő: background, border, color, font-size, cursor, transition, padding, z-index) ... */
+}
+.favorite-btn.disabled {
+  /* Stílus a betöltés alatti gombra */
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Responsive Perfume Cards --- */
+/* Grid container (a Search.js-ben lévő #perfumeList) */
+#perfumeList {
+  display: grid;
+  gap: 1.5rem; /* Térköz a kártyák között */
+  /* Alapértelmezett (mobil) - 1 oszlop */
+  grid-template-columns: 1fr;
+}
+
+/* Tablet méret (pl. 576px felett) - 2 oszlop */
+@media (min-width: 576px) {
+  #perfumeList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .perfume-card-title {
+    font-size: 1.15rem;
+  }
+}
+
+/* Kis desktop (pl. 768px felett) - 3 oszlop */
+@media (min-width: 768px) {
+  #perfumeList {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .perfume-card-img {
+    height: 220px;
+  }
+  .perfume-card-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* Nagyobb desktop (pl. 992px felett) - 4 oszlop */
+@media (min-width: 992px) {
+  #perfumeList {
+    grid-template-columns: repeat(
+      4,
+      1fr
+    ); /* Vagy maradhat 3, ha úgy jobban néz ki */
+  }
+}
+
+/* Nagyon nagy desktop (pl. 1200px felett) - Esetleg 4 vagy 5 oszlop */
+@media (min-width: 1200px) {
+  #perfumeList {
+    grid-template-columns: repeat(4, 1fr); /* Pl. 4 oszlop */
+  }
+  .perfume-card-img {
+    height: 240px;
+  }
+}
+
+/* --- Navbar Responsive --- */
+/* A Navbar.js-ben lévő logikával együttműködve */
+@media (max-width: 991px) {
+  /* A .nav-links.active stílusát a Navbar.js kezeli */
+  .navbar-content {
+    /* Struktúra változhat a JS alapján, de a lényeg, hogy a toggler megjelenjen */
+  }
+  /* Hamburger menü stílusai (ha a JS hozzáad egy 'active' classt) */
+  .nav-links.active {
+    display: flex; /* Vagy block, attól függően, hogy van implementálva */
+    /* ... (a lenyíló menü stílusai: position, top, left, width, background, etc.) ... */
+  }
+}
+
+.filter-toggle {
+  display: none; /* Alapból rejtett */
+  /* ... (gomb stílusai) ... */
+  z-index: 1001; /* Legyen a sidebar felett */
+}
+
+@media (max-width: 991px) {
+  .filter-toggle {
+    display: block; /* Megjelenik mobilon */
+  }
+  .sidebar {
+    position: fixed; /* Fix pozíció mobilon */
+    left: 0;
+    width: 80%; /* Vagy 100% */
+    max-width: 300px; /* Opcionális max szélesség */
+    transform: translateX(-100%); /* Alapból rejtett */
+    z-index: 1000; /* Navbar alatt, de tartalom felett */
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2); /* Erősebb árnyék */
+    border-right: none;
+  }
+  .sidebar:not(.hidden) {
+    /* Ha a JS hozzáadja a 'hidden' class-t */
+    transform: translateX(0); /* Előjön */
+  }
+  /* A tartalom eltolása, ha a sidebar nyitva van (opcionális) */
+  /* body.sidebar-open .main-content { margin-left: 250px; } */
+}
+
+/* --- Perfume Detail Responsive --- */
+@media (max-width: 768px) {
+  .perfume-detail-content {
+    /* Lehet, hogy itt kell a kép és infó elrendezését módosítani */
+  }
+  .perfume-image-wrapper,
+  .perfume-info,
+  .stores-section,
+  .reviews-section {
+    /* Kisebb margók */
+    margin-bottom: 1.5rem;
+  }
+  .perfume-image {
+    max-width: 80%; /* Kisebb kép */
+  }
+  .perfume-title-top {
+    font-size: 1.8rem;
+  }
+  .perfume-price {
+    font-size: 1.5rem;
+  }
+  .stores-title,
+  .reviews-title {
+    font-size: 1.3rem;
+  }
+  /* Értékelés form és lista elemek finomhangolása */
+  .review-form-custom,
+  .review-item-custom {
+    padding: 0.8rem;
+  }
+  .rating-category label,
+  .review-rating-custom .rating-category {
+    font-size: 0.8rem;
+  }
+  .slider-value,
+  .review-rating-custom .rating-stars {
+    font-size: 0.8rem;
+  }
+  .review-form-custom .btn-submit {
+    font-size: 0.9rem;
+  }
+}
+
+/* --- Footer Responsive --- */
+@media (max-width: 767px) {
+  /* Közepes breakpoint */
+  .footer-grid {
+    grid-template-columns: 1fr; /* Oszlopok egymás alá */
+    gap: 1.5rem; /* Nagyobb térköz */
+  }
+  .footer-col {
+    align-items: center; /* Középre igazítás */
+    text-align: center;
+  }
+  .contact_link_box {
+    align-items: center;
+  }
+}
+/* style.css */
+.perfume-card {
+  /* ... (meglévő stílusok) ... */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Fontos! */
+  position: relative;
+  overflow: hidden;
+}
+
+.perfume-card-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.perfume-card-body {
+  /* ... (meglévő stílusok) ... */
+  flex-grow: 1; /* Ez nyújtja ki a body-t */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.perfume-card-img {
+  width: 100%;
+  height: 200px; /* Vagy más fix magasság */
+  object-fit: contain; /* Vagy cover */
+  /* ... */
+}
+/* Meglévő #perfumeList grid definíció */
+#perfumeList {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr; /* Mobil alap */
+}
+
+/* Tablet */
+@media (min-width: 576px) {
+  #perfumeList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Kis desktop */
+@media (min-width: 768px) {
+  #perfumeList {
+    /* Maradhat 3, vagy növelhetjük a min szélességet */
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+/* Normál desktop */
+@media (min-width: 992px) {
+  #perfumeList {
+    /* Itt is növelhetjük a min szélességet, hogy kevesebb kártya férjen el */
+    /* Vagy fixen 3 oszlop */
+    grid-template-columns: repeat(3, 1fr); /* Próbáljuk 3 oszloppal */
+    /* Vagy auto-fill nagyobb min szélességgel: */
+    /* grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); */
+  }
+}
+
+/* Nagy desktop */
+@media (min-width: 1200px) {
+  #perfumeList {
+    grid-template-columns: repeat(
+      4,
+      1fr
+    ); /* Vagy 3, ha a 280px min szélességet használjuk */
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+  }
+}
+.sidebar {
+  /* ... (meglévő position: sticky, top, etc.) ... */
+  height: calc(100vh - 70px); /* Navbar magassága levonva */
+  max-height: calc(100vh - 70px); /* Biztonság kedvéért max-height is */
+  overflow-y: auto; /* Legyen görgethető, ha a tartalom hosszabb */
+  /* Add padding at the bottom to avoid content hitting the very bottom edge */
+  padding-bottom: 80px; /* Adjust as needed, should be >= footer height roughly */
+}
+
+/* Footer styling - ensure it has a defined height or enough padding */
+.footer_section {
+  /* ... */
+  /* min-height: 60px;  Example */
+  padding: 2rem 0; /* Ensure padding */
+  position: relative; /* Keep z-index stacking context */
+  z-index: 1; /* Lower than sidebar potentially, but check layout */
+}
+
+/* Main content area might need adjustment too */
+.main-content-area {
+  /* Assuming you have a wrapper like this */
+  min-height: calc(100vh - 70px); /* Ensure it pushes the footer down */
+  padding-bottom: 80px; /* Space for the footer */
+}
+.sidebar {
+  /* ... (alap stílusok: width, background, padding, position, top, height, etc.) ... */
+  transition: transform 0.3s ease-in-out;
+  z-index: 900; /* Navbar alatt */
+  max-height: calc(100vh - 70px); /* Max magasság */
+  overflow-y: auto; /* Görgetés ha kell */
+  padding-bottom: 2rem; /* Hely alul */
+}
+
+.filter-toggle {
+  display: none; /* Alapból rejtett */
+  position: fixed; /* Rögzített pozíció */
+  top: 80px; /* Navbar alatt kicsivel */
+  right: 1rem;
+  z-index: 1001; /* Legyen a sidebar felett */
+  background-color: #87ceeb; /* Vagy használj variable-t */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.filter-dropdown .form-control-sm {
+  /* Kereső input stílusa */
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+/* Sidebar elrejtése/megjelenítése mobilon */
+@media (max-width: 991px) {
+  .filter-toggle {
+    display: block; /* Megjelenik */
+  }
+
+  .sidebar {
+    position: fixed; /* Rögzített */
+    left: 0;
+    top: 70px; /* Navbar magassága */
+    width: 85%; /* Vagy amilyen széles legyen */
+    max-width: 320px; /* Max szélesség */
+    height: calc(100% - 70px); /* Teljes magasság navbar alatt */
+    transform: translateX(-100%); /* Alapból eltüntetve balra */
+    background: #f8f9fa; /* Világosabb háttér mobilon? */
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.15);
+    border-right: 1px solid #dee2e6;
+    z-index: 1000; /* Legyen a tartalom felett */
+    /* Itt megadhatsz specifikus mobil stílusokat, pl. padding */
+    padding: 1.5rem;
+  }
+
+  .sidebar:not(.hidden) {
+    /* Amikor nincs 'hidden' class (vagy van 'active') */
+    transform: translateX(0); /* Előjön */
+  }
+
+  /* Opcionális: Overlay a tartalom fölé, ha a sidebar nyitva */
+  /* body.sidebar-open::before { content: ''; ... } */
+}
+/* Login Prompt Modal Buttons */
+.login-prompt .login-btn {
+  /* Specificity */
+  /* Style for the primary login button */
+  background: #3498db; /* Example blue */
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 15px; /* Match existing */
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.5rem; /* Add margin */
+}
+
+.login-prompt .login-btn:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Style for the 'Cancel' button to match */
+.login-prompt .cancel-btn {
+  /* Specificity */
+  background: #ecf0f1; /* Example light gray */
+  color: #2c3e50; /* Dark text */
+  border: none;
+  padding: 0.6rem 1.5rem; /* Same padding */
+  border-radius: 15px; /* Same radius */
+  font-size: 0.9rem; /* Same font size */
+  font-weight: 500; /* Same weight */
+  text-transform: uppercase; /* Same transform */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.5rem; /* Add margin */
+}
+
+.login-prompt .cancel-btn:hover {
+  background: #dfe6e9; /* Slightly darker gray */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure the close button styling is also consistent */
+.login-prompt .close-btn {
+  /* ... existing styles ... */
+}
+.review-list-custom {
+  /* Container for reviews */
+}
+
+.review-item-custom.card {
+  /* Use Bootstrap card styles as base */
+  border-left: 4px solid #87ceeb; /* Accent border */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+.review-item-custom.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.review-header-custom {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.review-author-custom {
+  font-size: 1rem;
+  color: #333;
+}
+
+.review-date-custom {
+  font-size: 0.8rem;
+}
+
+.review-ratings-grid {
+  display: grid;
+  /* 2 columns for ratings */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.5rem 1rem; /* Row and column gap */
+  font-size: 0.9rem;
+}
+
+.rating-item {
+  display: flex;
+  justify-content: space-between; /* Label and stars apart */
+  align-items: center;
+}
+
+.rating-category {
+  color: #555;
+  margin-right: 0.5rem;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.rating-stars {
+  color: #f1c40f; /* Star color */
+  white-space: nowrap; /* Prevent wrapping */
+}
+.rating-stars span {
+  /* If using spans inside for ☆ */
+  color: #ccc; /* Empty star color */
+}
+
+.review-comment-custom {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.5;
+  margin-top: 0.75rem; /* Space above comment */
+  background-color: #f8f9fa; /* Slightly different background */
+  padding: 0.75rem;
+  border-radius: 5px;
+}
+/* style.css */
+.navbar-profile-img {
+  width: 28px; /* Small size for navbar */
+  height: 28px;
+  border-radius: 50%; /* Make it circular */
+  object-fit: cover; /* Ensure image covers the area */
+  border: 1px solid #666; /* Optional border */
+}
+/* style.css */
+.perfume-card {
+  /* ... */
+  margin-bottom: 0; /* Győződj meg róla, hogy nincs extra alsó margó */
+}
+.perfume-card-body {
+  padding: 1rem; /* Ez a belső térköz */
+  /* ... */
+}
+
+/* Bootstrap grid gap felülírása, ha szükséges (nem ajánlott, jobb a g-* class cseréje) */
+/*
+#perfumeList.row {
+  --bs-gutter-x: 0.8rem;
+  --bs-gutter-y: 0.8rem;
+}
+*/

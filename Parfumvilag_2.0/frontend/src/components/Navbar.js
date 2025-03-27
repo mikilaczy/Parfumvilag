@@ -1,74 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import '../style.css';
+import React, { useState, useEffect, useContext } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../App";
+import "../style.css";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
+  // Get state and functions from context
+  const { isLoggedIn, user, logout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const navigate = useNavigate();
 
+  // Handle window resize for mobile menu
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const userName = localStorage.getItem('username') || '';
-    setIsLoggedIn(loggedIn);
-    setUsername(userName);
-  }, []);
-
+  // Logout handler
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('username');
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setUsername('');
-    window.location.href = '/';
+    if (window.confirm("Biztosan ki szeretne lépni?")) {
+      logout(); // Use context logout function
+      navigate("/"); // Redirect home
+      setIsOpen(false); // Close menu if open
+    }
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
+  // Function to close menu, typically used on link clicks in mobile view
+  const closeMenu = () => {
+    if (windowWidth <= 991) {
+      // Only close if on mobile
+      setIsOpen(false);
+    }
+  };
+
+  // Determine profile image URL, fallback to placeholder or icon
+  const profileImageUrl = user?.profile_picture_url;
+  const showProfileImage = isLoggedIn && profileImageUrl;
+  const showProfileIcon = isLoggedIn && !profileImageUrl;
 
   return (
     <nav className="navbar navbar-dark">
       <div className="container">
         <div className="navbar-content">
+          {/* Hamburger Menu Toggle (Mobile) */}
           {windowWidth <= 991 && (
             <button className="navbar-toggler" onClick={toggleMenu}>
-              <i className="fas fa-bars"></i>
+              <i className={`fas ${isOpen ? "fa-times" : "fa-bars"}`}></i>{" "}
+              {/* Toggle icon */}
             </button>
           )}
-          <Link className="navbar-brand" to="/">
+
+          {/* Brand */}
+          <Link className="navbar-brand" to="/" onClick={closeMenu}>
             Parfümvilág
           </Link>
-          <div className={`nav-links ${isOpen ? 'active' : ''}`}>
+
+          {/* Navigation Links (Collapsible) */}
+          {/* Use `show` class from Bootstrap for collapse, controlled by `isOpen` state */}
+          <div
+            className={`nav-links ${
+              windowWidth <= 991 ? (isOpen ? "active" : "") : "d-flex"
+            }`}
+            id="navbarNav"
+          >
+            {" "}
+            {/* Ensure ID matches toggler target if using Bootstrap JS */}
             <ul className="navbar-nav navbar-left">
               <li className="nav-item">
                 <NavLink
-                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) =>
+                    `nav-link ${isActive ? "active" : ""}`
+                  }
                   to="/katalogus"
-                  onClick={() => windowWidth <= 991 && toggleMenu()}
+                  onClick={closeMenu}
                 >
                   Hírek
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink
-                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) =>
+                    `nav-link ${isActive ? "active" : ""}`
+                  }
                   to="/kereses"
-                  onClick={() => windowWidth <= 991 && toggleMenu()}
+                  onClick={closeMenu}
                 >
                   Keresés
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink
-                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) =>
+                    `nav-link ${isActive ? "active" : ""}`
+                  }
                   to="/rolunk"
-                  onClick={() => windowWidth <= 991 && toggleMenu()}
+                  onClick={closeMenu}
                 >
                   Rólunk
                 </NavLink>
@@ -76,36 +104,52 @@ const Navbar = () => {
               {isLoggedIn && (
                 <li className="nav-item">
                   <NavLink
-                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                    className={({ isActive }) =>
+                      `nav-link ${isActive ? "active" : ""}`
+                    }
                     to="/kedvencek"
-                    onClick={() => windowWidth <= 991 && toggleMenu()}
+                    onClick={closeMenu}
                   >
                     Kedvencek
                   </NavLink>
                 </li>
               )}
             </ul>
+            {/* Right Aligned Items (Login/Profile) */}
             <ul className="navbar-nav navbar-right">
-              {isLoggedIn ? (
+              {isLoggedIn && user ? ( // Check user object exists
                 <>
                   <li className="nav-item">
                     <NavLink
                       className={({ isActive }) =>
-                        `nav-link profile-link ${isActive ? 'active' : ''}`
+                        `nav-link profile-link d-flex align-items-center ${
+                          isActive ? "active" : ""
+                        }`
                       }
                       to="/profil"
-                      onClick={() => windowWidth <= 991 && toggleMenu()}
+                      onClick={closeMenu}
                     >
-                      <i className="fas fa-user-circle"></i> {username}
+                      {/* Conditionally render image or icon */}
+                      {showProfileImage ? (
+                        <img
+                          src={profileImageUrl}
+                          alt="Profil"
+                          className="navbar-profile-img me-2"
+                          // Simple fallback to hide broken images
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <i className="fas fa-user-circle fa-lg me-2"></i> // Slightly larger icon
+                      )}
+                      {user.name || "Profil"}
                     </NavLink>
                   </li>
                   <li className="nav-item">
                     <button
                       className="btn btn-outline-light logout-btn"
-                      onClick={() => {
-                        handleLogout();
-                        if (windowWidth <= 991) toggleMenu();
-                      }}
+                      onClick={handleLogout} // Use the correct handler
                     >
                       Kilépés
                     </button>
@@ -115,18 +159,22 @@ const Navbar = () => {
                 <>
                   <li className="nav-item">
                     <NavLink
-                      className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                      className={({ isActive }) =>
+                        `nav-link ${isActive ? "active" : ""}`
+                      }
                       to="/bejelentkezes"
-                      onClick={() => windowWidth <= 991 && toggleMenu()}
+                      onClick={closeMenu}
                     >
                       Bejelentkezés
                     </NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink
-                      className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                      className={({ isActive }) =>
+                        `nav-link ${isActive ? "active" : ""}`
+                      }
                       to="/regisztracio"
-                      onClick={() => windowWidth <= 991 && toggleMenu()}
+                      onClick={closeMenu}
                     >
                       Regisztráció
                     </NavLink>
