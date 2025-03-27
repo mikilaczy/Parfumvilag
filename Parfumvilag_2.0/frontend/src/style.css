@@ -3527,3 +3527,13 @@ body {
   color: #007bff;
   text-decoration: none;
 }
+.perfume-title-wrapper {
+  position: relative; /* Szülő elem relatív pozíciója */
+  padding-right: 100px; /* Hely a gombnak */
+}
+
+
+
+.favorite-btn.active {
+  color: #ff6b6b;
+}

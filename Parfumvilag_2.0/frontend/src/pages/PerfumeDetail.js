@@ -27,18 +27,61 @@ const PerfumeDetail = () => {
   useEffect(() => {
     const fetchPerfume = async () => {
       try {
-        const perfumeData = await getPerfumeById(id);
-        setPerfume(perfumeData);
-        setError("");
+        const data = await getPerfumeById(id);
+        setPerfume(data);
+        // Kedvenc állapot ellenőrzése
+        if (isLoggedIn) {
+          const favorites = await fetchFavorites();
+          setIsFavorite(favorites.some((fav) => fav.perfume_id === parseInt(id)));
+        }
       } catch (err) {
-        setError("Nem sikerült betölteni a parfüm részleteit!");
-      } finally {
-        setLoading(false);
+        console.error("Hiba a parfüm betöltésekor:", err);
       }
     };
-
     fetchPerfume();
-  }, [id]);
+  }, [id, isLoggedIn]);
+  
+  const handleToggleFavorite = async () => {
+    if (!isLoggedIn) return;
+    try {
+      await toggleFavorite(id);
+      setIsFavorite(!isFavorite);
+    } catch (err) {
+      console.error("Hiba a kedvenc kezelésekor:", err);
+    }
+    
+  }; useEffect(() => {
+    const fetchPerfumeData = async () => {
+      try {
+        const perfumeData = await getPerfumeById(id);
+        setPerfume(perfumeData);
+        
+        if (isLoggedIn) {
+          const favorites = await fetchFavorites();
+          setIsFavorite(favorites.some(fav => fav.perfume_id === parseInt(id)));
+        }
+      } catch (err) {
+        console.error("Hiba:", err);
+      }
+    };
+    fetchPerfumeData();
+  }, [id, isLoggedIn]);
+
+
+  const fetchFavorites = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5000/api/favorites", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return await response.json();
+    } catch (error) {
+      console.error("Hiba a kedvencek lekérdezésekor:", error);
+      return [];
+    }
+  };
 
   // Kedvencek ellenőrzése az API-n keresztül
   useEffect(() => {
@@ -206,7 +249,13 @@ const PerfumeDetail = () => {
 
         {perfume && (
           <div className="perfume-title-wrapper">
-            <h1 className="perfume-title-top">{perfume.name}</h1>
+             <h1 className="perfume-title-top">{perfume.name}</h1>
+          {isLoggedIn && (
+            <button
+              className={`favorite-btn ${isFavorite ? "active" : ""}`}
+              onClick={handleToggleFavorite}
+            />
+          )}
           </div>
         )}
 
@@ -279,15 +328,7 @@ const PerfumeDetail = () => {
                 </p>
               )}
               {/* Kedvencek gomb az ár alatt, középen */}
-              <div className="favorite-btn-wrapper">
-                <button
-                  className={`favorite-btn ${isFavorite ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleFavorite();
-                  }}
-                />
-              </div>
+             
               <p className="perfume-description">
                 <strong>Leírás:</strong> {perfume.description || "Nincs leírás"}
               </p>

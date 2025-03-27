@@ -49,6 +49,41 @@ const PerfumeCard = ({ perfume }) => {
     checkIfFavorite();
   }, [id, isLoggedIn]);
 
+  const fetchFavorites = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5000/api/favorites", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return await response.json();
+    } catch (error) {
+      console.error("Hiba a kedvencek lekérdezésekor:", error);
+      return [];
+    }
+  };
+   useEffect(() => {
+    const checkFavorite = async () => {
+      if (!isLoggedIn) return;
+      const favorites = await fetchFavorites();
+      setIsFavorite(favorites.some(fav => fav.perfume_id === id));
+    };
+    checkFavorite();
+  }, [id, isLoggedIn])
+  
+  const handleToggleFavorite = async (e) => {
+    e.preventDefault();
+    if (!isLoggedIn) return;
+    try {
+      await toggleFavorite(perfume.id);
+      setIsFavorite(!isFavorite);
+    } catch (err) {
+      console.error("Hiba a kedvenc kezelésekor:", err);
+    }
+  };
+
+
   // Kedvencekhez adás/törlés
   const toggleFavorite = async () => {
     if (!isLoggedIn) {
@@ -118,10 +153,8 @@ const PerfumeCard = ({ perfume }) => {
         </Link>
         <button
           className={`favorite-btn ${isFavorite ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            toggleFavorite();
-          }}
+          onClick={handleToggleFavorite}
+        
         />
       </div>
 

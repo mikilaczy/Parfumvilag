@@ -8,57 +8,58 @@ const Favorites = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+ 
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (!isLoggedIn) {
-        setLoading(false);
-        return;
-      }
-
       try {
+        // 1. Token ellenőrzése
         const token = localStorage.getItem('token');
         if (!token) {
-          throw new Error('Nincs érvényes token');
+          throw new Error('Hiányzó token! Jelentkezz be újra.');
         }
 
+        // 2. Kedvencek lekérdezése
         const favoritesResponse = await fetch('http://localhost:5000/api/favorites', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` }
         });
-
+        
         if (!favoritesResponse.ok) {
-          throw new Error(`Hiba a kedvencek lekérdezésekor: ${favoritesResponse.status}`);
+          const errorText = await favoritesResponse.text();
+          throw new Error(`Hiba (${favoritesResponse.status}): ${errorText}`);
         }
 
-        const contentType = favoritesResponse.headers.get('Content-Type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error('A szerver nem JSON-t adott vissza');
-        }
-
+        // 3. JSON válasz ellenőrzése
         const favoritesData = await favoritesResponse.json();
+        if (!Array.isArray(favoritesData)) {
+          throw new Error('Érvénytelen válaszformátum');
+        }
 
-        const perfumePromises = favoritesData.map(async (fav) => {
-          const perfumeResponse = await fetch(`http://localhost:5000/api/perfumes/${fav.perfume_id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+        // 4. Parfüm részletek lekérdezése (hibakezeléssel)
+        const perfumes = await Promise.allSettled(
+          favoritesData.map(async (fav) => {
+            const response = await fetch(`http://localhost:5000/api/perfumes/${fav.perfume_id}`, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error(`Parfüm ${fav.perfume_id} nem elérhető`);
+            return response.json();
+          })
+        );
 
-          if (!perfumeResponse.ok) {
-            throw new Error(`Hiba a parfüm lekérdezésekor: ${fav.perfume_id}`);
-          }
+        // 5. Sikeres és sikertelen eredmények szűrése
+        const successfulPerfumes = perfumes
+          .filter(result => result.status === 'fulfilled')
+          .map(result => result.value);
 
-          const perfumeContentType = perfumeResponse.headers.get('Content-Type');
-          if (!perfumeContentType || !perfumeContentType.includes('application/json')) {
-            throw new Error(`A szerver nem JSON-t adott vissza a parfümnél: ${fav.perfume_id}`);
-          }
+        const failedPerfumes = perfumes
+          .filter(result => result.status === 'rejected')
+          .map(result => result.reason.message);
 
-          return await perfumeResponse.json();
-        });
+        if (failedPerfumes.length > 0) {
+          console.warn('Nem sikerült betölteni:', failedPerfumes);
+        }
 
-        const perfumes = await Promise.all(perfumePromises);
-        setFavorites(perfumes);
+        setFavorites(successfulPerfumes);
+        
       } catch (err) {
         setError(err.message);
       } finally {
@@ -66,20 +67,8 @@ const Favorites = () => {
       }
     };
 
-    fetchFavorites();
+    if (isLoggedIn) fetchFavorites();
   }, [isLoggedIn]);
-
-  if (!isLoggedIn) {
-    return <Navigate to="/bejelentkezes" />;
-  }
-
-  if (loading) {
-    return <div className="text-center">Betöltés...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center text-danger">Hiba: {error}</div>;
-  }
 
   return (
     <div className="favorites-page">

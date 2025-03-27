@@ -50,3 +50,19 @@ export const getPerfumeById = async (id) => {
     throw new Error(errorMessage);
   }
 };
+export const toggleFavorite = async (perfumeId) => {
+  try {
+    const response = await axios.post(
+      "/api/favorites/toggle",
+      { perfume_id: perfumeId },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};

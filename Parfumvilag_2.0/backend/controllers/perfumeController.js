@@ -253,3 +253,29 @@ exports.deletePerfume = (req, res) => {
     res.status(200).json({ message: "Parfüm sikeresen törölve!" });
   });
 };
+
+exports.toggleFavorite = async (req, res) => {
+  const { perfume_id } = req.body;
+  const user_id = req.user.id;
+
+  try {
+    // Kedvenc hozzáadása/eltávolítása
+    const [existing] = await db.query(
+      "SELECT * FROM saved_perfumes WHERE user_id = ? AND perfume_id = ?",
+      [user_id, perfume_id]
+    );
+
+    if (existing.length > 0) {
+      await db.query("DELETE FROM saved_perfumes WHERE id = ?", [existing[0].id]);
+      res.json({ isFavorite: false });
+    } else {
+      await db.query("INSERT INTO saved_perfumes (user_id, perfume_id) VALUES (?, ?)", [
+        user_id,
+        perfume_id,
+      ]);
+      res.json({ isFavorite: true });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Adatbázis hiba!" });
+  }
+};
