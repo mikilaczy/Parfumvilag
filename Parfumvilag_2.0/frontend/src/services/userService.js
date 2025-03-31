@@ -1,66 +1,59 @@
-import axios from "axios";
+// frontend/src/services/userService.js
+import axios from 'axios';
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const getAuthConfig = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (!token) {
     console.error("userService: No auth token found");
-    return null; // Jelzi a hívónak, hogy nincs token
+    return null;
   }
   return {
     headers: {
-      "Content-Type": "application/json", // Explicit JSON küldése
-      "x-auth-token": token,
-    },
+      'Content-Type': 'application/json',
+      'x-auth-token': token
+    }
   };
 };
 
 export const getUser = async () => {
   const config = getAuthConfig();
-  // Itt nem dobunk hibát, ha nincs token, mert lehet, hogy csak ellenőrizni akarjuk
-  // De a backendnek kellene 401-et adnia, ha kötelező a token
-
+  console.log("[getUser] Fetching...");
   try {
-    // A config lehet null, ha nincs token, de a backendnek kell ezt kezelnie (authMiddleware)
-    const response = await axios.get(`${API_BASE_URL}/users/me`, config || {}); // Küldjük a configot, ha van
+    const response = await axios.get(`${API_BASE_URL}/users/me`, config || {});
+    console.log("[getUser] Success:", response.data);
     return response.data;
   } catch (error) {
-    console.error("getUser Error:", error.response?.data || error.message);
-    // Dobd tovább a hibát, hogy a komponens tudja kezelni
-    throw (
-      error.response?.data ||
-      new Error(
-        error.message || "Nem sikerült betölteni a felhasználó adatait!"
-      )
-    );
+    console.error('[getUser] Error:', error.response?.data || error.message);
+    // Dobd tovább a hibát
+    throw error.response?.data || new Error(error.message || 'Nem sikerült betölteni a felhasználó adatait!');
   }
 };
 
 export const updateUser = async (userData) => {
   const config = getAuthConfig();
   if (!config) {
-    // Dobjunk hibát, mert a frissítéshez biztosan kell token
-    throw new Error("Nem sikerült hitelesíteni a felhasználót a frissítéshez.");
+    console.error("[updateUser] Auth config failed.");
+    throw new Error('Nem sikerült hitelesíteni a felhasználót a frissítéshez.');
   }
 
+  console.log('[updateUser] Attempting PUT request to:', `${API_BASE_URL}/users/me`);
+  console.log('[updateUser] Sending data:', userData);
+  console.log('[updateUser] Using config:', config);
+
   try {
-    console.log("Sending update data:", userData); // Log data being sent
-    const response = await axios.put(
-      `${API_BASE_URL}/users/me`,
-      userData,
-      config
-    );
-    console.log("Update response:", response.data); // Log successful response
-    // Itt feltételezzük, hogy a backend a frissített user objektumot (vagy legalább egy sikeres üzenetet) ad vissza
-    // Ha a backend pl. csak { success: true } választ ad, akkor a hívónak újra kell fetch-elnie a usert
-    return response.data; // Return the whole response data
+    const response = await axios.put(`${API_BASE_URL}/users/me`, userData, config);
+    console.log('[updateUser] PUT Request successful! Response status:', response.status);
+    console.log('[updateUser] Response data:', response.data);
+    // Fontos: A Promise itt resolve-olódik
+    return response.data; // Visszaadjuk a választ
   } catch (error) {
-    console.error("updateUser Error:", error.response?.data || error.message);
-    // Dobjuk tovább a backend hibaüzenetét, ha van, különben az általánosat
-    throw new Error(
-      error.response?.data?.error ||
-        "Nem sikerült frissíteni a felhasználói adatokat!"
-    );
+    console.error('[updateUser] PUT Request failed!');
+    console.error('[updateUser] Error status:', error.response?.status);
+    console.error('[updateUser] Error data:', error.response?.data);
+    console.error('[updateUser] Full error:', error);
+    // Fontos: A Promise itt reject-elődni fog
+    throw new Error(error.response?.data?.error || 'Nem sikerült frissíteni a felhasználói adatokat!');
   }
 };
