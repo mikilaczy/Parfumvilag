@@ -67,7 +67,7 @@ const Favorites = () => {
         </div>
       ) : (
         // Alkalmazzuk az id="perfumeList"-et és a g-3 gap-et
-        <div className="row g-3" id="perfumeList">
+        <div className="row g-3" id="perfumeList2">
           {favoritePerfumes.map((perfume) => (
             // Használjuk a Bootstrap oszlopokat és a stretch igazítást
             <div

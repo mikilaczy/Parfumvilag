@@ -66,7 +66,7 @@ const Home = () => {
         {error && <div className="alert alert-danger text-center">{error}</div>}
         {!loading && !error && (
           // Alkalmazzuk az id="perfumeList"-et és a g-3 gap-et
-          <div className="row g-3" id="perfumeList">
+          <div className="row g-3" id="perfumeList2">
             {randomPerfumes.length > 0 ? (
               randomPerfumes.map((perfume) => (
                 // Használjuk a Bootstrap oszlopokat és a stretch igazítást
