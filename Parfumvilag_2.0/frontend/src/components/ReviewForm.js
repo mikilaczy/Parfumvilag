@@ -80,7 +80,7 @@ const ReviewForm = ({ perfumeId, onReviewSubmitted }) => {
       {/* Rating Sliders */}
       <div className="review-form-section">
         <label htmlFor="sillageRating" className="form-label">
-          Illatcsík (Sillage):
+          Illatfelhő (Sillage):
         </label>
         <input
           type="range"
