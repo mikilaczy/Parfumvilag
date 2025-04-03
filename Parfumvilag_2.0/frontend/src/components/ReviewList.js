@@ -1,130 +1,130 @@
-import React, { useState, useEffect } from "react";
-import { getReviewsForPerfume } from "../services/reviewService"; // Import service
+// --- START OF FILE ReviewList.js ---
+
+import React, { useState, useEffect } from "react"; // useEffect itt már nem is feltétlen kell, ha nincs dropdown
 
 // Helper function to format date
 const formatDate = (dateString) => {
-  if (!dateString) return "";
-  try {
-    return new Date(dateString).toLocaleDateString("hu-HU", {
-      year: "numeric",
-      month: "long",
-      day: "numeric" /*hour: '2-digit', minute: '2-digit'*/,
-    });
-  } catch (e) {
-    console.error("Error formatting date:", e);
-    return dateString; // Return original if formatting fails
-  }
+     if (!dateString) return "";
+      try {
+        return new Date(dateString).toLocaleDateString("hu-HU", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      } catch (e) {
+        console.error("Error formatting date:", e);
+        return dateString;
+      }
 };
 
 // Helper function to render stars
 const renderStars = (rating) => {
-  const filledStars = Math.max(0, Math.min(5, Math.round(rating || 0))); // Ensure 0-5 range
-  return (
-    <>
-      {"★".repeat(filledStars)}
-      {"☆".repeat(5 - filledStars)}
-    </>
-  );
+    const filledStars = Math.max(0, Math.min(5, Math.round(rating || 0)));
+      return (
+        <>
+          {"★".repeat(filledStars)}
+          {"☆".repeat(5 - filledStars)}
+        </>
+      );
 };
 
-const ReviewList = ({ perfumeId, newReview }) => {
-  // Accept newReview prop
-  const [reviews, setReviews] = useState([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+// --- Individual Review Item Component ---
+// Most már nem kell neki az 'onEdit' prop
+const ReviewItem = ({ review, currentUserId, onDelete }) => {
+    const isOwnReview = review.user_id === currentUserId;
 
-  // Function to fetch reviews
-  const fetchReviews = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const data = await getReviewsForPerfume(perfumeId);
-      setReviews(data || []); // Ensure it's always an array
-    } catch (err) {
-      setError(err.message || "Hiba az értékelések betöltésekor.");
-      setReviews([]); // Clear reviews on error
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Közvetlen törlés handler
+    const handleDeleteClick = (e) => {
+        e.stopPropagation(); // Megakadályozza a felesleges kattintásokat
+        onDelete(review.id); // Meghívja a szülőtől kapott onDelete függvényt az ID-val
+    };
 
-  // Initial fetch
-  useEffect(() => {
-    if (perfumeId) {
-      // Only fetch if perfumeId is available
-      fetchReviews();
-    }
-  }, [perfumeId]);
+     return (
+        <div className="review-item-custom card mb-3 position-relative">
+            {/* Delete Button - Only show if it's the user's own review */}
+            {/* Most már nem dropdown, hanem közvetlen kuka ikon */}
+            {isOwnReview && (
+                <div className="position-absolute" style={{ top: '10px', right: '10px', zIndex: 2 }}>
+                    <button
+                        onClick={handleDeleteClick}
+                        className="btn btn-sm btn-danger p-1" // Veszélyes művelet jelzése (piros)
+                        aria-label="Értékelés törlése"
+                        title="Értékelés törlése" // Title tooltip
+                        style={{ lineHeight: 1, /*background: 'transparent', border: 'none'*/ }} // Esetleg standard danger gomb
+                    >
+                        <i className="fas fa-trash-alt"></i> {/* Trash icon */}
+                    </button>
+                 </div>
+            )}
 
-  // Add new review to the top of the list when submitted
-  useEffect(() => {
-    if (newReview) {
-      // Add the new review to the beginning of the list
-      setReviews((prevReviews) => [newReview, ...prevReviews]);
-    }
-  }, [newReview]); // Re-run when newReview prop changes
-
-  if (loading)
-    return <div className="text-center my-4">Értékelések betöltése...</div>;
-
-  return (
-    <div className="review-list-custom mt-4">
-      {error && <div className="alert alert-danger">{error}</div>}
-      {reviews.length === 0 && !error && (
-        <p className="text-center text-muted">Még nincsenek értékelések.</p>
-      )}
-      {reviews.map((review) => {
-        console.log("Review data received:", review); // DEBUG: Check the content of each review object
-        return (
-          <div key={review.id} className="review-item-custom card mb-3">
+            {/* Card Body with Review Content */}
             <div className="card-body">
-              <div className="review-header-custom d-flex justify-content-between align-items-center mb-2">
-                {/* Use review.author which comes from the backend JOIN */}
-                <span className="review-author-custom fw-bold">
-                  {review.author || "Ismeretlen felhasználó"}
-                </span>
-                <span className="review-date-custom text-muted">
-                  {formatDate(review.created_at)}
-                </span>
-              </div>
-              {/* Ratings in a more structured way */}
-              <div className="review-ratings-grid mb-2">
-                <div className="rating-item">
-                  <span className="rating-category">Illatcsík:</span>
-                  <span className="rating-stars">
-                    {renderStars(review.scent_trail_rating)}
-                  </span>
+                <div className="review-header-custom d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom">
+                    <span className="review-author-custom fw-bold">
+                        {review.author || "Ismeretlen felhasználó"}
+                    </span>
+                    <span className="review-date-custom text-muted">
+                        {formatDate(review.created_at)}
+                    </span>
                 </div>
-                <div className="rating-item">
-                  <span className="rating-category">Tartósság:</span>
-                  <span className="rating-stars">
-                    {renderStars(review.longevity_rating)}
-                  </span>
+
+                {/* Ratings Grid */}
+                <div className="review-ratings-grid mb-2">
+                    <div className="rating-item">
+                        <span className="rating-category">Illatcsík:</span>
+                        <span className="rating-stars">{renderStars(review.scent_trail_rating)}</span>
+                    </div>
+                    <div className="rating-item">
+                        <span className="rating-category">Tartósság:</span>
+                        <span className="rating-stars">{renderStars(review.longevity_rating)}</span>
+                    </div>
+                    <div className="rating-item">
+                        <span className="rating-category">Ár/Érték:</span>
+                        <span className="rating-stars">{renderStars(review.value_rating)}</span>
+                    </div>
+                    <div className="rating-item">
+                        <span className="rating-category">Összbenyomás:</span>
+                        <span className="rating-stars">{renderStars(review.overall_impression)}</span>
+                    </div>
                 </div>
-                <div className="rating-item">
-                  <span className="rating-category">Ár/Érték:</span>
-                  <span className="rating-stars">
-                    {renderStars(review.value_rating)}
-                  </span>
-                </div>
-                <div className="rating-item">
-                  <span className="rating-category">Összbenyomás:</span>
-                  <span className="rating-stars">
-                    {renderStars(review.overall_impression)}
-                  </span>
-                </div>
-              </div>
-              {review.review_text && (
-                <p className="review-comment-custom card-text">
-                  {review.review_text}
-                </p>
-              )}
+
+                {/* Review Comment */}
+                {review.review_text && (
+                    <p className="review-comment-custom card-text bg-light p-2 rounded border mt-2">
+                        {review.review_text}
+                    </p>
+                )}
             </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+        </div>
+    );
+};
+
+
+// --- Main ReviewList Component ---
+// Most már nem kell neki az 'onEdit' prop
+const ReviewList = ({ reviews, loading, currentUserId, onDelete }) => {
+     if (loading) {
+        return <div className="text-center my-4 text-muted">Értékelések betöltése...</div>;
+      }
+
+      if (!reviews || reviews.length === 0) {
+        return <p className="text-center text-muted mt-4">Még nincsenek értékelések ehhez a parfümhöz.</p>;
+      }
+
+      return (
+        <div className="review-list-custom mt-4">
+          {reviews.map((review) => (
+            <ReviewItem
+              key={review.id}
+              review={review}
+              currentUserId={currentUserId}
+              // onEdit nincs többé
+              onDelete={onDelete} // Csak az onDelete van átadva
+            />
+          ))}
+        </div>
+      );
 };
 
 export default ReviewList;
+// --- END OF FILE ReviewList.js ---

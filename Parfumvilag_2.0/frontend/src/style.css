@@ -3987,3 +3987,74 @@ body {
   --bs-gutter-y: 0.8rem;
 }
 */
+/* --- Star Rating Input --- */
+.star-rating-input {
+  display: inline-block; /* Vagy block ha külön sorba akarod */
+  font-size: 1.6rem; /* Csillagok mérete */
+  color: #ccc; /* Üres csillagok színe */
+  cursor: pointer;
+}
+
+.star-rating-input .star-input {
+  display: inline-block;
+  transition: color 0.2s ease-in-out, transform 0.2s ease;
+  margin-right: 2px; /* Kis térköz a csillagok között */
+  color: #e0e0e0; /* Alapértelmezett üres csillag */
+}
+
+.star-rating-input .star-input:hover,
+.star-rating-input .star-input.hover { /* Hover effektus */
+  color: #ffcc00; /* Hover színe */
+  transform: scale(1.15);
+}
+
+.star-rating-input .star-input.filled { /* Kiválasztott csillag */
+  color: #f1c40f; /* Teli csillag színe (Bootstrap sárga) */
+}
+
+/* Disabled state styling (optional) */
+.star-rating-input .star-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.star-rating-input .star-input:disabled:hover {
+    color: #e0e0e0; /* No hover color change when disabled */
+    transform: none; /* No scale effect when disabled */
+}
+
+
+/* --- Review Form Customization --- */
+.review-form-custom {
+    /* background: #f8f9fa; /* Slightly off-white background */
+    /* padding: 1.5rem; */
+    /* border: 1px solid #dee2e6; */
+    /* border-radius: 8px; */
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.05); */
+}
+.review-form-custom .form-label {
+    font-weight: 500;
+    margin-bottom: 0.4rem; /* Kisebb margó */
+    color: #495057;
+}
+
+.review-form-custom .btn-primary { /* Submit button style */
+    background-color: #0d6efd; /* Standard Bootstrap Primary */
+    border-color: #0d6efd;
+    padding: 0.6rem 1.2rem;
+}
+.review-form-custom .btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.review-form-custom .btn-secondary { /* Cancel button style */
+     padding: 0.6rem 1.2rem;
+}
+
+
+/* --- Review Item Updates (if needed) --- */
+.review-comment-custom.bg-light {
+    background-color: #f8f9fa !important; /* Ensure light background for comment */
+    border: 1px solid #eee;
+    font-size: 0.9rem;
+}
