@@ -11,14 +11,21 @@ const getAllUsers = async () => {
 };
 
 const getUserById = async (id) => {
-  // Include profile_picture_url
-  const results = await queryAsync(
-    "SELECT id, name, email, phone, profile_picture_url, is_admin, created_at FROM users WHERE id = ?",
-    [id]
-  );
-  return results.length > 0 ? results[0] : null;
+  console.log(`[Model getUserById] Fetching user with ID: ${id}`); // Log Start
+  const sql =
+    "SELECT id, name, email, phone, profile_picture_url, is_admin, created_at FROM users WHERE id = ?"; // Pontos SELECT lista
+  try {
+    const results = await queryAsync(sql, [id]);
+    // <<< ITT LOGOLJUK A NYERS EREDMÉNYT >>>
+    console.log(`[Model getUserById] Raw DB result for ID ${id}:`, results);
+    // <<< LOG VÉGE >>>
+    return results.length > 0 ? results[0] : null;
+  } catch (error) {
+    console.error(`[Model getUserById] DB Error fetching user ${id}:`, error);
+    // Dobjuk tovább a hibát, hogy a controller elkapja
+    throw new Error("Adatbázis hiba a felhasználó lekérésekor.");
+  }
 };
-
 const getUserByEmail = async (email) => {
   // Visszaadja a teljes user objektumot (jelszóval együtt) az ellenőrzéshez
   const results = await queryAsync("SELECT * FROM users WHERE email = ?", [
@@ -56,22 +63,23 @@ const createUser = async (user) => {
 };
 
 const updateUser = async (id, userData) => {
-  const user = { ...userData }; // Clone input
+  // ... (Az updateUser kódja a korábbi részletes logokkal) ...
+  console.log(`[Model] Updating user ${id}. Raw data:`, userData);
+  const user = { ...userData };
 
-  // Hash password if provided and not empty
   if (user.password && user.password.trim() !== "") {
     try {
+      console.log(`[Model] Hashing password for user ${id}...`);
       user.password = await bcrypt.hash(user.password, 10);
+      console.log(`[Model] Password hashed for user ${id}.`);
     } catch (hashErr) {
-      console.error("Password hashing error:", hashErr);
+      console.error(`[Model] Password hashing error for user ${id}:`, hashErr);
       throw new Error("Jelszó hashelési hiba.");
     }
   } else {
-    delete user.password; // Don't update password if empty or not provided
+    delete user.password;
   }
 
-  // Prepare data for DB update - only allowed fields
-  // Make sure these names match your DB columns exactly
   const allowedFields = [
     "name",
     "email",
@@ -80,24 +88,18 @@ const updateUser = async (id, userData) => {
     "profile_picture_url",
   ];
   const updateData = {};
-
   for (const key of allowedFields) {
     if (user.hasOwnProperty(key)) {
-      // Check if the key exists in the input
-      // Allow setting fields to null if an empty string is provided
       updateData[key] =
         user[key] === null || user[key] === "" ? null : user[key];
     }
   }
-
-  // If password was deleted because it was empty, ensure it's not in updateData
   if (!user.password && updateData.hasOwnProperty("password")) {
     delete updateData.password;
   }
 
   if (Object.keys(updateData).length === 0) {
-    console.log("No valid fields to update for user:", id);
-    // Return something indicating no change, maybe fetch current user?
+    console.log(`[Model] No valid fields to update for user ${id}.`);
     return {
       affectedRows: 0,
       changedRows: 0,
@@ -105,29 +107,28 @@ const updateUser = async (id, userData) => {
     };
   }
 
-  console.log("Executing DB update for user:", id, "with data:", updateData);
-
+  console.log(
+    `[Model] Preparing DB update for user ${id} with data:`,
+    updateData
+  );
+  const sqlUpdate = "UPDATE users SET ? WHERE id = ?";
   try {
-    const result = await queryAsync("UPDATE users SET ? WHERE id = ?", [
-      updateData,
-      id,
-    ]);
-    console.log("DB update result:", result);
+    console.log(`[Model] Executing DB update for user ${id}...`);
+    const result = await queryAsync(sqlUpdate, [updateData, id]);
+    console.log(`[Model] DB update result for user ${id}:`, result);
     if (result.affectedRows === 0) {
-      console.warn(`User ${id} not found or data identical during update.`);
+      console.warn(
+        `[Model] User ${id} not found or data identical during update.`
+      );
     }
-    return result; // Return the MySQL result object
+    return result;
   } catch (error) {
-    if (error.code === "ER_DUP_ENTRY") {
-      // Check which key caused the duplicate error if possible (often involves parsing error message)
-      if (error.message.includes("email")) {
-        throw new Error("Ez az email cím már foglalt!");
-      } else {
-        throw new Error("Adatbázis hiba: Duplikált bejegyzés."); // More generic
-      }
+    console.error(`[Model] DB Error updating user ${id}:`, error);
+    if (error.code === "ER_DUP_ENTRY" && error.message.includes("email")) {
+      console.warn(`[Model] Duplicate email error for user ${id}`);
+      throw new Error("Ez az email cím már foglalt!");
     }
-    console.error("Error updating user in DB:", error);
-    throw new Error("Adatbázis hiba a felhasználó frissítésekor."); // Throw generic DB error
+    throw new Error("Adatbázis hiba a felhasználó frissítésekor.");
   }
 };
 

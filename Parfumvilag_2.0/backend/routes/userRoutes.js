@@ -1,36 +1,18 @@
 // backend/routes/userRoutes.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authMiddleware = require('../middleware/authMiddleware');
-const UserController = require('../controllers/userController');
-const User = require('../models/user');
+const authMiddleware = require("../middleware/authMiddleware");
+// MOST a Controllert importáljuk!
+const UserController = require("../controllers/userController");
+// A User modellre itt nincs szükségünk közvetlenül
+// const User = require('../models/user'); // <-- TÖRÖLNI vagy kikommentelni
 
-router.get('/me', authMiddleware, async (req, res) => {
-  try {
-    const user = await new Promise((resolve, reject) => {
-      User.getUserById(req.user.id, (err, results) => {
-        if (err) reject(err);
-        resolve(results[0]);
-      });
-    });
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// GET /api/users/me - Lekéri a bejelentkezett felhasználó adatait
+// Most már a UserController.getUserById ASYNC függvényét hívja
+router.get("/me", authMiddleware, UserController.getUserById);
 
-router.put('/me', authMiddleware, async (req, res) => {
-  try {
-    const updatedUser = await new Promise((resolve, reject) => {
-      User.updateUser(req.user.id, req.body, (err, results) => {
-        if (err) reject(err);
-        resolve(results);
-      });
-    });
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// PUT /api/users/me - Frissíti a bejelentkezett felhasználó adatait
+// Most már a UserController.updateUser ASYNC függvényét hívja
+router.put("/me", authMiddleware, UserController.updateUser);
 
 module.exports = router;

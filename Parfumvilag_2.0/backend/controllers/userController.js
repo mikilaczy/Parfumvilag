@@ -19,46 +19,39 @@ exports.getUserById = async (req, res, next) => {
 // UPDATE User Data (Handles JSON body)
 exports.updateUser = async (req, res, next) => {
   const userId = req.user.id;
-  // Data comes directly from the JSON body parser
   const userDataFromRequest = req.body;
+  console.log(
+    `CTRL: updateUser for ${userId} START. Data:`,
+    userDataFromRequest
+  ); // LOG 1
 
-  // Basic check for essential data if needed (though frontend validates)
   if (!userDataFromRequest || typeof userDataFromRequest !== "object") {
+    console.error(`CTRL: Invalid request body for user ${userId}`);
     return res.status(400).json({ error: "Érvénytelen kérés törzs." });
   }
 
   try {
+    // 1. Update DB via Model
+    console.log(`CTRL: Calling User.updateUser for ${userId}...`); // LOG 2
+    const updateResult = await User.updateUser(userId, userDataFromRequest);
     console.log(
-      `Controller: Updating user ${userId}. Received data:`,
-      userDataFromRequest
-    );
+      `CTRL: User.updateUser finished for ${userId}. Result:`,
+      updateResult
+    ); // LOG 3
 
-    // Call the simplified model function (which expects JSON-like data)
-    const result = await User.updateUser(userId, userDataFromRequest);
-
-    // Check if the update actually happened in the DB
-    // result.affectedRows might be 1 even if changedRows is 0 (if data was identical)
-    if (result.affectedRows === 0) {
-      // Maybe user doesn't exist? Should be caught by getUserById usually.
-      // Or data was identical. Let's treat identical data as success.
-      console.warn(
-        `Controller: Update for user ${userId} affected 0 rows. Data might be identical or user not found.`
-      );
-      // Re-fetch current data to be safe
-    }
-
-    console.log(
-      `Controller: Update processed for user ${userId}. Fetching fresh data...`
-    );
-    // --- Always re-fetch user data after update attempt ---
+    // 2. Fetch FRESH data via Model
+    console.log(`CTRL: Calling User.getUserById for ${userId} AFTER update...`); // LOG 4
     const updatedUser = await User.getUserById(userId);
+    console.log(
+      `CTRL: User.getUserById finished for ${userId}. Fetched:`,
+      updatedUser
+    ); // LOG 5 - LÁTOD EZT? TARTALMAZZA A KÉP URL-t?
 
     if (!updatedUser) {
-      // This is problematic, update happened but user can't be fetched?
       console.error(
-        `Controller: CRITICAL - Failed to fetch user ${userId} immediately after update!`
-      );
-      // Send a specific error indicating inconsistency
+        `CTRL: CRITICAL - Failed to fetch user ${userId} after update!`
+      ); // LOG 6 (Hiba)
+      // Biztosan küldjön választ hiba esetén is
       return res
         .status(500)
         .json({
@@ -66,16 +59,28 @@ exports.updateUser = async (req, res, next) => {
         });
     }
 
-    console.log(`Controller: Returning updated user data for ${userId}.`);
-    // Send the freshly fetched user data back
+    // 3. Send SUCCESS response with FRESH data
+    console.log(`CTRL: Sending SUCCESS response for user ${userId}.`); // LOG 7 - EZT LÁTOD?
     res.status(200).json({ success: true, user: updatedUser });
   } catch (err) {
-    // Catch errors from User.updateUser (like duplicate email) or other issues
     console.error(
-      `Controller: Error during user update process for ${userId}:`,
+      `CTRL: CATCH BLOCK - Error during user update process for ${userId}:`,
       err
-    );
-    // Pass the error to the central error handler
-    next(err);
+    ); // LOG 8 (Hiba)
+
+    if (err.message === "Ez az email cím már foglalt!") {
+      console.log(`CTRL: Sending 409 for duplicate email.`); // LOG 9 (Hiba)
+      return res.status(409).json({ error: err.message });
+    }
+
+    // Küldjön általános hibát, ha nincs specifikus kezelés
+    console.log(`CTRL: Sending 500 generic error.`); // LOG 10 (Hiba)
+    res
+      .status(500)
+      .json({
+        error:
+          err.message || "Szerverhiba történt a felhasználó frissítésekor.",
+      });
+    // Vagy ha van next(): next(err);
   }
 };

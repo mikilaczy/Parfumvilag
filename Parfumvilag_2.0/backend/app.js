@@ -2,8 +2,24 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 require("dotenv").config();
+const db = require("./db"); // DB kapcsolat
 
 const app = express();
+console.log("--- Express App Created ---"); // LOG 1
+
+app.use((req, res, next) => {
+  // Írjuk ki a kérés alapadatait, MIELŐTT bármi más feldolgozná
+  console.log(
+    `*** INCOMING REQUEST *** ${req.method} ${req.originalUrl} from ${req.ip}`
+  );
+  // Írjuk ki a fontos headeröket (pl. auth token)
+  console.log("   Headers:", {
+    "Content-Type": req.headers["content-type"],
+    "x-auth-token": req.headers["x-auth-token"], // Vagy 'authorization' ha Bearer tokent használsz
+    Origin: req.headers["origin"],
+  });
+  next(); // <<< FONTOS: Tovább kell engedni a kérést!
+});
 
 app.use(
   cors({
@@ -12,92 +28,50 @@ app.use(
     allowedHeaders: ["Content-Type", "x-auth-token"],
   })
 );
+
+console.log("--- CORS Middleware Initialized ---"); // LOG 2
 app.use(bodyParser.json());
+console.log("--- BodyParser Middleware Initialized ---"); // LOG 3
 
 // Importáljuk az útvonalakat
 const authRoutes = require("./routes/authRoutes");
 const brandRoutes = require("./routes/brandRoutes");
-const featuredPerfumeRoutes = require("./routes/featuredPerfumeRoutes");
+
 const noteRoutes = require("./routes/noteRoutes");
 const perfumeRoutes = require("./routes/perfumeRoutes");
 const perfumeNoteRoutes = require("./routes/perfumeNoteRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const savedPerfumeRoutes = require("./routes/savedPerfumeRoutes");
-const searchLogRoutes = require("./routes/searchLogRoutes");
+
 const storeRoutes = require("./routes/storeRoutes");
 const userRoutes = require("./routes/userRoutes");
 // Használjuk az útvonalakat
 app.use("/api/auth", authRoutes);
 app.use("/api/brands", brandRoutes);
-app.use("/api/featured-perfumes", featuredPerfumeRoutes);
+
 app.use("/api/notes", noteRoutes);
 app.use("/api/perfumes", perfumeRoutes);
 app.use("/api/perfume-notes", perfumeNoteRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/saved-perfumes", savedPerfumeRoutes);
-app.use("/api/search-logs", searchLogRoutes);
+
 app.use("/api/stores", storeRoutes);
 app.use("/api/users", userRoutes);
+console.log("--- Routers Mounted ---"); // LOG 5
 
-// Kapcsolódunk a MySQL-hez a db.js segítségével
-const db = require("./db");
-
-app.get("/api/featured-perfumes", (req, res) => {
-  const featuredPerfumes = [
-    {
-      id: 1,
-      name: "Chanel No. 5",
-      brand: "Chanel",
-      gender: "female",
-      description: "Időtlen klasszikus, ikonikus virágos-aldehides illat.",
-      scents: ["Virágos", "Aldehides"],
-      price: 45000,
-      image_url: "https://fimgs.net/himg/o.97897.jpg",
-    },
-    {
-      id: 2,
-      name: "Sauvage",
-      brand: "Dior",
-      gender: "male",
-      description: "Friss, erőteljes, nyers és nemes összetevőkkel.",
-      scents: ["Fás", "Fűszeres", "Friss"],
-      price: 38000,
-      image_url:
-        "https://cdn.notinoimg.com/detail_main_mq/dior/3348901250153_01/sauvage___200828.jpg",
-    },
-    {
-      id: 3,
-      name: "Black Opium",
-      brand: "Yves Saint Laurent",
-      gender: "female",
-      description: "Erőteljes és érzéki illat, kávé és vanília jegyekkel.",
-      scents: ["Orientális", "Fűszeres", "Édes"],
-      price: 44000,
-      image_url:
-        "https://cdn.shopify.com/s/files/1/0259/7733/products/black-opium-le-parfum-90ml_grande.png?v=1679625919",
-    },
-    // ... több parfüm
-  ];
-  res.json(featuredPerfumes);
-});
 app.use((err, req, res, next) => {
-  console.error("Unhandled Error:", err.stack || err); // Log the full error stack
-
-  // Set a default status code if not already set
-  const statusCode = err.statusCode || 500; // Use custom status code if available
-
-  // Send a generic error message in production, or more details in development
-  const errorMessage =
-    process.env.NODE_ENV === "production"
-      ? "Szerverhiba történt."
-      : err.message || "Ismeretlen szerverhiba.";
-
+  console.error(
+    "!!! Unhandled Error Caught by Central Handler:",
+    err.stack || err
+  );
+  const statusCode = err.statusCode || 500;
+  const errorMessage = err.message || "Ismeretlen szerverhiba.";
   res.status(statusCode).json({
     error: errorMessage,
-    // Optionally add more details in development
-    ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
+    // stack: process.env.NODE_ENV !== 'production' ? err.stack : undefined // Stack trace csak fejlesztéskor
   });
 });
+console.log("--- Central Error Handler Initialized ---"); // LOG 6
 
 // Adatbázis tesztelése
 db.query("SELECT 1 + 1 AS solution", (err, results) => {

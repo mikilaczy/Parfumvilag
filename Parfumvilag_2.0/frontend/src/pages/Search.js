@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import PerfumeCard from "../components/PerfumeCard";
-import Sidebar from "../components/Sidebar";
+import { useSearchParams } from "react-router-dom";
 import { getAllPerfumes } from "../services/perfumeService";
+import Sidebar from "../components/Sidebar";
+import PerfumeCard from "../components/PerfumeCard";
+import "../style.css"; // Ensure styles are imported
 
-const Search = ({ searchTerm: propSearchTerm }) => {
+// Helper for Pagination Buttons
+const PageButton = ({
+  page,
+  currentPage,
+  onClick,
+  isDisabled = false,
+  children,
+}) => (
+  <li
+    className={`page-item ${currentPage === page ? "active" : ""} ${
+      isDisabled ? "disabled" : ""
+    }`}
+  >
+    <button
+      className="page-link"
+      onClick={() => !isDisabled && onClick(page)}
+      disabled={isDisabled}
+    >
+      {children || page}
+    </button>
+  </li>
+);
+
+const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchTermFromUrl = searchParams.get("query") || propSearchTerm || "";
-  const brandFilter = searchParams.get("brand") || "";
-  const scentFilter = searchParams.get("note") || "";
-  const genderFilter = searchParams.get("gender") || "";
-  const sortOption = searchParams.get("sort") || "name-asc";
   const [perfumes, setPerfumes] = useState([]);
-  const [initialPerfumes, setInitialPerfumes] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState(searchTermFromUrl);
-  const [suggestions, setSuggestions] = useState([]);
-  const perfumesPerPage = 24;
   const [totalPages, setTotalPages] = useState(1);
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("query") || "");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -30,249 +46,254 @@ const Search = ({ searchTerm: propSearchTerm }) => {
 
   useEffect(() => {
     const fetchPerfumes = async () => {
+      setLoading(true);
+      setError("");
       try {
-        const response = await getAllPerfumes({
-          query: searchTerm,
-          brand: brandFilter,
-          note: scentFilter, // <-- Küldd 'note' paraméterként
-          gender: genderFilter,
-          sort: sortOption,
-          page: currentPage,
+        const params = {
+          query: searchParams.get("query") || "",
+          brand: searchParams.get("brand") || "",
+          note: searchParams.get("note") || "",
+          gender: searchParams.get("gender") || "",
+          sort: searchParams.get("sort") || "name-asc",
+          min_price: searchParams.get("min_price"),
+          max_price: searchParams.get("max_price"),
+          page: searchParams.get("page") || "1",
           per_page: 24,
-        });
-
-        setPerfumes(response.perfumes);
-        setTotalPages(response.totalPages);
-        setError("");
+        };
+        console.log("Search.js: Fetching perfumes with params:", params);
+        const response = await getAllPerfumes(params);
+        setPerfumes(response.perfumes || []);
+        setTotalPages(response.totalPages || 1);
       } catch (err) {
-        setError("Failed to load perfumes!");
+        console.error("Search.js: Error fetching perfumes:", err);
+        setError(err.message || "Hiba a parfümök betöltésekor.");
         setPerfumes([]);
+        setTotalPages(1);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchPerfumes();
-  }, [
-    searchTerm,
-    brandFilter,
-    scentFilter,
-    genderFilter,
-    sortOption,
-    currentPage,
-  ]);
+  }, [searchParams]); // Most már csak a searchParams-tól függ
 
-  useEffect(() => {
-    if (searchTerm.trim() && initialPerfumes.length > 0) {
-      const filtered = initialPerfumes
-        .filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        .slice(0, 5);
-      setSuggestions(filtered);
+  const handleSearchTermChange = (e) => setSearchTerm(e.target.value);
+
+  const handleSearchSubmit = () => {
+    const newParams = new URLSearchParams(searchParams);
+    if (searchTerm.trim()) {
+      newParams.set("query", searchTerm.trim());
     } else {
-      setSuggestions([]);
+      newParams.delete("query");
     }
-  }, [searchTerm, initialPerfumes]);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    const filtered = initialPerfumes
-      .filter((p) => !brandFilter || p.brand === brandFilter)
-      .filter((p) => !scentFilter || (p.notes && p.notes.includes(scentFilter)))
-      .filter((p) => !genderFilter || p.gender === genderFilter)
-      .sort((a, b) => {
-        switch (sortOption) {
-          case "name-asc":
-            return a.name.localeCompare(b.name);
-          case "name-desc":
-            return b.name.localeCompare(a.name);
-          case "price-asc":
-            return (a.price || 0) - (b.price || 0);
-          case "price-desc":
-            return (b.price || 0) - (a.price || 0);
-          default:
-            return 0;
-        }
-      });
-    const startIndex = (page - 1) * perfumesPerPage;
-    const endIndex = startIndex + perfumesPerPage;
-    setPerfumes(filtered.slice(startIndex, endIndex));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    newParams.set("page", "1");
+    setSearchParams(newParams);
   };
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    if (brandFilter) queryParams.set("brand", brandFilter.trim());
-    if (scentFilter) queryParams.set("note", scentFilter.trim().toLowerCase()); // Normalizálás
-    if (genderFilter) queryParams.set("gender", genderFilter);
-    navigate(`/kereses?${queryParams.toString()}`);
-    const queryParams = new URLSearchParams(searchParams);
-
-    if (searchTerm.trim()) {
-      queryParams.set("query", searchTerm);
-    } else {
-      queryParams.delete("query");
-    }
-    setSearchParams(queryParams);
-    setSuggestions([]);
+  const handlePageChange = (page) => {
+    const newPage = Math.max(1, Math.min(page, totalPages));
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", String(newPage));
+    setSearchParams(newParams);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const getPageNumbers = () => {
     const pages = [];
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    if (endPage - startPage + 1 < maxPagesToShow) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    const maxPagesToShow = windowWidth < 576 ? 3 : 5;
+    const halfPages = Math.floor(maxPagesToShow / 2);
+    let startPage, endPage;
+    if (totalPages <= maxPagesToShow) {
+      startPage = 1;
+      endPage = totalPages;
+    } else if (currentPage <= halfPages + 1) {
+      startPage = 1;
+      endPage = maxPagesToShow;
+    } else if (currentPage + halfPages >= totalPages) {
+      startPage = totalPages - maxPagesToShow + 1;
+      endPage = totalPages;
+    } else {
+      startPage = currentPage - halfPages;
+      endPage = currentPage + halfPages;
     }
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    return pages;
+    for (let i = startPage; i <= endPage; i++) pages.push(i);
+    return {
+      pages,
+      showStartEllipsis: startPage > 1,
+      showEndEllipsis: endPage < totalPages,
+    };
   };
 
+  const {
+    pages: pageNumbers,
+    showStartEllipsis,
+    showEndEllipsis,
+  } = getPageNumbers();
+  const mainContentPaddingLeft = windowWidth > 991 ? "250px" : "0";
+
   return (
-    <div className="d-flex">
+    <div className="d-lg-flex">
       <Sidebar />
       <div
-        className="flex-grow-1"
+        className="flex-grow-1 main-content-area"
         style={{
-          marginLeft: windowWidth > 991 ? "250px" : "0",
-          width: "100%",
+          paddingLeft: mainContentPaddingLeft,
+          transition: "padding-left 0.3s ease-in-out",
+          minHeight: "calc(100vh - 70px)",
         }}
       >
-        <div className="search-page container-fluid mt-4">
-          <div className="row justify-content-center mb-4">
-            <div className="col-md-6 position-relative">
-              <div className="input-group">
+        <div className="container-fluid py-4 px-lg-4 px-md-3 px-sm-2 px-1">
+          {/* Search Input Row */}
+          <div className="row justify-content-center mb-4 mb-lg-5">
+            <div className="col-md-10 col-lg-8 col-xl-6">
+              <div className="input-group shadow-sm">
                 <input
                   type="text"
-                  className="form-control"
-                  placeholder="Keresés név szerint..."
+                  className="form-control form-control-lg"
+                  placeholder="Keresés parfümre..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  onChange={handleSearchTermChange}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearchSubmit()}
+                  aria-label="Parfüm keresése"
                 />
-                <button className="btn btn-peach" onClick={handleSearch}>
-                  Keresés
+                <button
+                  className="btn btn-primary px-3"
+                  onClick={handleSearchSubmit}
+                  aria-label="Keresés"
+                >
+                  <i className="fas fa-search"></i>
                 </button>
               </div>
-              {suggestions.length > 0 && (
-                <ul
-                  className="list-group position-absolute w-100"
-                  style={{
-                    zIndex: 1000,
-                    maxHeight: "200px",
-                    overflowY: "auto",
-                  }}
-                >
-                  {suggestions.map((perfume) => (
-                    <li
-                      key={perfume.id}
-                      className="list-group-item list-group-item-action"
-                      onClick={() => navigate(`/parfume/${perfume.id}`)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {perfume.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
           </div>
 
-          <h1 className="search-title mb-4 text-center">Katalógus</h1>
-          {error && <div className="alert alert-danger">{error}</div>}
-          <div className="row" id="perfumeList">
-            {perfumes.length === 0 && !error ? (
-              <div id="noResults" className="text-center w-100">
-                <i className="fas fa-search fa-2x mb-3"></i>
-                <h4>Nincs találat</h4>
-                <p>Próbálj meg más keresőszót vagy kevesebb szűrőt!</p>
+          {/* Loading Indicator */}
+          {loading && (
+            <div className="text-center py-5 my-5">
+              <div
+                className="spinner-border text-primary"
+                style={{ width: "3rem", height: "3rem" }}
+                role="status"
+              >
+                <span className="visually-hidden">Parfümök betöltése...</span>
               </div>
-            ) : (
-              perfumes.map((p) => <PerfumeCard key={p.id} perfume={p} />)
-            )}
-          </div>
+            </div>
+          )}
 
-          {totalPages > 1 && (
-            <nav className="pagination mt-4">
-              <ul className="pagination-list justify-content-center align-items-center">
-                <li
-                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+          {/* Error Message */}
+          {error && !loading && (
+            <div className="alert alert-danger text-center col-md-8 mx-auto">
+              {error}
+            </div>
+          )}
+
+          {/* --- VISSZAÁLLÍTOTT Perfume List --- */}
+          {/* Itt most a div#perfumeList tartalmazza közvetlenül a kártyákat */}
+          {/* A layoutért (grid, flexbox) a te style.css-ed felelős, ami az #perfumeList ID-t célozza */}
+          {!loading && !error && (
+            <div id="perfumeList" className="perfume-list-container-search">
+              {" "}
+              {/* Add extra class if needed */}
+              {perfumes.length === 0 ? (
+                // No results message - lehet, hogy ezt is az #perfumeList-en belül kell megjeleníteni a CSS miatt
+                <div
+                  id="noResults"
+                  className="text-center card border-0 shadow-sm p-4 p-md-5 my-4 mx-auto"
+                  style={{ maxWidth: "500px" }}
                 >
-                  <button
-                    className="page-link prev-next"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                  >
-                    Előző
-                  </button>
-                </li>
-                <div className="page-numbers">
-                  {currentPage > 3 && (
-                    <>
-                      <li className="page-item">
-                        <button
-                          className="page-link"
-                          onClick={() => handlePageChange(1)}
-                        >
-                          1
-                        </button>
-                      </li>
-                      <li className="page-item disabled">
-                        <span className="page-link">...</span>
-                      </li>
-                    </>
-                  )}
-                  {getPageNumbers().map((page) => (
-                    <li
-                      className={`page-item ${
-                        currentPage === page ? "active" : ""
-                      }`}
-                      key={page}
-                    >
-                      <button
-                        className="page-link"
-                        onClick={() => handlePageChange(page)}
-                      >
-                        {page}
-                      </button>
-                    </li>
-                  ))}
-                  {currentPage < totalPages - 2 && (
-                    <>
-                      <li className="page-item disabled">
-                        <span className="page-link">...</span>
-                      </li>
-                      <li className="page-item">
-                        <button
-                          className="page-link"
-                          onClick={() => handlePageChange(totalPages)}
-                        >
-                          {totalPages}
-                        </button>
-                      </li>
-                    </>
-                  )}
+                  <i className="fas fa-box-open fa-3x mb-3 text-secondary opacity-50"></i>
+                  <h4 className="text-muted">Nincs Találat</h4>
+                  <p className="mb-0 text-muted">
+                    A megadott feltételekkel nem található parfüm. Próbálj más
+                    szűrőket!
+                  </p>
                 </div>
-                <li
-                  className={`page-item ${
-                    currentPage === totalPages ? "disabled" : ""
-                  }`}
+              ) : (
+                // Display Perfume Cards - Direct children
+                perfumes.map((p) => <PerfumeCard key={p.id} perfume={p} />)
+              )}
+            </div>
+          )}
+          {/* --- VISSZAÁLLÍTOTT LISTA VÉGE --- */}
+
+          {/* Pagination - Only render if not loading, no error, and more than one page */}
+          {!loading && !error && totalPages > 1 && (
+            <nav
+              className="mt-5 d-flex justify-content-center"
+              aria-label="Perfume pagination"
+            >
+              <ul className="pagination pagination-sm shadow-sm">
+                {/* Previous Button */}
+                <PageButton
+                  page={currentPage - 1}
+                  currentPage={currentPage}
+                  onClick={handlePageChange}
+                  isDisabled={currentPage === 1}
                 >
-                  <button
-                    className="page-link prev-next"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                  >
-                    Következő
-                  </button>
-                </li>
+                  «
+                </PageButton>
+
+                {/* First Page & Ellipsis */}
+                {showStartEllipsis && (
+                  <>
+                    <PageButton
+                      page={1}
+                      currentPage={currentPage}
+                      onClick={handlePageChange}
+                    />
+                    <li className="page-item disabled">
+                      <span className="page-link px-2">...</span>
+                    </li>
+                  </>
+                )}
+
+                {/* Page Numbers */}
+                {pageNumbers.map((page) => (
+                  <PageButton
+                    key={page}
+                    page={page}
+                    currentPage={currentPage}
+                    onClick={handlePageChange}
+                  />
+                ))}
+
+                {/* End Ellipsis & Last Page */}
+                {showEndEllipsis && (
+                  <>
+                    <li className="page-item disabled">
+                      <span className="page-link px-2">...</span>
+                    </li>
+                    <PageButton
+                      page={totalPages}
+                      currentPage={currentPage}
+                      onClick={handlePageChange}
+                    />
+                  </>
+                )}
+
+                {/* Next Button */}
+                <PageButton
+                  page={currentPage + 1}
+                  currentPage={currentPage}
+                  onClick={handlePageChange}
+                  isDisabled={currentPage === totalPages}
+                >
+                  »
+                </PageButton>
               </ul>
-              <div className="pagination-info text-center mt-2">
-                Összesen {totalPages} oldal
-              </div>
             </nav>
           )}
-        </div>
-      </div>
-    </div>
+
+          {/* Optional: Pagination Info Text */}
+          {!loading && !error && totalPages > 0 && perfumes.length > 0 && (
+            <div className="text-center text-muted small mt-2 mb-4">
+              {currentPage}. oldal / {totalPages}
+            </div>
+          )}
+        </div>{" "}
+        {/* End Container-fluid */}
+      </div>{" "}
+      {/* End Main Content Area */}
+    </div> // End d-lg-flex
   );
 };
 

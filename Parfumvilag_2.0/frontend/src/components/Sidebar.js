@@ -1,15 +1,14 @@
+// src/components/Sidebar.js
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-// Feltételezzük, hogy a service importok helyesek
-// import { getAllNotes } from "../services/noteService";
-// import { getAllBrands } from "../services/brandService"; // Vagy fetch, ahogy korábban volt
+import { useSearchParams } from "react-router-dom"; // Csak useSearchParams kell
+import { getPriceRange } from "../services/perfumeService"; // Szükséges a getPriceRange
 
 const Sidebar = () => {
-  // 1. Inicializáld a searchParams-ot ELŐSZÖR!
+  // Hookok
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // Valószínűleg nem kell
 
-  // 2. Most már használhatod a searchParams-ot a useState-ben
+  // State inicializálása - Stringekkel a konzisztencia érdekében
   const [brandFilter, setBrandFilter] = useState(
     searchParams.get("brand") || ""
   );
@@ -22,87 +21,118 @@ const Sidebar = () => {
   const [sortOption, setSortOption] = useState(
     searchParams.get("sort") || "name-asc"
   );
+  const [minPriceFilter, setMinPriceFilter] = useState(
+    searchParams.get("min_price") || ""
+  );
+  const [maxPriceFilter, setMaxPriceFilter] = useState(
+    searchParams.get("max_price") || ""
+  );
 
-  // State for fetched data
+  // Adatok és állapotok
   const [brands, setBrands] = useState([]);
   const [notes, setNotes] = useState([]);
   const [error, setError] = useState(null);
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
+  const [actualMin, setActualMin] = useState(0);
+  const [actualMax, setActualMax] = useState(100000);
 
-  // State for sidebar UI
-  const [isOpen, setIsOpen] = useState(false);
+  // UI állapotok
+  const [isOpen, setIsOpen] = useState(window.innerWidth > 991); // Desktopon nyitva kezdjen
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // State for dropdown search terms
   const [brandSearchTerm, setBrandSearchTerm] = useState("");
   const [noteSearchTerm, setNoteSearchTerm] = useState("");
 
-  // Fetch brands and notes
+  // Fetch data effect (brands, notes, price range)
   useEffect(() => {
-    setError(null); // Clear previous errors on new fetch attempt
-    let isMounted = true; // Flag to prevent state update on unmounted component
+    setError(null);
+    let isMounted = true;
 
     // Fetch Brands
     fetch("http://localhost:5000/api/brands")
-      .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok for brands");
-        return res.json();
-      })
-      .then((data) => {
-        if (isMounted) {
-          setBrands(Array.isArray(data) ? data : []);
-        }
-      })
+      .then((res) =>
+        res.ok ? res.json() : Promise.reject("Brands fetch failed")
+      )
+      .then((data) => isMounted && setBrands(Array.isArray(data) ? data : []))
       .catch((err) => {
         console.error("Hiba a márkák betöltésekor:", err);
-        if (isMounted) {
+        if (isMounted)
           setError(
             (prev) => (prev ? prev + "\n" : "") + "Márkák betöltése sikertelen."
           );
-          setBrands([]);
-        }
       });
 
     // Fetch Notes
     fetch("http://localhost:5000/api/notes")
-      .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok for notes");
-        return res.json();
-      })
-      .then((data) => {
-        if (isMounted) {
-          setNotes(Array.isArray(data) ? data : []);
-        }
-      })
+      .then((res) =>
+        res.ok ? res.json() : Promise.reject("Notes fetch failed")
+      )
+      .then((data) => isMounted && setNotes(Array.isArray(data) ? data : []))
       .catch((err) => {
         console.error("Hiba az illatjegyek betöltésekor:", err);
-        if (isMounted) {
+        if (isMounted)
           setError(
             (prev) =>
               (prev ? prev + "\n" : "") + "Illatjegyek betöltése sikertelen."
           );
-          setNotes([]);
+      });
+
+    // Fetch Price Range
+    getPriceRange()
+      .then((rangeData) => {
+        if (isMounted) {
+          const min = rangeData.minPrice || 0;
+          const max = rangeData.maxPrice || 100000;
+          setPriceRange({ min, max });
+          setActualMin(min);
+          setActualMax(max);
+          // Kezdőértékek beállítása a betöltött range és URL alapján
+          const urlMin = searchParams.get("min_price");
+          const urlMax = searchParams.get("max_price");
+          // Fontos: Stringként állítjuk be, mert az input value stringet vár
+          setMinPriceFilter(urlMin !== null ? urlMin : String(min));
+          setMaxPriceFilter(urlMax !== null ? urlMax : String(max));
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load price range, using defaults.", err);
+        if (isMounted) {
+          setError(
+            (prev) =>
+              (prev ? prev + "\n" : "") + "Árintervallum betöltése sikertelen."
+          );
+          // Hiba esetén is próbáljuk beállítani a filtereket (URL vagy default)
+          const urlMin = searchParams.get("min_price");
+          const urlMax = searchParams.get("max_price");
+          setMinPriceFilter(urlMin !== null ? urlMin : String(priceRange.min)); // priceRange defaultot használunk
+          setMaxPriceFilter(urlMax !== null ? urlMax : String(priceRange.max));
         }
       });
 
     return () => {
       isMounted = false;
-    }; // Cleanup function
-  }, []); // Run only once on mount
+    };
+  }, []); // Csak mountkor fusson
 
-  // Handle window resize
+  // Handle window resize effect
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      setWindowWidth(currentWidth);
+      // Sidebar automatikus nyitása/zárása átméretezéskor
+      if (currentWidth > 991) {
+        setIsOpen(true); // Desktop nézetben legyen nyitva
+      } else {
+        // Mobilon hagyjuk az aktuális állapotot, hacsak nem volt épp nyitva és átméreteztük desktopra
+        // Ezt a részt finomítani lehetne, de a toggle gomb a fő vezérlő mobilon
+      }
+    };
     window.addEventListener("resize", handleResize);
-    // Set initial state correctly based on width
-    if (window.innerWidth > 991) {
-      setIsOpen(true); // Keep open on desktop by default if needed
-    } else {
-      setIsOpen(false); // Closed on mobile by default
-    }
+    // Kezdő állapot beállítása
+    handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []); // Run only once
+  }, []);
 
-  // Filter brands based on search term
+  // Memoized filtered lists for dropdowns
   const filteredBrands = useMemo(() => {
     if (!brandSearchTerm) return brands;
     return brands.filter((brand) =>
@@ -110,7 +140,6 @@ const Sidebar = () => {
     );
   }, [brands, brandSearchTerm]);
 
-  // Filter notes based on search term
   const filteredNotes = useMemo(() => {
     if (!noteSearchTerm) return notes;
     return notes.filter((note) =>
@@ -118,76 +147,109 @@ const Sidebar = () => {
     );
   }, [notes, noteSearchTerm]);
 
-  // Apply filters and navigate
-  const handleSearch = () => {
-    const queryParams = new URLSearchParams(searchParams); // Start with existing params
-    // Update params based on state
-    if (brandFilter) queryParams.set("brand", brandFilter);
-    else queryParams.delete("brand");
-    if (scentFilter) queryParams.set("note", scentFilter);
-    else queryParams.delete("note");
-    if (genderFilter) queryParams.set("gender", genderFilter);
-    else queryParams.delete("gender");
-    if (sortOption) queryParams.set("sort", sortOption);
-    else queryParams.delete("sort"); // Keep default maybe?
-    queryParams.set("page", "1"); // Reset page to 1 when filters change
+  // Update URL search params on filter/sort change
+  const applyFilters = () => {
+    const queryParams = new URLSearchParams(); // Mindig újraépítjük
 
-    navigate(`/kereses?${queryParams.toString()}`);
-    if (windowWidth <= 991) {
-      // Close sidebar on mobile after search
-      setIsOpen(false);
+    // Rendezés (csak ha nem az alapértelmezett)
+    if (sortOption && sortOption !== "name-asc") {
+      queryParams.set("sort", sortOption);
     }
+
+    // Oldalszám mindig 1 új szűrésnél/rendezésnél
+    queryParams.set("page", "1");
+
+    // Aktív szűrők hozzáadása
+    if (brandFilter) queryParams.set("brand", brandFilter);
+    if (scentFilter) queryParams.set("note", scentFilter);
+    if (genderFilter) queryParams.set("gender", genderFilter);
+
+    // Árszűrők hozzáadása, ha érvényesek és *különböznek* az aktuális min/max-tól
+    // Ez megakadályozza a felesleges paramétereket, ha a csúszka a végállásban van
+    const minVal = parseFloat(minPriceFilter);
+    const maxVal = parseFloat(maxPriceFilter);
+    if (!isNaN(minVal) && minVal > actualMin) {
+      queryParams.set("min_price", String(minVal));
+    }
+    if (!isNaN(maxVal) && maxVal < actualMax) {
+      queryParams.set("max_price", String(maxVal));
+    }
+
+    console.log("Setting search params:", queryParams.toString());
+    setSearchParams(queryParams); // URL frissítése
+
+    // Sidebar bezárása mobilon
+    if (windowWidth <= 991) setIsOpen(false);
   };
 
-  // Clear all filters
-  const handleClearFilters = () => {
+  // Clear all filters and reset URL
+  const clearFilters = () => {
+    // Reset state
     setBrandFilter("");
     setScentFilter("");
     setGenderFilter("");
-    setSortOption("name-asc"); // Reset sort
-    setBrandSearchTerm(""); // Clear dropdown search
-    setNoteSearchTerm(""); // Clear dropdown search
+    setSortOption("name-asc");
+    setMinPriceFilter(String(actualMin)); // Vissza a betöltött min-re
+    setMaxPriceFilter(String(actualMax)); // Vissza a betöltött max-ra
+    setBrandSearchTerm("");
+    setNoteSearchTerm("");
 
-    const queryParams = new URLSearchParams(searchParams); // Start with existing
-    // Remove filter params
-    queryParams.delete("brand");
-    queryParams.delete("note");
-    queryParams.delete("gender");
-    queryParams.delete("sort");
-    queryParams.set("page", "1"); // Reset page
+    // Reset URL (csak page=1)
+    const queryParams = new URLSearchParams({ page: "1" });
 
-    navigate(`/kereses?${queryParams.toString()}`); // Navigate with cleared filters
-    if (windowWidth <= 991) {
-      // Close sidebar on mobile
-      setIsOpen(false);
-    }
+    console.log(
+      "Clearing filters, setting search params:",
+      queryParams.toString()
+    );
+    setSearchParams(queryParams);
+
+    if (windowWidth <= 991) setIsOpen(false);
   };
 
+  // Toggle sidebar visibility on mobile
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  // Determine sidebar class based on state and window width
+  // Dynamic sidebar class
   const sidebarClass = `sidebar d-flex flex-column ${
     windowWidth <= 991 && !isOpen ? "hidden" : ""
   }`;
 
+  // Slider input handlers to ensure min <= max
+  const handleMinPriceChange = (e) => {
+    const newVal = parseInt(e.target.value, 10);
+    const currentMax = parseInt(maxPriceFilter || actualMax, 10);
+    // Set min to the new value, but not higher than current max
+    setMinPriceFilter(String(Math.min(newVal, currentMax)));
+  };
+
+  const handleMaxPriceChange = (e) => {
+    const newVal = parseInt(e.target.value, 10);
+    const currentMin = parseInt(minPriceFilter || actualMin, 10);
+    // Set max to the new value, but not lower than current min
+    setMaxPriceFilter(String(Math.max(newVal, currentMin)));
+  };
+
   return (
     <>
+      {/* Toggle Button (Mobile) */}
       {windowWidth <= 991 && (
-        <button className="filter-toggle btn btn-sm" onClick={toggleSidebar}>
-          <i className={`fas ${isOpen ? "fa-times" : "fa-filter"} me-1`}></i>{" "}
-          {/* Change icon */}
-          {isOpen ? "Bezár" : "Szűrők"}
+        <button
+          className="filter-toggle btn btn-sm btn-primary shadow-sm"
+          onClick={toggleSidebar}
+        >
+          <i className={`fas ${isOpen ? "fa-times" : "fa-filter"} me-1`}></i>
+          {isOpen ? "Bezárás" : "Szűrők"}
         </button>
       )}
 
+      {/* Sidebar Content */}
       <div className={sidebarClass}>
-        {" "}
-        {/* Use dynamic class */}
-        <h5 className="mb-3">Szűrők és Rendezés</h5>
-        {error && <div className="alert alert-danger">{error}</div>}
-        {/* Rendezés */}
+        <h5 className="mb-3 border-bottom pb-2">Szűrők és Rendezés</h5>
+        {error && <div className="alert alert-warning small p-2">{error}</div>}
+
+        {/* Sort */}
         <div className="mb-3">
-          <label htmlFor="sort" className="form-label">
+          <label htmlFor="sort" className="form-label form-label-sm">
             Rendezés
           </label>
           <select
@@ -202,14 +264,63 @@ const Sidebar = () => {
             <option value="price-desc">Ár (csökkenő)</option>
           </select>
         </div>
-        {/* Márka Szűrő + Kereső */}
+
+        {/* Price Range Sliders */}
+        <div className="mb-3">
+          <label
+            htmlFor="minPrice"
+            className="form-label form-label-sm d-block"
+          >
+            {" "}
+            {/* d-block a jobb törésért */}
+            Min Ár:{" "}
+            <span className="fw-bold">
+              {Number(minPriceFilter || actualMin).toLocaleString("hu-HU")} Ft
+            </span>
+          </label>
+          <input
+            type="range"
+            className="form-range"
+            id="minPrice"
+            min={actualMin}
+            max={actualMax}
+            step="1000" // Lehet dinamikusabb lépésköz is
+            value={minPriceFilter || actualMin}
+            onChange={handleMinPriceChange}
+          />
+        </div>
+        <div className="mb-4">
+          {" "}
+          {/* Nagyobb térköz az ár után */}
+          <label
+            htmlFor="maxPrice"
+            className="form-label form-label-sm d-block"
+          >
+            Max Ár:{" "}
+            <span className="fw-bold">
+              {Number(maxPriceFilter || actualMax).toLocaleString("hu-HU")} Ft
+            </span>
+          </label>
+          <input
+            type="range"
+            className="form-range"
+            id="maxPrice"
+            min={actualMin}
+            max={actualMax}
+            step="1000"
+            value={maxPriceFilter || actualMax}
+            onChange={handleMaxPriceChange}
+          />
+        </div>
+
+        {/* Brand Filter */}
         <div className="mb-3 filter-dropdown">
-          <label htmlFor="brand" className="form-label">
+          <label htmlFor="brand" className="form-label form-label-sm">
             Márka
           </label>
           <input
             type="text"
-            className="form-control form-control-sm mb-2"
+            className="form-control form-control-sm mb-1"
             placeholder="Márka keresése..."
             value={brandSearchTerm}
             onChange={(e) => setBrandSearchTerm(e.target.value)}
@@ -221,28 +332,29 @@ const Sidebar = () => {
             onChange={(e) => setBrandFilter(e.target.value)}
           >
             <option value="">Összes márka</option>
-            {filteredBrands.length > 0
-              ? filteredBrands.map((brand) => (
-                  <option key={brand.id} value={brand.name}>
-                    {brand.name}
-                  </option>
-                ))
-              : brands.length > 0 &&
-                brandSearchTerm && (
-                  <option value="" disabled>
-                    Nincs találat
-                  </option>
-                )}
+            {filteredBrands.map((brand) => (
+              <option key={brand.id} value={brand.name}>
+                {brand.name}
+              </option>
+            ))}
+            {brands.length > 0 &&
+              filteredBrands.length === 0 &&
+              brandSearchTerm && (
+                <option value="" disabled>
+                  Nincs találat
+                </option>
+              )}
           </select>
         </div>
-        {/* Illatjegy Szűrő + Kereső */}
+
+        {/* Scent (Note) Filter */}
         <div className="mb-3 filter-dropdown">
-          <label htmlFor="scent" className="form-label">
+          <label htmlFor="scent" className="form-label form-label-sm">
             Illatjegy
           </label>
           <input
             type="text"
-            className="form-control form-control-sm mb-2"
+            className="form-control form-control-sm mb-1"
             placeholder="Illatjegy keresése..."
             value={noteSearchTerm}
             onChange={(e) => setNoteSearchTerm(e.target.value)}
@@ -254,23 +366,24 @@ const Sidebar = () => {
             onChange={(e) => setScentFilter(e.target.value)}
           >
             <option value="">Összes illatjegy</option>
-            {filteredNotes.length > 0
-              ? filteredNotes.map((note) => (
-                  <option key={note.id} value={note.name}>
-                    {note.name}
-                  </option>
-                ))
-              : notes.length > 0 &&
-                noteSearchTerm && (
-                  <option value="" disabled>
-                    Nincs találat
-                  </option>
-                )}
+            {filteredNotes.map((note) => (
+              <option key={note.id} value={note.name}>
+                {note.name}
+              </option>
+            ))}
+            {notes.length > 0 &&
+              filteredNotes.length === 0 &&
+              noteSearchTerm && (
+                <option value="" disabled>
+                  Nincs találat
+                </option>
+              )}
           </select>
         </div>
-        {/* Nem Szűrő */}
+
+        {/* Gender Filter */}
         <div className="mb-3">
-          <label htmlFor="gender" className="form-label">
+          <label htmlFor="gender" className="form-label form-label-sm">
             Nem
           </label>
           <select
@@ -285,18 +398,20 @@ const Sidebar = () => {
             <option value="unisex">Unisex</option>
           </select>
         </div>
-        {/* Gombok */}
-        <div className="mt-auto pt-3">
+
+        {/* Action Buttons */}
+        <div className="mt-auto pt-3 border-top">
           {" "}
-          {/* Push buttons to the bottom */}
-          <button className="btn btn-primary w-100 mb-2" onClick={handleSearch}>
-            {" "}
-            {/* Changed btn-peach */}
+          {/* Alulra igazítás és elválasztó */}
+          <button
+            className="btn btn-primary btn-sm w-100 mb-2"
+            onClick={applyFilters}
+          >
             Szűrés és Rendezés
           </button>
           <button
-            className="btn btn-outline-secondary w-100"
-            onClick={handleClearFilters}
+            className="btn btn-outline-secondary btn-sm w-100"
+            onClick={clearFilters}
           >
             Szűrők törlése
           </button>

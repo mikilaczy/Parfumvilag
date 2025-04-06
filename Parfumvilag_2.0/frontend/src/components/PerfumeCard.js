@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useContext } from "react"; // Import useContext
+// frontend/src/components/PerfumeCard.js
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../App"; // Import AuthContext
+import { AuthContext } from "../App"; // AuthContext importálása
 import {
   getMyFavoriteIds,
   addFavorite,
   removeFavorite,
-} from "../services/savedPerfumeService"; // Import service functions
+} from "../services/savedPerfumeService";
 import "../style.css";
 
 // Login Prompt Modal Component (Simple Example)
@@ -18,144 +19,229 @@ const LoginPromptModal = ({ onClose, onLoginRedirect }) => (
       </button>
       <h3>Bejelentkezés szükséges</h3>
       <p>Be kell jelentkezni a kedvencek kezeléséhez.</p>
-      <button className="login-btn" onClick={onLoginRedirect}>
-        Bejelentkezés
-      </button>
-      <button className="cancel-btn" onClick={onClose}>
-        Mégse
-      </button>
+      <div className="d-flex justify-content-center mt-3">
+        {" "}
+        {/* Buttons centered */}
+        <button className="login-btn me-2" onClick={onLoginRedirect}>
+          {" "}
+          {/* Added margin */}
+          Bejelentkezés
+        </button>
+        <button className="cancel-btn" onClick={onClose}>
+          Mégse
+        </button>
+      </div>
     </div>
   </>
 );
 
-const PerfumeCard = ({ perfume }) => {
-  const { id, name, brand_name: brand, price, image_url } = perfume || {};
-  const { isLoggedIn, token } = useContext(AuthContext); // Use context
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const [loadingFavorite, setLoadingFavorite] = useState(false); // Loading state for favorite action
+const PerfumeCard = ({ perfume, onFavoriteChange }) => {
+  // Destructuring perfume properties with defaults
+  const {
+    id,
+    name = "Ismeretlen Parfüm",
+    brand_name: brand,
+    price,
+    image_url,
+  } = perfume || {};
+
+  // Auth context and navigation
+  const { isLoggedIn, token, logout } = useContext(AuthContext); // Get logout from context
   const navigate = useNavigate();
 
+  // Component state
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [loadingFavorite, setLoadingFavorite] = useState(false); // Loading state specifically for toggle action
+
+  // Format price function
   const formattedPrice = () => {
-    if (price === undefined || price === null)
+    if (price === undefined || price === null) {
       return "Ár információ nem elérhető";
-    return new Intl.NumberFormat("hu-HU").format(price) + " Ft";
+    }
+    // Format with HUF currency, no fraction digits
+    return new Intl.NumberFormat("hu-HU", {
+      style: "currency",
+      currency: "HUF",
+      maximumFractionDigits: 0,
+    }).format(price);
   };
 
-  // Fetch initial favorite status
+  // Effect to check initial favorite status
   useEffect(() => {
-    let isMounted = true; // Handle component unmount
+    let isMounted = true; // Flag to prevent state updates on unmounted component
+
     const checkIfFavorite = async () => {
-      if (!isLoggedIn || !id) return; // Only run if logged in and perfume id exists
-      setLoadingFavorite(true);
+      // Skip check if not logged in or perfume ID is missing
+      if (!isLoggedIn || !id) {
+        if (isMounted) setIsFavorite(false); // Ensure it's false if not logged in
+        return;
+      }
+
+      // No visual loading indicator for the initial check needed here
+      // setLoadingFavorite(true); // <-- Removed
+
       try {
-        // Fetch all favorite IDs once might be more efficient if many cards are displayed
-        // Alternatively, create a backend endpoint to check a single ID: GET /api/saved-perfumes/check/:perfumeId
-        const favoriteIds = await getMyFavoriteIds();
+        // console.log(`PerfumeCard (${id}): Checking favorite status...`);
+        const favoriteIds = await getMyFavoriteIds(); // Fetch user's favorite IDs
         if (isMounted) {
-          setIsFavorite(favoriteIds.includes(id));
+          const fav = favoriteIds.includes(id);
+          // console.log(`PerfumeCard (${id}): Is favorite? ${fav}`);
+          setIsFavorite(fav); // Update local state based on fetched data
         }
       } catch (error) {
-        if (isMounted) {
-          console.error("Hiba a kedvenc állapot ellenőrzésekor:", error);
-          // Optionally show an error to the user
+        console.error(
+          `PerfumeCard (${id}): Hiba a kedvenc állapot ellenőrzésekor:`,
+          error
+        );
+
+        // Check if the error indicates an invalid/expired token
+        if (error && error.error === "Token érvénytelen!") {
+          console.warn(
+            `PerfumeCard (${id}): Invalid token detected during check. Logging out.`
+          );
+          if (isMounted) {
+            logout(); // Call context logout function
+            // No need to navigate here, protected routes or App.js will handle redirection
+          }
+        } else if (isMounted) {
+          // Handle other errors (e.g., network error) - maybe log or ignore
+          console.error(
+            `PerfumeCard (${id}): Other error checking favorite status:`,
+            error.message
+          );
+          // Keep isFavorite as false in case of non-auth errors during check
+          setIsFavorite(false);
         }
       } finally {
-        if (isMounted) {
-          setLoadingFavorite(false);
-        }
+        // No loading state to reset here for the initial check
+        // setLoadingFavorite(false); // <-- Removed
       }
     };
 
-    checkIfFavorite();
+    checkIfFavorite(); // Run the check function
 
+    // Cleanup function to run when the component unmounts or dependencies change
     return () => {
       isMounted = false;
-    }; // Cleanup on unmount
-  }, [id, isLoggedIn, token]); // Re-run if id, login status, or token changes
+    };
+    // Dependencies: Re-run if perfume ID, login status, token changes, or logout function reference changes
+  }, [id, isLoggedIn, token, logout]);
 
-  // Handle favorite toggle click
+  // Handler for the favorite button click
   const handleToggleFavorite = async (e) => {
-    e.preventDefault(); // Prevent link navigation if clicking the button inside a link
-    e.stopPropagation(); // Prevent event bubbling up
+    e.preventDefault(); // Prevent link navigation when clicking button inside a link
+    e.stopPropagation(); // Stop event bubbling
 
+    // If not logged in, show the login prompt
     if (!isLoggedIn) {
       setShowLoginPrompt(true);
       return;
     }
 
-    if (loadingFavorite || !id) return; // Prevent multiple clicks while processing or if no ID
+    // Prevent action if already processing or ID is missing
+    if (loadingFavorite || !id) return;
 
-    setLoadingFavorite(true);
+    setLoadingFavorite(true); // Indicate loading state for the toggle action
+
     try {
+      let nowFavorite;
+      // Perform API call based on current favorite state
       if (isFavorite) {
-        await removeFavorite(id);
-        setIsFavorite(false);
-        // Optional: Show success message
+        await removeFavorite(id); // Call service to remove
+        nowFavorite = false;
       } else {
-        await addFavorite(id);
-        setIsFavorite(true);
-        // Optional: Show success message
+        await addFavorite(id); // Call service to add
+        nowFavorite = true;
       }
+
+      // Update local state
+      setIsFavorite(nowFavorite);
+
+      // Notify parent component (e.g., Favorites page) about the change if callback provided
+      if (onFavoriteChange) {
+        onFavoriteChange(id, nowFavorite);
+      }
+      // Optional: Show a brief success message to the user
+      // console.log(`PerfumeCard (${id}): Favorite status toggled to ${nowFavorite}`);
     } catch (error) {
-      console.error("Hiba a kedvencek kezelésekor:", error);
-      // Optional: Show error message to user
-      alert(`Hiba: ${error.message || "Nem sikerült módosítani a kedvencet."}`);
+      console.error(
+        `PerfumeCard (${id}): Hiba a kedvencek kezelésekor:`,
+        error
+      );
+
+      // Check for invalid token error during toggle as well
+      if (error && error.error === "Token érvénytelen!") {
+        console.warn(
+          `PerfumeCard (${id}): Invalid token detected on toggle. Logging out.`
+        );
+        logout(); // Logout if token invalid during toggle
+      } else {
+        // Show generic error alert for other issues
+        alert(
+          `Hiba: ${error.message || "Nem sikerült módosítani a kedvencet."}`
+        );
+      }
     } finally {
-      setLoadingFavorite(false);
+      setLoadingFavorite(false); // Stop loading indicator regardless of outcome
     }
   };
 
+  // JSX for the component
   return (
     <>
+      {/* Perfume Card Structure */}
       <div className="perfume-card h-100">
-        {" "}
-        {/* Add h-100 for consistent height if needed */}
+        {/* Link wrapping the main content */}
         <Link
-          to={`/parfume/${id}`}
-          className="perfume-card-link d-flex flex-column h-100" // Flex layout
+          to={`/parfume/${id}`} // Navigate to detail page on click
+          className="perfume-card-link d-flex flex-column h-100"
           style={{ textDecoration: "none", color: "inherit" }}
         >
+          {/* Perfume Image */}
           <img
-            src={image_url || "https://via.placeholder.com/220x180?text=Parfüm"} // Adjust placeholder size if needed
-            alt={name || "Parfüm"}
-            className="perfume-card-img" // Ensure CSS defines height/object-fit
+            src={image_url || "https://via.placeholder.com/220x200?text=Parfüm"} // Placeholder image
+            alt={name}
+            className="perfume-card-img" // Ensure CSS handles height/object-fit
           />
+          {/* Card Body */}
           <div className="perfume-card-body d-flex flex-column flex-grow-1 justify-content-between">
-            {" "}
-            {/* Flex grow */}
+            {/* Top part of the body (Title, Brand, Price) */}
             <div>
-              {" "}
-              {/* Wrapper for title and price */}
-              <h3 className="perfume-card-title">
-                {name || "Ismeretlen Parfüm"}
-              </h3>
-              {/* Brand name could be added here if available: <p className="perfume-card-subtitle">{brand || 'Ismeretlen Márka'}</p> */}
+              <h3 className="perfume-card-title">{name}</h3>
+              {/* Display brand if available */}
+              {brand && (
+                <p className="perfume-card-subtitle text-muted small mb-1">
+                  {brand}
+                </p>
+              )}
               <p className="perfume-card-text">{formattedPrice()}</p>
             </div>
-            {/* Favorite button stays at the bottom right via absolute positioning in CSS */}
+            {/* Bottom part could contain other info or actions if needed */}
           </div>
         </Link>
-        {/* Favorite button outside the Link to handle its own click */}
+
+        {/* Favorite Button (positioned absolutely via CSS) */}
         <button
           className={`favorite-btn ${isFavorite ? "active" : ""} ${
-            loadingFavorite ? "disabled" : ""
+            loadingFavorite ? "disabled" : "" // Add disabled class when loading
           }`}
           onClick={handleToggleFavorite}
-          disabled={loadingFavorite}
+          disabled={loadingFavorite} // Disable button during API call
           aria-label={
             isFavorite
               ? "Eltávolítás a kedvencekből"
               : "Hozzáadás a kedvencekhez"
           }
+          // The heart icon (♥) is added via CSS ::before pseudo-element
         />
       </div>
 
-      {/* Login Prompt Modal */}
+      {/* Login Prompt Modal (conditionally rendered) */}
       {showLoginPrompt && (
         <LoginPromptModal
-          onClose={() => setShowLoginPrompt(false)}
-          onLoginRedirect={() => navigate("/bejelentkezes")}
+          onClose={() => setShowLoginPrompt(false)} // Handler to close the modal
+          onLoginRedirect={() => navigate("/bejelentkezes")} // Handler to redirect to login
         />
       )}
     </>

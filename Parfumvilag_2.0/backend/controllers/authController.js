@@ -15,11 +15,9 @@ exports.register = async (req, res) => {
       .json({ error: "Minden mező kitöltése kötelező (név, email, jelszó)!" });
   }
   if (password.length < 6) {
-    return res
-      .status(400)
-      .json({
-        error: "A jelszónak legalább 6 karakter hosszúnak kell lennie!",
-      });
+    return res.status(400).json({
+      error: "A jelszónak legalább 6 karakter hosszúnak kell lennie!",
+    });
   }
 
   try {
@@ -73,7 +71,8 @@ exports.register = async (req, res) => {
 };
 
 // Bejelentkezés
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
+  // Ajánlott next használata
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -83,46 +82,51 @@ exports.login = async (req, res) => {
   }
 
   try {
-    // 1. Felhasználó lekérése email alapján (a modell már Promise-t ad vissza)
-    // Fontos: getUserByEmail most a teljes user objektumot adja vissza, jelszóval együtt!
+    // 1. Felhasználó lekérése email alapján (Teljes objektumot ad vissza, jelszóval)
     const user = await User.getUserByEmail(email);
 
     // 2. Ellenőrizzük, létezik-e a felhasználó
     if (!user) {
-      // Fontos: Ne áruljuk el, hogy az email vagy a jelszó rossz!
-      return res.status(401).json({ error: "Hibás email cím vagy jelszó!" }); // 401 Unauthorized
+      return res.status(401).json({ error: "Hibás email cím vagy jelszó!" });
     }
 
-    // 3. Jelszó ellenőrzés (aszinkron!)
+    // 3. Jelszó ellenőrzés
     const isMatch = await bcrypt.compare(password, user.password);
 
     // 4. Ellenőrizzük a jelszó egyezést
     if (!isMatch) {
-      // Fontos: Ne áruljuk el, hogy az email vagy a jelszó rossz!
-      return res.status(401).json({ error: "Hibás email cím vagy jelszó!" }); // 401 Unauthorized
+      return res.status(401).json({ error: "Hibás email cím vagy jelszó!" });
     }
 
     // 5. Sikeres bejelentkezés => Token generálása
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1h", // Vagy amilyen lejáratot szeretnél
     });
 
-    // 6. Felhasználói adatok visszaküldése (jelszó nélkül!)
+    // 6. Felhasználói adatok visszaküldése (jelszó NÉLKÜL!)
+    //    Most már a phone és profile_picture_url mezőket is beletesszük
     res.status(200).json({
       user: {
-        // Csak a szükséges, nem érzékeny adatokat küldjük vissza
         id: user.id,
         name: user.name,
         email: user.email,
-        // is_admin: user.is_admin // Ha szükséges
+        phone: user.phone, // <<< HOZZÁADVA
+        profile_picture_url: user.profile_picture_url, // <<< HOZZÁADVA
+        is_admin: user.is_admin, // Ha az admin státusz is kell a frontendnek
+        // Fontos: A 'password' mezőt NE add vissza!
       },
       token,
     });
   } catch (error) {
     // Általános szerverhiba
     console.error("Login Error:", error);
-    res
-      .status(500)
-      .json({ error: "Szerverhiba történt a bejelentkezés során." });
+    // Használjuk a next()-et, ha van központi hibakezelő
+    if (next) {
+      next(error);
+    } else {
+      res
+        .status(500)
+        .json({ error: "Szerverhiba történt a bejelentkezés során." });
+    }
   }
 };

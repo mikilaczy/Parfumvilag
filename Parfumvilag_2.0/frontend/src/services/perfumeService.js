@@ -8,12 +8,24 @@ export const getAllPerfumes = async ({
   note = "",
   gender = "",
   sort = "name-asc",
+  min_price, // Add min_price
+  max_price, // Add max_price
   page = 1,
   per_page = 24,
 }) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/perfumes/all`, {
-      params: { query, brand, note, gender, sort, page, per_page }, // <-- Javított formázás
+      params: {
+        query,
+        brand,
+        note,
+        gender,
+        sort,
+        min_price,
+        max_price,
+        page,
+        per_page,
+      }, // <-- Javított formázás
     });
     return response.data;
   } catch (error) {
@@ -77,5 +89,16 @@ export const toggleFavorite = async (perfumeId) => {
     return response.data;
   } catch (error) {
     throw error.response.data;
+  }
+};
+export const getPriceRange = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/perfumes/price-range`);
+    return response.data; // { minPrice: number, maxPrice: number }
+  } catch (error) {
+    console.error("Error fetching price range:", error);
+    // Return default or throw
+    return { minPrice: 0, maxPrice: 100000 }; // Default fallback
+    // throw new Error("Nem sikerült lekérni az árintervallumot.");
   }
 };

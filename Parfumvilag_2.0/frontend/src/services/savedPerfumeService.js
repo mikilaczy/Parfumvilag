@@ -19,16 +19,17 @@ const getAuthConfig = () => {
 // Felhasználó kedvenc parfüm ID-inak lekérése
 export const getMyFavoriteIds = async () => {
   const config = getAuthConfig();
-  if (!config) throw new Error("Bejelentkezés szükséges."); // Hiba dobása, ha nincs token
+  if (!config) throw new Error("Bejelentkezés szükséges.");
 
   try {
     const response = await axios.get(`${API_BASE_URL}/saved-perfumes`, config);
-    return response.data; // Visszaadja a perfume_id tömböt
+    return response.data;
   } catch (error) {
     console.error(
       "Error fetching favorite IDs:",
-      error.response?.data || error.message
+      error.response?.data || error.message // Logolás marad
     );
+    // Dobd tovább az error.response?.data objektumot, ha van, különben egy új Error-t
     throw (
       error.response?.data || new Error("Nem sikerült lekérni a kedvenceket.")
     );
@@ -46,12 +47,13 @@ export const addFavorite = async (perfumeId) => {
       { perfume_id: perfumeId },
       config
     );
-    return response.data; // { success: true, message: '...', id: ... } vagy hiba
+    return response.data;
   } catch (error) {
     console.error(
       "Error adding favorite:",
       error.response?.data || error.message
     );
+    // Dobd tovább a backend hibát vagy egy újat
     throw (
       error.response?.data ||
       new Error("Nem sikerült hozzáadni a kedvencekhez.")
@@ -65,17 +67,17 @@ export const removeFavorite = async (perfumeId) => {
   if (!config) throw new Error("Bejelentkezés szükséges.");
 
   try {
-    // Figyeljünk, hogy a backend :perfumeId paramétert vár az URL-ben
     const response = await axios.delete(
       `${API_BASE_URL}/saved-perfumes/${perfumeId}`,
       config
     );
-    return response.data; // { success: true, message: '...' } vagy hiba
+    return response.data;
   } catch (error) {
     console.error(
       "Error removing favorite:",
       error.response?.data || error.message
     );
+    // Dobd tovább a backend hibát vagy egy újat
     throw (
       error.response?.data ||
       new Error("Nem sikerült eltávolítani a kedvencekből.")
