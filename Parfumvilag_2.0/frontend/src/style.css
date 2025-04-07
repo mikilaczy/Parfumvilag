@@ -3588,19 +3588,6 @@ body {
   }
 }
 
-/* --- Navbar Responsive --- */
-/* A Navbar.js-ben lévő logikával együttműködve */
-@media (max-width: 991px) {
-  /* A .nav-links.active stílusát a Navbar.js kezeli */
-  .navbar-content {
-    /* Struktúra változhat a JS alapján, de a lényeg, hogy a toggler megjelenjen */
-  }
-  /* Hamburger menü stílusai (ha a JS hozzáad egy 'active' classt) */
-  .nav-links.active {
-    display: flex; /* Vagy block, attól függően, hogy van implementálva */
-    /* ... (a lenyíló menü stílusai: position, top, left, width, background, etc.) ... */
-  }
-}
 
 .filter-toggle {
   display: none; /* Alapból rejtett */
@@ -3632,9 +3619,7 @@ body {
 
 /* --- Perfume Detail Responsive --- */
 @media (max-width: 768px) {
-  .perfume-detail-content {
-    /* Lehet, hogy itt kell a kép és infó elrendezését módosítani */
-  }
+  
   .perfume-image-wrapper,
   .perfume-info,
   .stores-section,
@@ -3891,13 +3876,6 @@ body {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Ensure the close button styling is also consistent */
-.login-prompt .close-btn {
-  /* ... existing styles ... */
-}
-.review-list-custom {
-  /* Container for reviews */
-}
 
 .review-item-custom.card {
   /* Use Bootstrap card styles as base */
@@ -3979,14 +3957,6 @@ body {
   /* ... */
 }
 
-/* Bootstrap grid gap felülírása, ha szükséges (nem ajánlott, jobb a g-* class cseréje) */
-/*
-#perfumeList.row {
-  --bs-gutter-x: 0.8rem;
-  --bs-gutter-y: 0.8rem;
-}
-*/
-/* --- Star Rating Input --- */
 .star-rating-input {
   display: inline-block; /* Vagy block ha külön sorba akarod */
   font-size: 1.6rem; /* Csillagok mérete */
@@ -4023,14 +3993,6 @@ body {
   transform: none; /* No scale effect when disabled */
 }
 
-/* --- Review Form Customization --- */
-.review-form-custom {
-  /* background: #f8f9fa; /* Slightly off-white background */
-  /* padding: 1.5rem; */
-  /* border: 1px solid #dee2e6; */
-  /* border-radius: 8px; */
-  /* box-shadow: 0 1px 3px rgba(0,0,0,0.05); */
-}
 .review-form-custom .form-label {
   font-weight: 500;
   margin-bottom: 0.4rem; /* Kisebb margó */
