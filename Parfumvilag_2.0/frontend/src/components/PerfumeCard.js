@@ -121,63 +121,57 @@ const PerfumeCard = ({ perfume, onFavoriteChange }) => {
 
     checkIfFavorite(); // Run the check function
 
-    // Cleanup function to run when the component unmounts or dependencies change
     return () => {
       isMounted = false;
     };
-    // Dependencies: Re-run if perfume ID, login status, token changes, or logout function reference changes
   }, [id, isLoggedIn, token, logout]);
 
-  // Handler for the favorite button click
+ 
   const handleToggleFavorite = async (e) => {
-    e.preventDefault(); // Prevent link navigation when clicking button inside a link
-    e.stopPropagation(); // Stop event bubbling
+    e.preventDefault(); 
+    e.stopPropagation(); 
 
-    // If not logged in, show the login prompt
     if (!isLoggedIn) {
       setShowLoginPrompt(true);
       return;
     }
 
-    // Prevent action if already processing or ID is missing
+  
     if (loadingFavorite || !id) return;
 
-    setLoadingFavorite(true); // Indicate loading state for the toggle action
+    setLoadingFavorite(true); 
 
     try {
       let nowFavorite;
-      // Perform API call based on current favorite state
+      
       if (isFavorite) {
-        await removeFavorite(id); // Call service to remove
+        await removeFavorite(id); 
         nowFavorite = false;
       } else {
-        await addFavorite(id); // Call service to add
+        await addFavorite(id); 
         nowFavorite = true;
       }
 
-      // Update local state
       setIsFavorite(nowFavorite);
 
-      // Notify parent component (e.g., Favorites page) about the change if callback provided
+      
       if (onFavoriteChange) {
         onFavoriteChange(id, nowFavorite);
       }
-      // Optional: Show a brief success message to the user
-      // console.log(`PerfumeCard (${id}): Favorite status toggled to ${nowFavorite}`);
     } catch (error) {
       console.error(
         `PerfumeCard (${id}): Hiba a kedvencek kezelésekor:`,
         error
       );
 
-      // Check for invalid token error during toggle as well
+  
       if (error && error.error === "Token érvénytelen!") {
         console.warn(
           `PerfumeCard (${id}): Invalid token detected on toggle. Logging out.`
         );
-        logout(); // Logout if token invalid during toggle
+        logout(); 
       } else {
-        // Show generic error alert for other issues
+      
         alert(
           `Hiba: ${error.message || "Nem sikerült módosítani a kedvencet."}`
         );
