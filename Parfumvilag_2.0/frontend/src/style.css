@@ -37,7 +37,7 @@ body {
 
 .about-icon {
   font-size: 2rem;
-  color: #e6e6fa; 
+  color: #e6e6fa;
   margin-bottom: 1rem;
 }
 
@@ -59,7 +59,6 @@ body {
   object-fit: cover;
   border-radius: 10px;
   margin-top: 1.5rem;
-
 }
 /* Perfume Detail Container */
 .perfume-detail-container {
@@ -401,7 +400,6 @@ body {
   content: "♥";
 }
 
-
 /* Bezárás gomb (X) */
 .close-btn {
   position: absolute;
@@ -540,9 +538,8 @@ body {
   justify-content: center;
   transition: color 0.3s ease, transform 0.3s ease;
   animation: fadeInUp 1.5s ease-out 0.2s forwards;
-  pointer-events: auto !important; 
+  pointer-events: auto !important;
   position: relative;
- 
 }
 
 .footer_social {
@@ -720,9 +717,9 @@ body {
     font-size: 1rem;
   }
   .dropdown-menu {
-    position: static; 
+    position: static;
     width: 100%;
-    box-shadow: none; 
+    box-shadow: none;
     border: none;
   }
   .footer_section {
@@ -832,7 +829,7 @@ body {
   }
   .perfume-card-text {
     font-size: 0.8rem;
-    -webkit-line-clamp: 2; 
+    -webkit-line-clamp: 2;
   }
 }
 
@@ -1547,7 +1544,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-
 .review-form-custom .form-label {
   font-size: 0.85rem; /* Kisebb betűméret */
   font-weight: 500;
@@ -1909,14 +1905,7 @@ body {
 }
 
 /* Footer */
-.footer_section {
-  background: #333;
-  color: #fff;
-  padding: 2rem 0;
-  text-align: center;
-  position: relative;
-  animation: fadeInUp 1.2s ease-out;
-}
+
 .footer_section::before {
   content: "";
   position: absolute;
@@ -1966,17 +1955,7 @@ body {
 .contact_link:hover i {
   color: #00b7eb;
 }
-.footer-logo {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #fff;
-  text-decoration: none;
-  margin-bottom: 1rem;
-  transition: color 0.3s;
-}
-.footer-logo:hover {
-  color: #87ceeb;
-}
+
 .social-link {
   font-size: 1.2rem;
   color: #fff;
@@ -2459,6 +2438,7 @@ body {
   z-index: 900;
   box-shadow: 2px 0 10px rgba(135, 206, 235, 0.2);
   border-right: 1px solid #87ceeb;
+  padding-bottom: 400px; /* Térköz alul a footernek */
 }
 
 /* Form elemek */
@@ -2525,22 +2505,6 @@ body {
 @media (max-width: 991px) {
   .filter-toggle {
     display: block;
-  }
-
-  .sidebar {
-    position: fixed;
-    top: 70px;
-    left: 0;
-    width: 100%;
-    height: calc(100% - 70px);
-    z-index: 1000;
-    padding: 2rem;
-    box-shadow: none;
-    border-right: none;
-    background: #fff;
-    border-radius: 0;
-    transform: translateX(-100%); /* Alapértelmezésként rejtve */
-    transition: transform 0.3s ease-in-out;
   }
 
   .sidebar:not(.hidden) {
@@ -2679,7 +2643,6 @@ body {
   }
 }
 
-
 .filter-toggle {
   display: none; /* Alapból rejtett */
   /* ... (gomb stílusai) ... */
@@ -2699,6 +2662,7 @@ body {
     z-index: 1000; /* Navbar alatt, de tartalom felett */
     box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2); /* Erősebb árnyék */
     border-right: none;
+    padding-bottom: 80px; /* Térköz alul a footernek */
   }
   .sidebar:not(.hidden) {
     /* Ha a JS hozzáadja a 'hidden' class-t */
@@ -2710,7 +2674,6 @@ body {
 
 /* --- Perfume Detail Responsive --- */
 @media (max-width: 768px) {
-  
   .perfume-image-wrapper,
   .perfume-info,
   .stores-section,
@@ -2839,38 +2802,6 @@ body {
     /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
   }
 }
-.sidebar {
-  /* ... (meglévő position: sticky, top, etc.) ... */
-  height: calc(100vh - 70px); /* Navbar magassága levonva */
-  max-height: calc(100vh - 70px); /* Biztonság kedvéért max-height is */
-  overflow-y: auto; /* Legyen görgethető, ha a tartalom hosszabb */
-  /* Add padding at the bottom to avoid content hitting the very bottom edge */
-  padding-bottom: 80px; /* Adjust as needed, should be >= footer height roughly */
-}
-
-/* Footer styling - ensure it has a defined height or enough padding */
-.footer_section {
-  /* ... */
-  /* min-height: 60px;  Example */
-  padding: 2rem 0; /* Ensure padding */
-  position: relative; /* Keep z-index stacking context */
-  z-index: 1; /* Lower than sidebar potentially, but check layout */
-}
-
-/* Main content area might need adjustment too */
-.main-content-area {
-  /* Assuming you have a wrapper like this */
-  min-height: calc(100vh - 70px); /* Ensure it pushes the footer down */
-  padding-bottom: 80px; /* Space for the footer */
-}
-.sidebar {
-  /* ... (alap stílusok: width, background, padding, position, top, height, etc.) ... */
-  transition: transform 0.3s ease-in-out;
-  z-index: 900; /* Navbar alatt */
-  max-height: calc(100vh - 70px); /* Max magasság */
-  overflow-y: auto; /* Görgetés ha kell */
-  padding-bottom: 2rem; /* Hely alul */
-}
 
 .filter-toggle {
   display: none; /* Alapból rejtett */
@@ -2896,22 +2827,6 @@ body {
 @media (max-width: 991px) {
   .filter-toggle {
     display: block; /* Megjelenik */
-  }
-
-  .sidebar {
-    position: fixed; /* Rögzített */
-    left: 0;
-    top: 70px; /* Navbar magassága */
-    width: 85%; /* Vagy amilyen széles legyen */
-    max-width: 320px; /* Max szélesség */
-    height: calc(100% - 70px); /* Teljes magasság navbar alatt */
-    transform: translateX(-100%); /* Alapból eltüntetve balra */
-    background: #f8f9fa; /* Világosabb háttér mobilon? */
-    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.15);
-    border-right: 1px solid #dee2e6;
-    z-index: 1000; /* Legyen a tartalom felett */
-    /* Itt megadhatsz specifikus mobil stílusokat, pl. padding */
-    padding: 1.5rem;
   }
 
   .sidebar:not(.hidden) {
@@ -2966,7 +2881,6 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
 }
-
 
 .review-item-custom.card {
   /* Use Bootstrap card styles as base */
