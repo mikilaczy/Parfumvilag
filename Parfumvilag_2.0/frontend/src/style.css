@@ -1181,7 +1181,7 @@
   animation: slideInLeft 1s ease-out;
 }
 
-/* Profile Image */
+/* Profilkép */
 .profile-image-section {
   text-align: center;
   margin-bottom: 2rem;
@@ -1201,7 +1201,7 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive Adjustments */
+/* Reszponzív Igazítások */
 @media (max-width: 767px) {
   .profile-card {
     padding: 1.5rem;
@@ -1271,7 +1271,7 @@
   }
 }
 
-/* Responsive Adjustments */
+/* Reszponzív Igazítások */
 @media (max-width: 767px) {
   .form-label {
     font-size: 0.9rem;
@@ -1529,7 +1529,7 @@
     font-size: 1.2rem;
   }
 }
-/* Custom Review Form Styling */
+/* Egyéni Értékelési Űrlap Stílus */
 .review-form-custom {
   background: #ffffff;
   border-radius: 10px; /* Kisebb lekerekítés */
@@ -1630,7 +1630,7 @@
   box-shadow: 0 4px 12px rgba(212, 165, 154, 0.3);
 }
 
-/* Custom Review List Styling */
+/* Egyéni Értékelési Lista Stílus */
 .review-list-custom {
   display: flex;
   flex-direction: column;
@@ -1733,7 +1733,7 @@
   }
 }
 
-/* Responsive Design */
+/* Reszponzív Dizájn */
 @media (max-width: 991px) {
   .filter-sidebar {
     position: static;
@@ -1769,7 +1769,7 @@
     padding: 0.4rem 1rem;
   }
   .pagination-list {
-    flex-direction: column; /* Stack vertically on small screens */
+    flex-direction: column; /* Egymás alá rendezés kis képernyőkön */
   }
   .page-numbers {
     flex-direction: column;
@@ -1818,7 +1818,7 @@
   text-align: center;
 }
 
-/* Buttons */
+/* Gombok */
 .btn-peach {
   background: linear-gradient(135deg, #87ceeb, #add8e6);
   border: none;
@@ -1842,7 +1842,7 @@
   box-shadow: 0 5px 12px rgba(0, 183, 235, 0.4);
 }
 
-/* Perfume Card */
+/* Parfüm Kártya */
 .perfume-card {
   background: linear-gradient(135deg, #fff, #f8f9fa);
   border-radius: 20px;
@@ -1904,7 +1904,7 @@
   transform: scale(1.03);
 }
 
-/* Footer */
+/* Lábléc */
 
 .footer_section::before {
   content: "";
@@ -1966,7 +1966,7 @@
   transform: scale(1.1);
 }
 
-/* Responsive */
+/* Reszponzív */
 @media (max-width: 991px) {
   .filter-sidebar {
     position: static;
@@ -2002,7 +2002,7 @@
   }
 }
 
-/* Additional Sections */
+/* További Szekciók */
 .section-title,
 .perfume-detail-title,
 .profile-title,
@@ -2591,8 +2591,8 @@
   color: #ff6b6b;
 }
 
-/* --- Responsive Perfume Cards --- */
-/* Grid container (a Search.js-ben lévő #perfumeList) */
+/* --- Reszponzív Parfüm Kártyák --- */
+/* Grid konténer (a Search.js-ben lévő #perfumeList) */
 #perfumeList {
   display: grid;
   gap: 1.5rem; /* Térköz a kártyák között */
@@ -2672,7 +2672,7 @@
   /* body.sidebar-open .main-content { margin-left: 250px; } */
 }
 
-/* --- Perfume Detail Responsive --- */
+/* --- Parfüm Részletek Reszponzív --- */
 @media (max-width: 768px) {
   .perfume-image-wrapper,
   .perfume-info,
@@ -2712,7 +2712,7 @@
   }
 }
 
-/* --- Footer Responsive --- */
+/* --- Lábléc Reszponzív --- */
 @media (max-width: 767px) {
   /* Közepes breakpoint */
   .footer-grid {
@@ -2837,21 +2837,21 @@
   /* Opcionális: Overlay a tartalom fölé, ha a sidebar nyitva */
   /* body.sidebar-open::before { content: ''; ... } */
 }
-/* Login Prompt Modal Buttons */
+/* Bejelentkezési Felugró Ablak Gombok */
 .login-prompt .login-btn {
-  /* Specificity */
-  /* Style for the primary login button */
-  background: #3498db; /* Example blue */
+  /* Specifikusság */
+  /* Elsődleges bejelentkezési gomb stílusa */
+  background: #3498db; /* Példa kék */
   color: #fff;
   border: none;
   padding: 0.6rem 1.5rem;
-  border-radius: 15px; /* Match existing */
+  border-radius: 15px; /* Meglévőhöz illeszkedő */
   font-size: 0.9rem;
   font-weight: 500;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 0.5rem; /* Add margin */
+  margin: 0.5rem; /* Margó hozzáadása */
 }
 
 .login-prompt .login-btn:hover {
@@ -2860,31 +2860,31 @@
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Style for the 'Cancel' button to match */
+/* 'Mégse' gomb stílusa, hogy illeszkedjen */
 .login-prompt .cancel-btn {
-  /* Specificity */
-  background: #ecf0f1; /* Example light gray */
-  color: #2c3e50; /* Dark text */
+  /* Specifikusság */
+  background: #ecf0f1; /* Példa világosszürke */
+  color: #2c3e50; /* Sötét szöveg */
   border: none;
-  padding: 0.6rem 1.5rem; /* Same padding */
-  border-radius: 15px; /* Same radius */
-  font-size: 0.9rem; /* Same font size */
-  font-weight: 500; /* Same weight */
-  text-transform: uppercase; /* Same transform */
+  padding: 0.6rem 1.5rem; /* Ugyanaz a padding */
+  border-radius: 15px; /* Ugyanaz a sugár */
+  font-size: 0.9rem; /* Ugyanaz a betűméret */
+  font-weight: 500; /* Ugyanaz a vastagság */
+  text-transform: uppercase; /* Ugyanaz a transzformáció */
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 0.5rem; /* Add margin */
+  margin: 0.5rem; /* Margó hozzáadása */
 }
 
 .login-prompt .cancel-btn:hover {
-  background: #dfe6e9; /* Slightly darker gray */
+  background: #dfe6e9; /* Kissé sötétebb szürke */
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
 }
 
 .review-item-custom.card {
-  /* Use Bootstrap card styles as base */
-  border-left: 4px solid #87ceeb; /* Accent border */
+  /* Bootstrap kártya stílusok használata alapként */
+  border-left: 4px solid #87ceeb; /* Kiemelő szegély */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.3s ease;
 }
@@ -2908,49 +2908,49 @@
 
 .review-ratings-grid {
   display: grid;
-  /* 2 columns for ratings */
+  /* 2 oszlop az értékelésekhez */
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0.5rem 1rem; /* Row and column gap */
+  gap: 0.5rem 1rem; /* Sor és oszlop közötti rés */
   font-size: 0.9rem;
 }
 
 .rating-item {
   display: flex;
-  justify-content: space-between; /* Label and stars apart */
+  justify-content: space-between; /* Címke és csillagok szétválasztva */
   align-items: center;
 }
 
 .rating-category {
   color: #555;
   margin-right: 0.5rem;
-  white-space: nowrap; /* Prevent wrapping */
+  white-space: nowrap; /* Tördelés megakadályozása */
 }
 
 .rating-stars {
-  color: #f1c40f; /* Star color */
-  white-space: nowrap; /* Prevent wrapping */
+  color: #f1c40f; /* Csillag színe */
+  white-space: nowrap; /* Tördelés megakadályozása */
 }
 .rating-stars span {
-  /* If using spans inside for ☆ */
-  color: #ccc; /* Empty star color */
+  /* Ha span-eket használsz belül ☆-hoz */
+  color: #ccc; /* Üres csillag színe */
 }
 
 .review-comment-custom {
   font-size: 0.95rem;
   color: #444;
   line-height: 1.5;
-  margin-top: 0.75rem; /* Space above comment */
-  background-color: #f8f9fa; /* Slightly different background */
+  margin-top: 0.75rem; /* Hely a komment felett */
+  background-color: #f8f9fa; /* Kissé eltérő háttér */
   padding: 0.75rem;
   border-radius: 5px;
 }
 /* style.css */
 .navbar-profile-img {
-  width: 28px; /* Small size for navbar */
+  width: 28px; /* Kis méret a navbarhoz */
   height: 28px;
-  border-radius: 50%; /* Make it circular */
-  object-fit: cover; /* Ensure image covers the area */
-  border: 1px solid #666; /* Optional border */
+  border-radius: 50%; /* Kör alakúvá tétel */
+  object-fit: cover; /* Biztosítja, hogy a kép lefedje a területet */
+  border: 1px solid #666; /* Opcionális szegély */
 }
 /* style.css */
 .perfume-card {
@@ -2988,14 +2988,14 @@
   color: #f1c40f; /* Teli csillag színe (Bootstrap sárga) */
 }
 
-/* Disabled state styling (optional) */
+/* Letiltott állapot stílusa (opcionális) */
 .star-rating-input .star-input:disabled {
   cursor: not-allowed;
   opacity: 0.7;
 }
 .star-rating-input .star-input:disabled:hover {
-  color: #e0e0e0; /* No hover color change when disabled */
-  transform: none; /* No scale effect when disabled */
+  color: #e0e0e0; /* Nincs hover színváltozás letiltva */
+  transform: none; /* Nincs méretezési effektus letiltva */
 }
 
 .review-form-custom .form-label {
@@ -3005,8 +3005,8 @@
 }
 
 .review-form-custom .btn-primary {
-  /* Submit button style */
-  background-color: #0d6efd; /* Standard Bootstrap Primary */
+  /* Küldés gomb stílusa */
+  background-color: #0d6efd; /* Standard Bootstrap Elsődleges */
   border-color: #0d6efd;
   padding: 0.6rem 1.2rem;
 }
@@ -3016,13 +3016,13 @@
 }
 
 .review-form-custom .btn-secondary {
-  /* Cancel button style */
+  /* Mégse gomb stílusa */
   padding: 0.6rem 1.2rem;
 }
 
-/* --- Review Item Updates (if needed) --- */
+/* --- Értékelés Elem Frissítések (ha szükséges) --- */
 .review-comment-custom.bg-light {
-  background-color: #f8f9fa !important; /* Ensure light background for comment */
+  background-color: #f8f9fa !important; /* Biztosítsd a világos hátteret a kommenthez */
   border: 1px solid #eee;
   font-size: 0.9rem;
 }
